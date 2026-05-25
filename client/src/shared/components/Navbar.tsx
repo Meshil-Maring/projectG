@@ -1,20 +1,62 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Heart, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { label: "Home", href: "#" },
-  { label: "About Us", href: "#" },
-  { label: "Causes", href: "#" },
-  { label: "Impact", href: "#" },
-  { label: "Stories", href: "#" },
-  { label: "Get Involved", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Home", href: "#home", sectionId: "home" },
+  { label: "About Us", href: "#about", sectionId: "about" },
+  { label: "Causes", href: "#causes", sectionId: "causes" },
+  { label: "Impact", href: "#impact", sectionId: "impact" },
+  { label: "Stories", href: "#stories", sectionId: "stories" },
+  { label: "Get Involved", href: "#get-involved", sectionId: "get-involved" },
+  { label: "Contact", href: "#contact", sectionId: "contact" },
 ];
 
 export default function Navbar() {
   const [active, setActive] = useState("Home");
   const [menuOpen, setMenuOpen] = useState(false);
+  const isNavigating = useRef(false);
+  const navTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    function updateActive() {
+      if (isNavigating.current) return;
+
+      const threshold = 68 + 24;
+
+      for (let i = navLinks.length - 1; i >= 0; i--) {
+        const el = document.getElementById(navLinks[i].sectionId);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= threshold) {
+          setActive(navLinks[i].label);
+          return;
+        }
+      }
+
+      setActive(navLinks[0].label);
+    }
+
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    return () => window.removeEventListener("scroll", updateActive);
+  }, []);
+
+  function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) {
+    e.preventDefault();
+    setActive(link.label);
+    isNavigating.current = true;
+
+    if (navTimer.current) clearTimeout(navTimer.current);
+    navTimer.current = setTimeout(() => {
+      isNavigating.current = false;
+    }, 800);
+
+    const el = document.getElementById(link.sectionId);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 68;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  }
 
   return (
     <header
@@ -96,7 +138,6 @@ export default function Navbar() {
         {/* ── Desktop Nav ── */}
         <nav
           style={{
-            display: "flex",
             alignItems: "center",
             gap: "0.15rem",
             flex: 1,
@@ -110,7 +151,7 @@ export default function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                onClick={() => setActive(link.label)}
+                onClick={(e) => handleNavClick(e, link)}
                 style={{
                   position: "relative",
                   padding: "0.45rem 0.75rem",
@@ -153,7 +194,15 @@ export default function Navbar() {
           }}
         >
           <motion.a
-            href="#"
+            href="#donate"
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById("donate");
+              if (el) {
+                const top = el.getBoundingClientRect().top + window.scrollY - 68;
+                window.scrollTo({ top, behavior: "smooth" });
+              }
+            }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             style={{
@@ -213,8 +262,8 @@ export default function Navbar() {
                   <a
                     key={link.label}
                     href={link.href}
-                    onClick={() => {
-                      setActive(link.label);
+                    onClick={(e) => {
+                      handleNavClick(e, link);
                       setMenuOpen(false);
                     }}
                     style={{

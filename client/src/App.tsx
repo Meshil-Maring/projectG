@@ -16,16 +16,18 @@ function App() {
   return (
     <>
       <Navbar />
-      <Hero />
-      <Mission />
-      <VideoStories />
-      <ImageGallery />
-      <Impact />
-      <Campaigns />
-      <Donate />
-      <Volunteer />
-      <StoriesOfChange />
-      <NewsletterSubscribe />
+      <section id="home"><Hero /></section>
+      <section id="about">
+        <Mission />
+        <VideoStories />
+        <ImageGallery />
+      </section>
+      <section id="causes"><Campaigns /></section>
+      <section id="impact"><Impact /></section>
+      <section id="stories"><StoriesOfChange /></section>
+      <section id="get-involved"><Volunteer /></section>
+      <section id="donate"><Donate /></section>
+      <section id="contact"><NewsletterSubscribe /></section>
       <Footer />
     </>
   );

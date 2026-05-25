@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   /* ── Brand Colors ── */
   --color-primary:        #1a3270;   /* navy – nav, footer, primary buttons */
