@@ -40,7 +40,14 @@ export default function Navbar() {
         }}
       >
         {/* ── Logo ── */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            flexShrink: 0,
+          }}
+        >
           {/* Icon circle */}
           <div
             style={{
@@ -81,17 +88,7 @@ export default function Navbar() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Helping Hands
-            </div>
-            <div
-              style={{
-                fontWeight: 400,
-                fontSize: "0.68rem",
-                color: "#94a3b8",
-                letterSpacing: "0.01em",
-              }}
-            >
-              Together We Can
+              Project Generation
             </div>
           </div>
         </div>
@@ -147,7 +144,14 @@ export default function Navbar() {
         </nav>
 
         {/* ── Donate button + mobile toggle ── */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            flexShrink: 0,
+          }}
+        >
           <motion.a
             href="#"
             whileHover={{ scale: 1.04 }}
