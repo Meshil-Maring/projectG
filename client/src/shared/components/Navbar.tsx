@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Heart, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Logo from "../../assets/image/logo.jpeg";
 
 const navLinks = [
   { label: "Home", href: "#home", sectionId: "home" },
   { label: "About Us", href: "#about", sectionId: "about" },
+  { label: "Our Groups", href: "#groups", sectionId: "groups" },
   { label: "Causes", href: "#causes", sectionId: "causes" },
   { label: "Impact", href: "#impact", sectionId: "impact" },
   { label: "Stories", href: "#stories", sectionId: "stories" },
@@ -17,13 +20,16 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const isNavigating = useRef(false);
   const navTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
+    if (!isHomePage) return;
+
     function updateActive() {
       if (isNavigating.current) return;
-
       const threshold = 68 + 24;
-
       for (let i = navLinks.length - 1; i >= 0; i--) {
         const el = document.getElementById(navLinks[i].sectionId);
         if (!el) continue;
@@ -32,30 +38,43 @@ export default function Navbar() {
           return;
         }
       }
-
       setActive(navLinks[0].label);
     }
 
     updateActive();
     window.addEventListener("scroll", updateActive, { passive: true });
     return () => window.removeEventListener("scroll", updateActive);
-  }, []);
+  }, [isHomePage]);
 
-  function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) {
-    e.preventDefault();
-    setActive(link.label);
-    isNavigating.current = true;
-
-    if (navTimer.current) clearTimeout(navTimer.current);
-    navTimer.current = setTimeout(() => {
-      isNavigating.current = false;
-    }, 800);
-
-    const el = document.getElementById(link.sectionId);
+  function scrollToSection(sectionId: string) {
+    const el = document.getElementById(sectionId);
     if (el) {
       const top = el.getBoundingClientRect().top + window.scrollY - 68;
       window.scrollTo({ top, behavior: "smooth" });
     }
+  }
+
+  function handleNavClick(
+    e: React.MouseEvent<HTMLAnchorElement>,
+    link: (typeof navLinks)[0],
+  ) {
+    e.preventDefault();
+    setMenuOpen(false);
+
+    if (!isHomePage) {
+      navigate("/");
+      // after navigation, scroll on next tick once sections mount
+      setTimeout(() => scrollToSection(link.sectionId), 120);
+      return;
+    }
+
+    setActive(link.label);
+    isNavigating.current = true;
+    if (navTimer.current) clearTimeout(navTimer.current);
+    navTimer.current = setTimeout(() => {
+      isNavigating.current = false;
+    }, 800);
+    scrollToSection(link.sectionId);
   }
 
   return (
@@ -82,45 +101,19 @@ export default function Navbar() {
         }}
       >
         {/* ── Logo ── */}
-        <div
+        <Link
+          to="/"
           style={{
             display: "flex",
             alignItems: "center",
             gap: "0.6rem",
             flexShrink: 0,
+            textDecoration: "none",
           }}
         >
-          {/* Icon circle */}
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              backgroundColor: "#1a3270",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 21C12 21 3 14.5 3 8.5C3 6 5 4 7.5 4C9.2 4 10.7 4.9 11.5 6.2C12.3 4.9 13.8 4 15.5 4C18 4 20 6 20 8.5C20 14.5 12 21 12 21Z"
-                fill="white"
-                opacity="0.9"
-              />
-              <path
-                d="M8 11C8 11 9 13 12 15C15 13 16 11 16 11"
-                stroke="white"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                fill="none"
-                opacity="0.6"
-              />
-            </svg>
+          <div className="w-12 rounded-full bg-brown-800">
+            <img className="rounded-full" src={Logo} alt="Project Generation" />
           </div>
-
-          {/* Brand text */}
           <div style={{ lineHeight: 1.2 }}>
             <div
               style={{
@@ -133,20 +126,20 @@ export default function Navbar() {
               Project Generation
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* ── Desktop Nav ── */}
         <nav
           style={{
             alignItems: "center",
-            gap: "0.15rem",
+            gap: "0.05rem",
             flex: 1,
             justifyContent: "center",
           }}
           className="hidden md:flex"
         >
           {navLinks.map((link) => {
-            const isActive = active === link.label;
+            const isActive = isHomePage && active === link.label;
             return (
               <a
                 key={link.label}
@@ -154,8 +147,8 @@ export default function Navbar() {
                 onClick={(e) => handleNavClick(e, link)}
                 style={{
                   position: "relative",
-                  padding: "0.45rem 0.75rem",
-                  fontSize: "0.82rem",
+                  padding: "0.45rem 0.65rem",
+                  fontSize: "0.78rem",
                   fontWeight: isActive ? 600 : 500,
                   color: isActive ? "#1a3270" : "#475569",
                   textDecoration: "none",
@@ -170,8 +163,8 @@ export default function Navbar() {
                     style={{
                       position: "absolute",
                       bottom: "-2px",
-                      left: "0.75rem",
-                      right: "0.75rem",
+                      left: "0.65rem",
+                      right: "0.65rem",
                       height: "2.5px",
                       borderRadius: "2px",
                       backgroundColor: "#1a3270",
@@ -197,11 +190,13 @@ export default function Navbar() {
             href="#donate"
             onClick={(e) => {
               e.preventDefault();
-              const el = document.getElementById("donate");
-              if (el) {
-                const top = el.getBoundingClientRect().top + window.scrollY - 68;
-                window.scrollTo({ top, behavior: "smooth" });
+              setMenuOpen(false);
+              if (!isHomePage) {
+                navigate("/");
+                setTimeout(() => scrollToSection("donate"), 120);
+                return;
               }
+              scrollToSection("donate");
             }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
@@ -257,15 +252,12 @@ export default function Navbar() {
           >
             <div style={{ padding: "0.75rem 1.5rem 1rem" }}>
               {navLinks.map((link) => {
-                const isActive = active === link.label;
+                const isActive = isHomePage && active === link.label;
                 return (
                   <a
                     key={link.label}
                     href={link.href}
-                    onClick={(e) => {
-                      handleNavClick(e, link);
-                      setMenuOpen(false);
-                    }}
+                    onClick={(e) => handleNavClick(e, link)}
                     style={{
                       display: "block",
                       padding: "0.6rem 0",
