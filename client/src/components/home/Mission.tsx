@@ -54,7 +54,7 @@ export default function Mission() {
     <section className="py-16 px-8 bg-white">
       <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row gap-10">
         {/* ── Our Mission ── */}
-        <div className="flex-1 flex flex-col lg:flex-row gap-6 bg-white rounded-2xl border border-[#e2e8f0] shadow-[0_4px_16px_0_rgba(0,0,0,0.08)] overflow-hidden p-6">
+        <div className="flex-1 flex flex-col lg:flex-row gap-6 bg-white rounded-2xl border border-[#e2e8f0] overflow-hidden p-6">
           {/* Family image */}
           <div className="shrink-0 w-full lg:w-56 xl:w-64 rounded-xl overflow-hidden">
             <img
@@ -75,7 +75,7 @@ export default function Mission() {
                 <br />
                 Building Better Future
               </h2>
-              <p className="text-sm text-[#475569] leading-relaxed max-w-sm">
+              <p className="text-sm text-body leading-relaxed max-w-sm">
                 We work for the upliftment of underprivileged communities by
                 providing education, healthcare, food and a safe environment.
               </p>

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Users, Mail, ChevronRight } from "lucide-react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { groups } from "../../data/groups";
-import Footer from "../home/Footer";
+import Footer from "../../shared/components/Footer";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -270,7 +270,13 @@ export default function GroupPage() {
               >
                 {value}
               </div>
-              <div style={{ fontSize: "0.8rem", color: "#94a3b8", fontWeight: 500 }}>
+              <div
+                style={{
+                  fontSize: "0.8rem",
+                  color: "#94a3b8",
+                  fontWeight: 500,
+                }}
+              >
                 {label}
               </div>
             </div>
@@ -290,7 +296,13 @@ export default function GroupPage() {
           >
             Explore Other Groups
           </h3>
-          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "0.6rem" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap" as const,
+              gap: "0.6rem",
+            }}
+          >
             {groups
               .filter((g) => g.id !== group.id)
               .map((g) => {
@@ -312,7 +324,9 @@ export default function GroupPage() {
                       fontWeight: 600,
                       transition: "opacity 0.2s",
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.opacity = "0.8")
+                    }
                     onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
                   >
                     <GIcon size={13} strokeWidth={2} />
@@ -384,7 +398,8 @@ export default function GroupPage() {
               margin: "0 auto 1.5rem",
             }}
           >
-            Become part of {group.name} and contribute to something bigger than yourself.
+            Become part of {group.name} and contribute to something bigger than
+            yourself.
           </p>
 
           <Link

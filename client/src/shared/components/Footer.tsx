@@ -220,7 +220,7 @@ export default function Footer() {
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.49 5.49l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                   </svg>
                 }
-                text="+91 98765 43210"
+                text="+91 87983 03158"
               />
               <ContactItem
                 icon={
@@ -238,7 +238,7 @@ export default function Footer() {
                     <polyline points="22,6 12,13 2,6" />
                   </svg>
                 }
-                text="info@helpinghands.org"
+                text="projectgmanipur@gmail.com"
               />
               <ContactItem
                 icon={
@@ -256,7 +256,7 @@ export default function Footer() {
                     <circle cx="12" cy="10" r="3" />
                   </svg>
                 }
-                text="123, Hope Street, New Delhi, India - 110001"
+                text="Sagolband Ingudam Leikai, Manipur, India - 795001"
               />
             </div>
           </div>

@@ -27,13 +27,12 @@ export default function Donate() {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-
           {/* ── Left: Image ── */}
           <div className="flex-shrink-0 w-full lg:w-[420px] flex justify-center">
             <img
               src={donateImg}
               alt="Donate and make a difference"
-              className="w-full max-w-[400px] lg:max-w-none object-contain drop-shadow-xl"
+              className="w-full max-w-[400px] lg:max-w-none object-contain"
             />
           </div>
 
@@ -52,8 +51,8 @@ export default function Donate() {
 
             {/* Sub-text */}
             <p className="text-[color:var(--color-body)] text-base leading-relaxed mb-8 max-w-md">
-              Every contribution, no matter how small, brings hope
-              and creates a lasting impact.
+              Every contribution, no matter how small, brings hope and creates a
+              lasting impact.
             </p>
 
             {/* Amount Selector */}
@@ -68,7 +67,9 @@ export default function Donate() {
                       : "border-[color:var(--color-border)] hover:border-purple-300 hover:bg-purple-50/40"
                   }`}
                 >
-                  <span className={`text-base font-bold ${selected === value ? "text-[color:var(--color-purple)]" : "text-[color:var(--color-heading)]"}`}>
+                  <span
+                    className={`text-base font-bold ${selected === value ? "text-[color:var(--color-purple)]" : "text-[color:var(--color-heading)]"}`}
+                  >
                     {label}
                   </span>
                   <span className="text-xs text-[color:var(--color-muted)] mt-0.5 leading-tight">
@@ -98,7 +99,9 @@ export default function Donate() {
                   />
                 ) : (
                   <span className="text-sm font-semibold text-[color:var(--color-purple)]">
-                    Other<br />Amount
+                    Other
+                    <br />
+                    Amount
                   </span>
                 )}
               </button>
@@ -117,22 +120,18 @@ export default function Donate() {
             {/* Trust Badges */}
             <div className="flex items-center gap-5 text-sm text-[color:var(--color-muted)]">
               <span className="flex items-center gap-1.5">
-                <ShieldCheck size={15} className="text-[color:var(--color-purple)]" />
+                <ShieldCheck
+                  size={15}
+                  className="text-[color:var(--color-purple)]"
+                />
                 100% Secure
               </span>
-              <span className="text-[color:var(--color-border)]">•</span>
-              <span className="flex items-center gap-1.5">
-                <Eye size={15} className="text-[color:var(--color-purple)]" />
-                Transparent
-              </span>
-              <span className="text-[color:var(--color-border)]">•</span>
-              <span className="flex items-center gap-1.5">
-                <Star size={15} className="text-[color:var(--color-purple)]" />
-                Trusted
-              </span>
+              <span className="text-black/50">•</span>
+              <span className="flex items-center gap-1.5">Transparent</span>
+              <span className="text-black/50">•</span>
+              <span className="flex items-center gap-1.5">Trusted</span>
             </div>
           </div>
-
         </div>
       </div>
 

@@ -10,25 +10,41 @@ import Campaigns from "../components/home/Campaigns";
 import StoriesOfChange from "../components/home/StoriesOfChange";
 import Donate from "../components/home/Donate";
 import NewsletterSubscribe from "../components/home/NewsletterSubscribe";
-import Footer from "../components/home/Footer";
+import Footer from "../shared/components/Footer";
 
 export default function HomePage() {
   return (
     <>
       <Navbar />
-      <section id="home"><Hero /></section>
+      <section id="home">
+        <Hero />
+      </section>
       <section id="about">
         <Mission />
         <VideoStories />
         <ImageGallery />
       </section>
-      <section id="groups"><Groups /></section>
-      <section id="causes"><Campaigns /></section>
-      <section id="impact"><Impact /></section>
-      <section id="stories"><StoriesOfChange /></section>
-      <section id="get-involved"><Volunteer /></section>
-      <section id="donate"><Donate /></section>
-      <section id="contact"><NewsletterSubscribe /></section>
+      <section id="groups">
+        <Groups />
+      </section>
+      <section id="causes">
+        <Campaigns />
+      </section>
+      <section id="impact">
+        <Impact />
+      </section>
+      <section id="stories">
+        <StoriesOfChange />
+      </section>
+      <section id="get-involved">
+        <Volunteer />
+      </section>
+      <section id="donate">
+        <Donate />
+      </section>
+      <section id="contact">
+        <NewsletterSubscribe />
+      </section>
       <Footer />
     </>
   );
