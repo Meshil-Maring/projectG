@@ -1,3 +1,4 @@
+import { useState } from "react";
 import familyImg from "../../assets/image/family.jpeg";
 import {
   Users,
@@ -18,6 +19,29 @@ const pillars = [
   { icon: Briefcase, label: "Create\nOpportunities" },
 ];
 
+function scrollToSection(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
+
+async function handleShare(setCopied: (v: boolean) => void) {
+  const shareData = {
+    title: "Help Us Change Lives",
+    text: "Join our mission to support families, educate children, and build better communities.",
+    url: window.location.href,
+  };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch {
+      // user cancelled — no-op
+    }
+  } else {
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+}
+
 const helpItems = [
   {
     icon: Heart,
@@ -25,6 +49,7 @@ const helpItems = [
     iconColor: "text-pink-500",
     title: "Donate",
     desc: "Your contribution helps us change lives.",
+    sectionId: "donate",
   },
   {
     icon: HandHelping,
@@ -32,6 +57,7 @@ const helpItems = [
     iconColor: "text-green-600",
     title: "Volunteer",
     desc: "Give your time and inspire others.",
+    sectionId: "get-involved",
   },
   {
     icon: Gift,
@@ -39,6 +65,7 @@ const helpItems = [
     iconColor: "text-purple-600",
     title: "Fundraise",
     desc: "Start a fundraiser and spread the word.",
+    sectionId: "causes",
   },
   {
     icon: Share2,
@@ -46,10 +73,13 @@ const helpItems = [
     iconColor: "text-indigo-600",
     title: "Share",
     desc: "Share our mission with your network.",
+    sectionId: null,
   },
 ];
 
 export default function Mission() {
+  const [copied, setCopied] = useState(false);
+
   return (
     <section className="py-16 px-8 bg-white">
       <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row gap-10">
@@ -105,10 +135,16 @@ export default function Mission() {
           <p className="text-xs font-bold uppercase tracking-widest text-[#1e293b]">
             How You Can Help
           </p>
-          {helpItems.map(({ icon: Icon, iconBg, iconColor, title, desc }) => (
-            <div
+          {helpItems.map(({ icon: Icon, iconBg, iconColor, title, desc, sectionId }) => (
+            <button
               key={title}
-              className="flex items-center gap-4 bg-white border border-[#e2e8f0] rounded-xl px-4 py-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+              type="button"
+              onClick={() =>
+                sectionId
+                  ? scrollToSection(sectionId)
+                  : handleShare(setCopied)
+              }
+              className="flex items-center gap-4 bg-white border border-[#e2e8f0] rounded-xl px-4 py-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow text-left w-full"
             >
               <div
                 className={`w-10 h-10 rounded-full ${iconBg} flex items-center justify-center shrink-0`}
@@ -117,13 +153,15 @@ export default function Mission() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-[#1e293b] text-sm">{title}</p>
-                <p className="text-xs text-[#475569] leading-snug">{desc}</p>
+                <p className="text-xs text-[#475569] leading-snug">
+                  {title === "Share" && copied ? "Link copied!" : desc}
+                </p>
               </div>
               <ChevronRight
                 size={16}
                 className="text-[#94a3b8] flex-shrink-0"
               />
-            </div>
+            </button>
           ))}
         </div>
       </div>
