@@ -5,14 +5,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/image/logo.jpeg";
 
 const navLinks = [
-  { label: "Home", href: "#home", sectionId: "home" },
-  { label: "About Us", href: "#about", sectionId: "about" },
-  { label: "Our Groups", href: "#groups", sectionId: "groups" },
-  { label: "Causes", href: "#causes", sectionId: "causes" },
-  { label: "Impact", href: "#impact", sectionId: "impact" },
-  { label: "Stories", href: "#stories", sectionId: "stories" },
-  { label: "Get Involved", href: "#get-involved", sectionId: "get-involved" },
-  { label: "Contact", href: "#contact", sectionId: "contact" },
+  { label: "Home", href: "#home", sectionId: "home", route: null },
+  { label: "About Us", href: "/about-us", sectionId: "about", route: "/about-us" },
+  { label: "Our Groups", href: "#groups", sectionId: "groups", route: null },
+  { label: "Causes", href: "#causes", sectionId: "causes", route: null },
+  { label: "Impact", href: "#impact", sectionId: "impact", route: null },
+  { label: "Stories", href: "#stories", sectionId: "stories", route: null },
+  { label: "Get Involved", href: "#get-involved", sectionId: "get-involved", route: null },
+  { label: "Contact", href: "#contact", sectionId: "contact", route: null },
 ];
 
 export default function Navbar() {
@@ -60,6 +60,11 @@ export default function Navbar() {
   ) {
     e.preventDefault();
     setMenuOpen(false);
+
+    if (link.route) {
+      navigate(link.route);
+      return;
+    }
 
     if (!isHomePage) {
       navigate("/");
@@ -125,6 +130,7 @@ export default function Navbar() {
             >
               Project Generation
             </div>
+            <p className="text-[12px]">Learn sharp and Transform</p>
           </div>
         </Link>
 
@@ -139,7 +145,9 @@ export default function Navbar() {
           className="hidden md:flex"
         >
           {navLinks.map((link) => {
-            const isActive = isHomePage && active === link.label;
+            const isActive =
+              (link.route && location.pathname === link.route) ||
+              (!link.route && isHomePage && active === link.label);
             return (
               <a
                 key={link.label}
@@ -252,7 +260,9 @@ export default function Navbar() {
           >
             <div style={{ padding: "0.75rem 1.5rem 1rem" }}>
               {navLinks.map((link) => {
-                const isActive = isHomePage && active === link.label;
+                const isActive =
+                  (link.route && location.pathname === link.route) ||
+                  (!link.route && isHomePage && active === link.label);
                 return (
                   <a
                     key={link.label}

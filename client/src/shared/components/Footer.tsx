@@ -121,7 +121,10 @@ export default function Footer() {
               }}
             >
               <img className="w-12 rounded-full" src={Logo} />
-              <p>Project Generation</p>
+              <aside>
+                <p className="font-black">Project Generation</p>
+                <p className="text-[12px]">Learn sharp and Transform</p>
+              </aside>
             </div>
 
             <p
