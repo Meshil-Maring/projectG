@@ -1,58 +1,39 @@
 import { useState, useEffect, useRef } from "react";
-import { Heart, Menu, X } from "lucide-react";
+import { Heart, Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/image/logo.jpeg";
+import { groups } from "../../data/groups";
 
 const navLinks = [
-  { label: "Home", href: "#home", sectionId: "home", route: null },
-  { label: "About Us", href: "/about-us", sectionId: "about", route: "/about-us" },
-  { label: "Our Groups", href: "#groups", sectionId: "groups", route: null },
-  { label: "Causes", href: "#causes", sectionId: "causes", route: null },
-  { label: "Impact", href: "#impact", sectionId: "impact", route: null },
-  { label: "Stories", href: "#stories", sectionId: "stories", route: null },
-  { label: "Get Involved", href: "#get-involved", sectionId: "get-involved", route: null },
-  { label: "Contact", href: "#contact", sectionId: "contact", route: null },
+  { label: "Home", href: "/", route: "/" },
+  { label: "About Us", href: "/about-us", route: "/about-us" },
+  { label: "Our Groups", href: "#groups", route: null },
+  { label: "Causes", href: "/causes", route: "/causes" },
+  { label: "Impact", href: "/", route: null },
+  { label: "Stories", href: "/stories", route: "/stories" },
+  { label: "Notice", href: "/notice", route: "/notice" },
+  { label: "Get Involved", href: "/", route: null },
+  { label: "Contact", href: "/contact", route: "/contact" },
 ];
 
 export default function Navbar() {
-  const [active, setActive] = useState("Home");
   const [menuOpen, setMenuOpen] = useState(false);
-  const isNavigating = useRef(false);
-  const navTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [groupsOpen, setGroupsOpen] = useState(false);
+  const [mobileGroupsOpen, setMobileGroupsOpen] = useState(false);
+  const groupsDropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
-    if (!isHomePage) return;
-
-    function updateActive() {
-      if (isNavigating.current) return;
-      const threshold = 68 + 24;
-      for (let i = navLinks.length - 1; i >= 0; i--) {
-        const el = document.getElementById(navLinks[i].sectionId);
-        if (!el) continue;
-        if (el.getBoundingClientRect().top <= threshold) {
-          setActive(navLinks[i].label);
-          return;
-        }
+    function handleClickOutside(e: MouseEvent) {
+      if (groupsDropdownRef.current && !groupsDropdownRef.current.contains(e.target as Node)) {
+        setGroupsOpen(false);
       }
-      setActive(navLinks[0].label);
     }
-
-    updateActive();
-    window.addEventListener("scroll", updateActive, { passive: true });
-    return () => window.removeEventListener("scroll", updateActive);
-  }, [isHomePage]);
-
-  function scrollToSection(sectionId: string) {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 68;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
-  }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function handleNavClick(
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -60,26 +41,7 @@ export default function Navbar() {
   ) {
     e.preventDefault();
     setMenuOpen(false);
-
-    if (link.route) {
-      navigate(link.route);
-      return;
-    }
-
-    if (!isHomePage) {
-      navigate("/");
-      // after navigation, scroll on next tick once sections mount
-      setTimeout(() => scrollToSection(link.sectionId), 120);
-      return;
-    }
-
-    setActive(link.label);
-    isNavigating.current = true;
-    if (navTimer.current) clearTimeout(navTimer.current);
-    navTimer.current = setTimeout(() => {
-      isNavigating.current = false;
-    }, 800);
-    scrollToSection(link.sectionId);
+    navigate(link.route ?? "/");
   }
 
   return (
@@ -145,9 +107,150 @@ export default function Navbar() {
           className="hidden md:flex"
         >
           {navLinks.map((link) => {
-            const isActive =
-              (link.route && location.pathname === link.route) ||
-              (!link.route && isHomePage && active === link.label);
+            const isActive = link.route
+              ? location.pathname === link.route
+              : false;
+
+            if (link.label === "Our Groups") {
+              return (
+                <div
+                  key={link.label}
+                  ref={groupsDropdownRef}
+                  style={{ position: "relative" }}
+                  onMouseEnter={() => setGroupsOpen(true)}
+                  onMouseLeave={() => setGroupsOpen(false)}
+                >
+                  <a
+                    href={link.href}
+                    onClick={(e) => e.preventDefault()}
+                    style={{
+                      position: "relative",
+                      padding: "0.45rem 0.65rem",
+                      fontSize: "0.78rem",
+                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? "#1a3270" : "#475569",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                      transition: "color 0.2s",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.2rem",
+                    }}
+                  >
+                    {link.label}
+                    <ChevronDown
+                      size={13}
+                      style={{
+                        transition: "transform 0.2s",
+                        transform: groupsOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      }}
+                    />
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        style={{
+                          position: "absolute",
+                          bottom: "-2px",
+                          left: "0.65rem",
+                          right: "0.65rem",
+                          height: "2.5px",
+                          borderRadius: "2px",
+                          backgroundColor: "#1a3270",
+                        }}
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </a>
+
+                  <AnimatePresence>
+                    {groupsOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        style={{
+                          position: "absolute",
+                          top: "calc(100% + 4px)",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          backgroundColor: "#ffffff",
+                          borderRadius: "0.6rem",
+                          boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+                          border: "1px solid #e2e8f0",
+                          minWidth: "240px",
+                          zIndex: 100,
+                          overflow: "hidden",
+                        }}
+                      >
+                        {groups.map((group) => {
+                          const Icon = group.icon;
+                          return (
+                            <Link
+                              key={group.id}
+                              to={`/groups/${group.slug}`}
+                              onClick={() => setGroupsOpen(false)}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.75rem",
+                                padding: "0.65rem 1rem",
+                                textDecoration: "none",
+                                borderBottom: "1px solid #f1f5f9",
+                                transition: "background 0.15s",
+                              }}
+                              onMouseEnter={(e) =>
+                                ((e.currentTarget as HTMLElement).style.backgroundColor = "#f8fafc")
+                              }
+                              onMouseLeave={(e) =>
+                                ((e.currentTarget as HTMLElement).style.backgroundColor = "transparent")
+                              }
+                            >
+                              <span
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  width: "30px",
+                                  height: "30px",
+                                  borderRadius: "0.4rem",
+                                  backgroundColor: group.lightColor,
+                                  flexShrink: 0,
+                                }}
+                              >
+                                <Icon size={15} color={group.color} />
+                              </span>
+                              <div>
+                                <div
+                                  style={{
+                                    fontSize: "0.78rem",
+                                    fontWeight: 600,
+                                    color: "#1e293b",
+                                    lineHeight: 1.3,
+                                  }}
+                                >
+                                  {group.abbreviation}
+                                </div>
+                                <div
+                                  style={{
+                                    fontSize: "0.68rem",
+                                    color: "#64748b",
+                                    lineHeight: 1.3,
+                                  }}
+                                >
+                                  {group.name}
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
+
             return (
               <a
                 key={link.label}
@@ -195,16 +298,11 @@ export default function Navbar() {
           }}
         >
           <motion.a
-            href="#donate"
+            href="/"
             onClick={(e) => {
               e.preventDefault();
               setMenuOpen(false);
-              if (!isHomePage) {
-                navigate("/");
-                setTimeout(() => scrollToSection("donate"), 120);
-                return;
-              }
-              scrollToSection("donate");
+              navigate("/");
             }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
@@ -260,9 +358,100 @@ export default function Navbar() {
           >
             <div style={{ padding: "0.75rem 1.5rem 1rem" }}>
               {navLinks.map((link) => {
-                const isActive =
-                  (link.route && location.pathname === link.route) ||
-                  (!link.route && isHomePage && active === link.label);
+                const isActive = link.route
+                  ? location.pathname === link.route
+                  : false;
+
+                if (link.label === "Our Groups") {
+                  return (
+                    <div key={link.label}>
+                      <button
+                        onClick={() => setMobileGroupsOpen((v) => !v)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          width: "100%",
+                          padding: "0.6rem 0",
+                          fontSize: "0.88rem",
+                          fontWeight: isActive ? 600 : 500,
+                          color: isActive ? "#1a3270" : "#475569",
+                          background: "none",
+                          border: "none",
+                          borderBottom: "1px solid #f1f5f9",
+                          cursor: "pointer",
+                          textAlign: "left",
+                        }}
+                      >
+                        {link.label}
+                        <ChevronDown
+                          size={15}
+                          style={{
+                            transition: "transform 0.2s",
+                            transform: mobileGroupsOpen ? "rotate(180deg)" : "rotate(0deg)",
+                          }}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {mobileGroupsOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2, ease: "easeInOut" }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            {groups.map((group) => {
+                              const Icon = group.icon;
+                              return (
+                                <Link
+                                  key={group.id}
+                                  to={`/groups/${group.slug}`}
+                                  onClick={() => {
+                                    setMenuOpen(false);
+                                    setMobileGroupsOpen(false);
+                                  }}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.7rem",
+                                    padding: "0.5rem 0 0.5rem 0.75rem",
+                                    textDecoration: "none",
+                                    borderBottom: "1px solid #f8fafc",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      width: "26px",
+                                      height: "26px",
+                                      borderRadius: "0.35rem",
+                                      backgroundColor: group.lightColor,
+                                      flexShrink: 0,
+                                    }}
+                                  >
+                                    <Icon size={13} color={group.color} />
+                                  </span>
+                                  <div>
+                                    <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#1e293b" }}>
+                                      {group.abbreviation}
+                                    </div>
+                                    <div style={{ fontSize: "0.68rem", color: "#64748b" }}>
+                                      {group.name}
+                                    </div>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
                 return (
                   <a
                     key={link.label}

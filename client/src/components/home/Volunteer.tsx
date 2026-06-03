@@ -1,5 +1,7 @@
+import { useState } from "react";
 import handImg from "../../assets/image/hand.png";
 import { Heart, BookOpen, Users, Handshake } from "lucide-react";
+import VolunteerModal from "./VolunteerModal";
 
 const pillars = [
   { icon: Heart, label: "Make\nImpact" },
@@ -9,7 +11,10 @@ const pillars = [
 ];
 
 export default function Volunteer() {
+  const [showModal, setShowModal] = useState(false);
+
   return (
+    <>
     <section className="py-14 px-6 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-8">
 
@@ -25,12 +30,12 @@ export default function Volunteer() {
             Join our team of passionate volunteers and help us create a better
             tomorrow for all.
           </p>
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 bg-[#e63975] hover:bg-[#c72d60] text-white text-sm font-semibold px-6 py-3 rounded-full transition-colors duration-200"
+          <button
+            onClick={() => setShowModal(true)}
+            className="inline-flex items-center gap-2 bg-[#e63975] hover:bg-[#c72d60] text-white text-sm font-semibold px-6 py-3 rounded-full transition-colors duration-200 cursor-pointer"
           >
             Join Us Today <span aria-hidden>→</span>
-          </a>
+          </button>
         </div>
 
         {/* Center — pillar icons */}
@@ -58,5 +63,8 @@ export default function Volunteer() {
 
       </div>
     </section>
+
+    {showModal && <VolunteerModal onClose={() => setShowModal(false)} />}
+    </>
   );
 }

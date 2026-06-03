@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
-import { Heart, Target, Lightbulb, Shield, Users, Globe } from "lucide-react";
+import {
+  Heart, Shield, Users, GraduationCap, Handshake, Leaf,
+  Search, Lightbulb, Zap, BarChart2,
+} from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -11,84 +14,108 @@ const fadeUp = {
 };
 
 const values = [
-  {
-    icon: Heart,
-    title: "Compassion",
-    desc: "We lead with empathy, ensuring every person we serve feels seen, heard, and valued.",
-    color: "bg-pink-100",
-    iconColor: "text-pink-500",
-  },
-  {
-    icon: Target,
-    title: "Impact",
-    desc: "Every action is measured by the tangible difference it creates in people's lives.",
-    color: "bg-orange-100",
-    iconColor: "text-[#f97316]",
-  },
-  {
-    icon: Lightbulb,
-    title: "Innovation",
-    desc: "We seek new and creative approaches to solve the complex challenges communities face.",
-    color: "bg-yellow-100",
-    iconColor: "text-yellow-600",
-  },
-  {
-    icon: Shield,
-    title: "Integrity",
-    desc: "We operate with full transparency and accountability in all that we do.",
-    color: "bg-blue-100",
-    iconColor: "text-blue-600",
-  },
-  {
-    icon: Users,
-    title: "Community",
-    desc: "We believe in the power of people coming together to uplift one another.",
-    color: "bg-green-100",
-    iconColor: "text-green-600",
-  },
-  {
-    icon: Globe,
-    title: "Inclusivity",
-    desc: "We serve without discrimination — every child, family and community matters.",
-    color: "bg-purple-100",
-    iconColor: "text-purple-600",
-  },
+  { icon: Heart,        label: "Compassion",    desc: "We care deeply about people and their needs.",                     bg: "bg-purple-100",  color: "text-purple-600" },
+  { icon: Shield,       label: "Integrity",     desc: "We act honestly, transparently and responsibly.",                 bg: "bg-green-100",   color: "text-green-600" },
+  { icon: Users,        label: "Inclusivity",   desc: "We embrace diversity and respect every individual.",              bg: "bg-orange-100",  color: "text-orange-500" },
+  { icon: GraduationCap,label: "Empowerment",   desc: "We equip people with skills, knowledge and confidence.",         bg: "bg-violet-100",  color: "text-violet-600" },
+  { icon: Handshake,    label: "Collaboration", desc: "We work together with partners and communities.",                 bg: "bg-pink-100",    color: "text-pink-600" },
+  { icon: Leaf,         label: "Sustainability",desc: "We build lasting solutions for a better future.",                bg: "bg-teal-100",    color: "text-teal-600" },
+];
+
+const approach = [
+  { icon: Search,    title: "Identify Needs",     desc: "Understanding the real challenges faced by communities." },
+  { icon: Lightbulb, title: "Plan & Collaborate", desc: "Designing effective programs with partners and experts." },
+  { icon: Zap,       title: "Take Action",        desc: "Implementing projects that create real and measurable change." },
+  { icon: BarChart2, title: "Measure Impact",     desc: "Tracking results and continuously improving our work." },
 ];
 
 export default function AboutValues() {
   return (
-    <section className="py-20 px-6 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[#f97316] mb-2">
+    <section className="py-20 px-6 bg-[#f8fafc] overflow-hidden">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 relative">
+
+        {/* Left — Our Values */}
+        <div className="flex-1">
+          <motion.p
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+            className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-2"
+          >
+            Our Values
+          </motion.p>
+          <motion.h2
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
+            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-8"
+          >
             What Guides Us
-          </p>
-          <h2 className="text-2xl xl:text-3xl font-bold text-[#1e293b]">
-            Our Core Values
-          </h2>
+          </motion.h2>
+
+          <div className="grid grid-cols-3 gap-6">
+            {values.map(({ icon: Icon, label, desc, bg, color }, i) => (
+              <motion.div
+                key={label}
+                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.5}
+                className="flex flex-col items-center text-center"
+              >
+                <div className={`w-14 h-14 rounded-full ${bg} flex items-center justify-center mb-3 shadow-sm`}>
+                  <Icon size={22} className={color} strokeWidth={1.8} />
+                </div>
+                <h3 className="text-sm font-bold text-[#1a1a4b] mb-1">{label}</h3>
+                <p className="text-xs text-[#64748b] leading-relaxed">{desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {values.map(({ icon: Icon, title, desc, color, iconColor }, i) => (
-            <motion.div
-              key={title}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={i * 0.5}
-              className="bg-white border border-[#e2e8f0] rounded-2xl p-6 hover:shadow-md transition-shadow"
-            >
-              <div
-                className={`w-12 h-12 rounded-full ${color} flex items-center justify-center mb-4`}
+        {/* Right — Our Approach */}
+        <div className="flex-1 relative">
+          <motion.p
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+            className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-2"
+          >
+            Our Approach
+          </motion.p>
+          <motion.h2
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
+            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-8"
+          >
+            How We Work
+          </motion.h2>
+
+          <div className="flex flex-col gap-5">
+            {approach.map(({ icon: Icon, title, desc }, i) => (
+              <motion.div
+                key={title}
+                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i + 2}
+                className="flex items-start gap-4"
               >
-                <Icon size={22} className={iconColor} />
-              </div>
-              <h3 className="font-bold text-[#1e293b] mb-2">{title}</h3>
-              <p className="text-sm text-[#475569] leading-relaxed">{desc}</p>
-            </motion.div>
-          ))}
+                <div className="w-11 h-11 rounded-full bg-[#e8f0ff] flex items-center justify-center shrink-0 mt-0.5">
+                  <Icon size={18} className="text-[#1a3270]" strokeWidth={1.8} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-[#1a1a4b] mb-1">{title}</h3>
+                  <p className="text-xs text-[#64748b] leading-relaxed">{desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Blue tree + silhouette decoration */}
+          <svg
+            className="absolute -right-8 bottom-0 w-28 h-52 opacity-20 pointer-events-none hidden lg:block"
+            viewBox="0 0 100 200"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M50 180 L50 100" stroke="#1a3270" strokeWidth="4" strokeLinecap="round" />
+            <path d="M50 100 C50 100, 20 70, 30 40 C35 25, 50 20, 50 20 C50 20, 65 25, 70 40 C80 70, 50 100, 50 100Z" fill="#1a3270" />
+            <path d="M50 130 C50 130, 28 115, 32 95 C34 85, 50 80, 50 80 C50 80, 66 85, 68 95 C72 115, 50 130, 50 130Z" fill="#1a3270" />
+            <ellipse cx="25" cy="188" rx="20" ry="4" fill="#1a3270" opacity="0.3" />
+            <ellipse cx="75" cy="188" rx="20" ry="4" fill="#1a3270" opacity="0.3" />
+            <rect x="20" y="172" width="6" height="16" rx="3" fill="#1a3270" />
+            <rect x="74" y="172" width="6" height="16" rx="3" fill="#1a3270" />
+          </svg>
         </div>
+
       </div>
     </section>
   );

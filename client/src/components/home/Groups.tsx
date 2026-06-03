@@ -47,7 +47,7 @@ export default function Groups() {
               lineHeight: 1.2,
             }}
           >
-            Five Groups, One Mission
+            Club of Society
           </h2>
           <p
             style={{
@@ -84,7 +84,11 @@ export default function Groups() {
               >
                 <Link
                   to={`/groups/${group.slug}`}
-                  style={{ textDecoration: "none", display: "block", height: "100%" }}
+                  style={{
+                    textDecoration: "none",
+                    display: "block",
+                    height: "100%",
+                  }}
                 >
                   <motion.div
                     whileHover={{

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, GraduationCap, Leaf, HandHeart } from "lucide-react";
+import { Users, GraduationCap, Globe, HandHeart, Clock } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -11,38 +11,19 @@ const fadeUp = {
 };
 
 const stats = [
-  { icon: Users, value: "25K+", label: "Lives\nImpacted" },
-  { icon: GraduationCap, value: "10K+", label: "Children\nEducated" },
-  { icon: Leaf, value: "150+", label: "Communities\nServed" },
-  { icon: HandHeart, value: "500+", label: "Volunteers\nWorldwide" },
+  { icon: Users,         value: "25K+",  label: "Lives Impacted",       bg: "bg-blue-100",   color: "text-blue-600" },
+  { icon: GraduationCap, value: "10K+",  label: "Children Educated",    bg: "bg-green-100",  color: "text-green-600" },
+  { icon: Globe,         value: "150+",  label: "Communities Served",   bg: "bg-orange-100", color: "text-orange-500" },
+  { icon: HandHeart,     value: "500+",  label: "Volunteers Worldwide", bg: "bg-purple-100", color: "text-purple-600" },
+  { icon: Clock,         value: "12+",   label: "Years of Service",     bg: "bg-pink-100",   color: "text-pink-600" },
 ];
 
 export default function AboutStats() {
   return (
-    <section className="py-20 px-6 bg-[#0f2057]">
-      <div className="max-w-7xl mx-auto text-center">
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="text-sm font-semibold uppercase tracking-widest text-[#f97316] mb-2"
-        >
-          Our Impact
-        </motion.p>
-        <motion.h2
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={1}
-          className="text-2xl xl:text-3xl font-bold text-white mb-12"
-        >
-          Numbers That Tell Our Story
-        </motion.h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map(({ icon: Icon, value, label }, i) => (
+    <section className="py-16 px-6 bg-[#f8fafc] border-y border-[#e2e8f0]">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
+          {stats.map(({ icon: Icon, value, label, bg, color }, i) => (
             <motion.div
               key={value}
               variants={fadeUp}
@@ -50,15 +31,15 @@ export default function AboutStats() {
               whileInView="visible"
               viewport={{ once: true }}
               custom={i}
-              className="flex flex-col items-center gap-3 bg-white/10 border border-white/15 rounded-2xl py-8 px-4"
+              className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 shadow-sm border border-[#e2e8f0]"
             >
-              <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center">
-                <Icon size={22} className="text-white" />
+              <div className={`w-12 h-12 rounded-full ${bg} flex items-center justify-center shrink-0`}>
+                <Icon size={22} className={color} strokeWidth={1.8} />
               </div>
-              <span className="text-3xl font-bold text-white">{value}</span>
-              <span className="text-xs text-white/60 leading-tight whitespace-pre-line font-medium">
-                {label}
-              </span>
+              <div>
+                <p className="text-2xl font-extrabold text-[#1a1a4b] leading-none mb-0.5">{value}</p>
+                <p className="text-xs text-[#64748b] font-medium leading-tight">{label}</p>
+              </div>
             </motion.div>
           ))}
         </div>

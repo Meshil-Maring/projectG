@@ -1,48 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const stories = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80",
-    quote:
-      "Thanks to the scholarship, I am now able to study and dream of a better future.",
-    name: "Aarav Kumar",
-    role: "Scholarship Recipient",
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=120&q=80",
-    quote:
-      "The support we received helped us rebuild our home and live with dignity again.",
-    name: "Sunita Devi",
-    role: "Community Beneficiary",
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80",
-    quote:
-      "Volunteering here has been the most meaningful experience of my life.",
-    name: "Rohan Mehta",
-    role: "Volunteer",
-  },
-  {
-    id: 4,
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80",
-    quote:
-      "Every contribution transformed not just my child's future but our entire community.",
-    name: "Priya Sharma",
-    role: "Parent Beneficiary",
-  },
-  {
-    id: 5,
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&q=80",
-    quote:
-      "I never imagined clean water would change everything — it truly gave us a new life.",
-    name: "Meera Nair",
-    role: "Village Resident",
-  },
-];
+import { Link } from "react-router-dom";
+import { stories } from "../../data/stories";
 
 const VISIBLE = 3;
 
@@ -68,12 +27,12 @@ export default function StoriesOfChange() {
               Real People. Real Impact.
             </h2>
           </div>
-          <a
-            href="#"
+          <Link
+            to="/stories"
             className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[color:var(--color-primary-light)] hover:underline mt-1 shrink-0"
           >
             Read More Stories <span aria-hidden>→</span>
-          </a>
+          </Link>
         </div>
 
         {/* Cards + nav wrapper */}
