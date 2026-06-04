@@ -73,16 +73,16 @@ export default function AboutTeam() {
                 <h3 className="text-sm font-bold text-[#1a1a4b] leading-tight mb-0.5">{name}</h3>
                 <p className="text-[11px] text-[#64748b] mb-3">{role}</p>
 
-                {/* Social icons */}
+                {/* Social icons — placeholder, no profiles yet */}
                 <div className="flex items-center gap-2">
                   {[FacebookIcon, LinkedinIcon, TwitterIcon].map((Icon, idx) => (
-                    <a
+                    <span
                       key={idx}
-                      href="#"
-                      className="w-7 h-7 rounded-full bg-[#f0f4ff] flex items-center justify-center text-[#1a3270] hover:bg-[#1a3270] hover:text-white transition-colors"
+                      title="Coming soon"
+                      className="w-7 h-7 rounded-full bg-[#f0f4ff] flex items-center justify-center text-[#1a3270] opacity-40 cursor-not-allowed"
                     >
                       <Icon />
-                    </a>
+                    </span>
                   ))}
                 </div>
               </motion.div>

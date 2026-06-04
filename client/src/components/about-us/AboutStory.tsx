@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Play, Calendar, MapPin, FileCheck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import familyImg from "../../assets/image/family.jpeg";
 
 const fadeUp = {
@@ -18,6 +19,8 @@ const infoBadges = [
 ];
 
 export default function AboutStory() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 px-6 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-14 relative">
@@ -35,7 +38,11 @@ export default function AboutStory() {
             alt="Our story"
             className="w-full h-72 lg:h-96 object-cover"
           />
-          <button className="absolute inset-0 flex items-center justify-center group">
+          <button
+            onClick={() => navigate("/stories")}
+            className="absolute inset-0 flex items-center justify-center group"
+            aria-label="Watch our stories"
+          >
             <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
               <Play size={22} className="text-[#1a3270] ml-1" fill="#1a3270" />
             </div>

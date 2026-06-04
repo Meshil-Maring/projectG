@@ -11,6 +11,8 @@ import CausesPage from "./pages/CausesPage";
 import ContactPage from "./pages/ContactPage";
 import GetInvolvedPage from "./pages/GetInvolvedPage";
 import DonatePage from "./pages/DonatePage";
+import ImpactPage from "./pages/ImpactPage";
+import LacPage from "./pages/LacPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -33,6 +35,9 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/get-involved" element={<GetInvolvedPage />} />
         <Route path="/donate" element={<DonatePage />} />
+        <Route path="/impact" element={<ImpactPage />} />
+        <Route path="/lac" element={<LacPage />} />
+        <Route path="/groups/lac" element={<LacPage />} />
         <Route path="/groups/:slug" element={<GroupPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

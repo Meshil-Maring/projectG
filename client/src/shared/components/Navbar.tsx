@@ -10,7 +10,7 @@ const navLinks = [
   { label: "About Us", href: "/about-us", route: "/about-us" },
   { label: "Our Groups", href: "#groups", route: null },
   { label: "Causes", href: "/causes", route: "/causes" },
-  { label: "Impact", href: "/", route: null },
+  { label: "Impact", href: "/impact", route: "/impact" },
   { label: "Stories", href: "/stories", route: "/stories" },
   { label: "Notice", href: "/notice", route: "/notice" },
   { label: "Get Involved", href: "/get-involved", route: "/get-involved" },

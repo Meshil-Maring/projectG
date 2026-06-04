@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import familyImg from "../../assets/image/family.jpeg";
 import {
   Users,
@@ -49,7 +50,8 @@ const helpItems = [
     iconColor: "text-pink-500",
     title: "Donate",
     desc: "Your contribution helps us change lives.",
-    sectionId: "donate",
+    route: "/donate",
+    sectionId: null,
   },
   {
     icon: HandHelping,
@@ -57,6 +59,7 @@ const helpItems = [
     iconColor: "text-green-600",
     title: "Volunteer",
     desc: "Give your time and inspire others.",
+    route: null,
     sectionId: "get-involved",
   },
   {
@@ -65,6 +68,7 @@ const helpItems = [
     iconColor: "text-purple-600",
     title: "Fundraise",
     desc: "Start a fundraiser and spread the word.",
+    route: null,
     sectionId: "causes",
   },
   {
@@ -73,12 +77,14 @@ const helpItems = [
     iconColor: "text-indigo-600",
     title: "Share",
     desc: "Share our mission with your network.",
+    route: null,
     sectionId: null,
   },
 ];
 
 export default function Mission() {
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <section className="py-16 px-8 bg-white">
@@ -135,12 +141,14 @@ export default function Mission() {
           <p className="text-xs font-bold uppercase tracking-widest text-[#1e293b]">
             How You Can Help
           </p>
-          {helpItems.map(({ icon: Icon, iconBg, iconColor, title, desc, sectionId }) => (
+          {helpItems.map(({ icon: Icon, iconBg, iconColor, title, desc, route, sectionId }) => (
             <button
               key={title}
               type="button"
               onClick={() =>
-                sectionId
+                route
+                  ? navigate(route)
+                  : sectionId
                   ? scrollToSection(sectionId)
                   : handleShare(setCopied)
               }

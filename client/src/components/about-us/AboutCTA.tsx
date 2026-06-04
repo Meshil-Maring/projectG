@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Heart, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import handImg from "../../assets/image/hand.png";
 
 const fadeUp = {
@@ -60,18 +61,18 @@ export default function AboutCTA() {
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <a
-            href="/#get-involved"
+          <Link
+            to="/get-involved"
             className="inline-flex items-center gap-2 border-2 border-white text-white font-semibold text-sm px-8 py-3 rounded-full hover:bg-white hover:text-[#1a3270] transition-colors duration-200"
           >
             Join Us <ArrowRight size={15} />
-          </a>
-          <a
-            href="/#donate"
+          </Link>
+          <Link
+            to="/donate"
             className="inline-flex items-center gap-2 bg-white text-[#1a3270] font-semibold text-sm px-8 py-3 rounded-full hover:bg-blue-50 transition-colors duration-200 shadow-md"
           >
             Donate Now <Heart size={14} fill="#1a3270" strokeWidth={0} />
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>

@@ -166,6 +166,7 @@ export default function Hero() {
                   backgroundColor: "rgba(26,50,112,0.06)",
                 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={() => navigate("/get-involved")}
                 style={{
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: 600,

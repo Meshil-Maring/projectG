@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowLeft, Users, MapPin, Target, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../shared/components/Navbar";
 import Footer from "../shared/components/Footer";
 import { causes, categories, type Cause } from "../data/causes";
@@ -116,6 +116,7 @@ function CauseCard({
   cause: Cause;
   onOpen: () => void;
 }) {
+  const navigate = useNavigate();
   const formatted = new Intl.NumberFormat("en-IN").format(cause.amountRaised);
   const goalFormatted = new Intl.NumberFormat("en-IN").format(cause.goal);
 
@@ -188,6 +189,7 @@ function CauseCard({
             Learn More
           </button>
           <button
+            onClick={() => navigate("/donate")}
             className="flex-1 py-2 rounded-lg text-xs font-semibold text-white transition-colors"
             style={{ backgroundColor: cause.categoryColor }}
           >
@@ -206,6 +208,7 @@ function CauseModal({
   cause: Cause;
   onClose: () => void;
 }) {
+  const navigate = useNavigate();
   const formatted = new Intl.NumberFormat("en-IN").format(cause.amountRaised);
   const goalFormatted = new Intl.NumberFormat("en-IN").format(cause.goal);
 
@@ -294,6 +297,7 @@ function CauseModal({
           </div>
 
           <button
+            onClick={() => navigate("/donate")}
             className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: cause.categoryColor }}
           >

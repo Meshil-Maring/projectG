@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 export interface CampaignCardData {
   id: string | number;
@@ -72,6 +73,15 @@ export default function CampaignCard({
             style={{ width: `${clamped}%`, backgroundColor: categoryColor }}
           />
         </div>
+
+        {/* Donate button */}
+        <Link
+          to="/donate"
+          className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-90"
+          style={{ backgroundColor: categoryColor }}
+        >
+          Donate Now
+        </Link>
       </div>
     </div>
   );

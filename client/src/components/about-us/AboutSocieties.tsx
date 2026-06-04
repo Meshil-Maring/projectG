@@ -9,16 +9,17 @@ import {
 } from "lucide-react";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 32 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" },
+    transition: { delay: i * 0.08, duration: 0.55, ease: "easeOut" },
   }),
 };
 
 const societies = [
   {
+    number: "01",
     icon: Heart,
     name: "Medical Awareness Society",
     color: "#c2410c",
@@ -33,10 +34,11 @@ const societies = [
     ],
   },
   {
+    number: "02",
     icon: PlayCircle,
     name: "YouTube & Digital Outreach",
-    color: "#1a3270",
-    lightColor: "#eef1fb",
+    color: "#1d4ed8",
+    lightColor: "#eff6ff",
     gradientFrom: "#1a3270",
     gradientTo: "#2563eb",
     activities: [
@@ -45,10 +47,11 @@ const societies = [
     ],
   },
   {
+    number: "03",
     icon: GraduationCap,
     name: "Human Resource Development Society",
     color: "#15803d",
-    lightColor: "#edf7f1",
+    lightColor: "#f0fdf4",
     gradientFrom: "#15803d",
     gradientTo: "#16a34a",
     activities: [
@@ -58,10 +61,11 @@ const societies = [
     ],
   },
   {
+    number: "04",
     icon: Trophy,
     name: "Competitive World Group",
     color: "#0f766e",
-    lightColor: "#e8f7f6",
+    lightColor: "#f0fdfa",
     gradientFrom: "#0f766e",
     gradientTo: "#0d9488",
     activities: [
@@ -71,10 +75,11 @@ const societies = [
     ],
   },
   {
+    number: "05",
     icon: Globe,
     name: "Foundation for Socio-Economic Development",
     color: "#6d28d9",
-    lightColor: "#f3f0ff",
+    lightColor: "#faf5ff",
     gradientFrom: "#6d28d9",
     gradientTo: "#7c3aed",
     activities: [
@@ -87,16 +92,17 @@ const societies = [
 
 export default function AboutSocieties() {
   return (
-    <section className="py-20 px-6 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-14">
+    <section className="py-24 px-6 bg-surface overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+
+        {/* ── Section header ── */}
+        <div className="text-center mb-16">
           <motion.p
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-2"
+            className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-3"
           >
             How We Operate
           </motion.p>
@@ -107,8 +113,9 @@ export default function AboutSocieties() {
             viewport={{ once: true }}
             custom={1}
             className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-4"
+            style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Our Societies & Clubs
+            Our Societies &amp; Clubs
           </motion.h2>
           <div className="w-12 h-1 bg-[#1a3270] rounded mx-auto mb-5" />
           <motion.p
@@ -117,66 +124,83 @@ export default function AboutSocieties() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={2}
-            className="text-sm text-[#64748b] leading-relaxed max-w-xl mx-auto"
+            className="text-sm text-[#64748b] leading-relaxed max-w-lg mx-auto"
           >
-            PROJECT 'G' Foundation operates through several dedicated
-            societies and clubs, each with a special focus area to maximize
+            PROJECT 'G' Foundation operates through five dedicated societies
+            and clubs, each with a special focus area to drive meaningful
             community impact.
           </motion.p>
         </div>
 
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* ── Cards grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {societies.map(
-            (
-              { icon: Icon, name, color, lightColor, gradientFrom, gradientTo, activities },
-              i
-            ) => (
+            ({ number, icon: Icon, name, color, lightColor, gradientFrom, gradientTo, activities }, i) => (
               <motion.div
                 key={name}
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-                custom={i * 0.5}
-                className="bg-white rounded-2xl shadow-md border border-[#f1f5f9] overflow-hidden flex flex-col"
+                viewport={{ once: true, margin: "-50px" }}
+                custom={i}
+                className={`bg-white rounded-2xl border border-[#e8edf5] shadow-sm overflow-hidden flex flex-col${
+                  i === 4 ? " md:col-span-2 md:max-w-xl md:mx-auto md:w-full" : ""
+                }`}
               >
-                {/* Top gradient bar */}
+                {/* Gradient top strip */}
                 <div
-                  className="h-1.5 w-full"
+                  className="h-1.5 w-full shrink-0"
                   style={{
                     background: `linear-gradient(90deg, ${gradientFrom}, ${gradientTo})`,
                   }}
                 />
 
-                <div className="p-6 flex flex-col flex-1">
-                  {/* Icon */}
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 shrink-0"
-                    style={{ backgroundColor: lightColor }}
-                  >
-                    <Icon size={22} style={{ color }} strokeWidth={1.8} />
+                <div className="p-7 flex flex-col flex-1">
+                  {/* Top row: number badge + icon */}
+                  <div className="flex items-center justify-between mb-5">
+                    <span
+                      className="text-4xl font-black leading-none select-none"
+                      style={{
+                        color: `${color}20`,
+                        fontFamily: "'Poppins', sans-serif",
+                        letterSpacing: "-0.03em",
+                      }}
+                    >
+                      {number}
+                    </span>
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: lightColor }}
+                    >
+                      <Icon size={20} style={{ color }} strokeWidth={1.9} />
+                    </div>
                   </div>
 
                   {/* Society name */}
                   <h3
-                    className="font-extrabold text-[#1a1a4b] text-base leading-snug mb-4"
+                    className="text-base font-extrabold text-[#1a1a4b] leading-snug mb-5"
                     style={{ fontFamily: "'Poppins', sans-serif" }}
                   >
                     {name}
                   </h3>
 
-                  {/* Activities list */}
-                  <ul className="flex flex-col gap-2.5 flex-1">
+                  {/* Divider */}
+                  <div
+                    className="h-px w-full mb-5"
+                    style={{ backgroundColor: `${color}18` }}
+                  />
+
+                  {/* Activities */}
+                  <ul className="flex flex-col gap-3 flex-1">
                     {activities.map((activity) => (
-                      <li key={activity} className="flex items-start gap-2.5">
+                      <li key={activity} className="flex items-start gap-3">
                         <CheckCircle2
-                          size={15}
+                          size={14}
                           className="shrink-0 mt-0.5"
                           style={{ color }}
-                          strokeWidth={2}
+                          strokeWidth={2.2}
                         />
-                        <span className="text-xs text-[#64748b] leading-relaxed">
+                        <span className="text-sm text-body leading-snug">
                           {activity}
                         </span>
                       </li>
@@ -187,6 +211,7 @@ export default function AboutSocieties() {
             )
           )}
         </div>
+
       </div>
     </section>
   );

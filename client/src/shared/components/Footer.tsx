@@ -1,20 +1,26 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import Logo from "../../assets/image/logo.jpeg";
 
 const quickLinks = [
-  "About Us",
-  "Our Causes",
-  "Our Impact",
-  "Stories",
-  "Contact Us",
+  { label: "About Us", href: "/about-us" },
+  { label: "Our Causes", href: "/causes" },
+  { label: "Our Impact", href: "/impact" },
+  { label: "Stories", href: "/stories" },
+  { label: "Contact Us", href: "/contact" },
 ];
-const getInvolved = ["Donate", "Volunteer", "Fundraise", "Partner With Us"];
+const getInvolved = [
+  { label: "Donate", href: "/donate" },
+  { label: "Volunteer", href: "/get-involved" },
+  { label: "Fundraise", href: "/get-involved" },
+  { label: "Partner With Us", href: "/contact" },
+];
 const programs = [
-  "Education",
-  "Healthcare",
-  "Environment",
-  "Women Empowerment",
-  "Child Protection",
+  { label: "Education", href: "/causes" },
+  { label: "Healthcare", href: "/causes" },
+  { label: "Environment", href: "/causes" },
+  { label: "Women Empowerment", href: "/causes" },
+  { label: "Child Protection", href: "/causes" },
 ];
 
 const socialIcons = {
@@ -330,7 +336,13 @@ export default function Footer() {
   );
 }
 
-function FooterColumn({ title, links }: { title: string; links: string[] }) {
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { label: string; href: string }[];
+}) {
   return (
     <div>
       <h4
@@ -355,20 +367,27 @@ function FooterColumn({ title, links }: { title: string; links: string[] }) {
         }}
       >
         {links.map((link) => (
-          <li key={link}>
-            <motion.a
-              href="#"
-              whileHover={{ x: 3, color: "#ffffff" }}
-              style={{
-                fontSize: "0.8rem",
-                color: "rgba(255,255,255,0.6)",
-                textDecoration: "none",
-                display: "inline-block",
-                transition: "color 0.2s",
-              }}
-            >
-              {link}
-            </motion.a>
+          <li key={link.label}>
+            <motion.div whileHover={{ x: 3 }} style={{ display: "inline-block" }}>
+              <Link
+                to={link.href}
+                style={{
+                  fontSize: "0.8rem",
+                  color: "rgba(255,255,255,0.6)",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "#ffffff")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgba(255,255,255,0.6)")
+                }
+              >
+                {link.label}
+              </Link>
+            </motion.div>
           </li>
         ))}
       </ul>

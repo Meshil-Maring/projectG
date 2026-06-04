@@ -1,5 +1,6 @@
 import earthImg from "../../assets/image/earth.png";
 import { Users, GraduationCap, Leaf, HandHeart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const stats = [
   { icon: Users, value: "25K+", label: "Lives\nImpacted" },
@@ -48,6 +49,15 @@ export default function Impact() {
                 </span>
               </div>
             ))}
+          </div>
+
+          <div className="mt-8">
+            <Link
+              to="/impact"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#0d9488] text-white text-sm font-semibold hover:bg-[#0b7a70] transition-colors duration-200"
+            >
+              See Our Full Impact <span aria-hidden>→</span>
+            </Link>
           </div>
         </div>
       </div>

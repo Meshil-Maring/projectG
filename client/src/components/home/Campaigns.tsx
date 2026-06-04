@@ -1,4 +1,5 @@
 import { Leaf, BookOpen, HeartPulse, Utensils } from "lucide-react";
+import { Link } from "react-router-dom";
 import CampaignCard, {
   type CampaignCardData,
 } from "../../shared/components/CampaignCard";
@@ -78,6 +79,16 @@ export default function Campaigns() {
           {campaigns.map(({ id, ...card }) => (
             <CampaignCard key={id} {...card} />
           ))}
+        </div>
+
+        {/* View All */}
+        <div className="mt-10 flex justify-center">
+          <Link
+            to="/causes"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full border-2 border-[color:var(--color-secondary)] text-[color:var(--color-secondary)] text-sm font-semibold hover:bg-[color:var(--color-secondary)] hover:text-white transition-colors duration-200"
+          >
+            View All Causes <span aria-hidden>→</span>
+          </Link>
         </div>
       </div>
     </section>

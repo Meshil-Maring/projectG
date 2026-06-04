@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Heart, Zap, Shield, Globe } from "lucide-react";
+import { Link } from "react-router-dom";
 import donateImg from "../../assets/image/donate.png";
 
 const fadeUp = {
@@ -88,12 +89,12 @@ export default function GetInvolvedDonate() {
             viewport={{ once: true }}
             custom={6}
           >
-            <a
-              href="/#donate"
+            <Link
+              to="/donate"
               className="inline-flex items-center gap-2 bg-[#1a3270] hover:bg-[#0f1f4a] text-white text-sm font-semibold px-7 py-3.5 rounded-full transition-colors duration-200 shadow-md"
             >
               Donate Now <Heart size={14} fill="white" strokeWidth={0} />
-            </a>
+            </Link>
           </motion.div>
         </div>
 
