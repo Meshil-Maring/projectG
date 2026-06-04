@@ -2,6 +2,7 @@ import { Users, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "../../assets/image/herosection_small.png";
 import { INK_PATHS } from "./heroInkPaths";
+import { useNavigate } from "react-router-dom";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -22,6 +23,8 @@ const fadeIn = {
 };
 
 export default function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section
       className="relative w-full overflow-hidden"
@@ -140,6 +143,7 @@ export default function Hero() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={() => navigate("/about-us")}
                 style={{
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: 600,

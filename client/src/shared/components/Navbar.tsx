@@ -13,7 +13,7 @@ const navLinks = [
   { label: "Impact", href: "/", route: null },
   { label: "Stories", href: "/stories", route: "/stories" },
   { label: "Notice", href: "/notice", route: "/notice" },
-  { label: "Get Involved", href: "/", route: null },
+  { label: "Get Involved", href: "/get-involved", route: "/get-involved" },
   { label: "Contact", href: "/contact", route: "/contact" },
 ];
 
@@ -298,11 +298,11 @@ export default function Navbar() {
           }}
         >
           <motion.a
-            href="/"
+            href="/donate"
             onClick={(e) => {
               e.preventDefault();
               setMenuOpen(false);
-              navigate("/");
+              navigate("/donate");
             }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
