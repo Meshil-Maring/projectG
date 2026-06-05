@@ -1177,7 +1177,7 @@ export default function LacPage() {
             {otherGroups.map(({ slug, abbr, label, color, bg, Icon }) => (
               <Link
                 key={slug}
-                to={`/groups/${slug}`}
+                to={slug === "whg" ? "/whg" : slug === "hrds" ? "/hrds" : slug === "cwg" ? "/cwg" : slug === "fseds" ? "/fseds" : `/groups/${slug}`}
                 style={{
                   display: "flex",
                   flexDirection: "column" as const,
