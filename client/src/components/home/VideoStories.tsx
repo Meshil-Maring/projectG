@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
@@ -9,6 +9,7 @@ import {
   Heart,
   Users,
   Volume2,
+  VolumeX,
   Maximize2,
   LayoutGrid,
 } from "lucide-react";
@@ -17,40 +18,64 @@ import plantingImg from "../../assets/image/planting_tree.png";
 import donateImg from "../../assets/image/donate.png";
 import earthImg from "../../assets/image/earth.png";
 
-const videos = [
+type VideoEntry = {
+  id: number;
+  title: string;
+  description: string;
+  thumbnail: string;
+  youtubeId?: string;
+  videoUrl?: string;
+  duration: string;
+};
+
+const videos: VideoEntry[] = [
   {
     id: 1,
     title: "Every Step We Take, Creates a Better Tomorrow",
     description:
       "See how your support helps us bring hope, opportunities, and change to those who need it most.",
-    thumbnail: familyImg,
-    duration: "1:48",
+    thumbnail: familyImg as string,
+    youtubeId: "lArdfIpLlAA",
+    duration: "—",
   },
   {
     id: 2,
     title: "Planting Seeds of Change for Future Generations",
     description:
       "Join us as we transform barren landscapes into thriving green spaces for communities in need.",
-    thumbnail: plantingImg,
-    duration: "2:15",
+    thumbnail: plantingImg as string,
+    videoUrl:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    duration: "10:54",
   },
   {
     id: 3,
     title: "Your Donation Changes Lives Every Single Day",
     description:
       "Witness the real-world impact of every rupee donated — from meals to medicine to education.",
-    thumbnail: donateImg,
-    duration: "3:02",
+    thumbnail: donateImg as string,
+    videoUrl:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    duration: "0:15",
   },
   {
     id: 4,
     title: "Together We Build a Greener, Fairer World",
     description:
       "Our volunteers and partners unite across borders to create lasting change for vulnerable families.",
-    thumbnail: earthImg,
-    duration: "2:33",
+    thumbnail: earthImg as string,
+    videoUrl:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    duration: "12:14",
   },
 ];
+
+const fmt = (s: number) => {
+  if (!s || isNaN(s)) return "0:00";
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+};
 
 const features = [
   {
@@ -84,32 +109,68 @@ export default function VideoStories() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAllVideos, setShowAllVideos] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const current = videos[currentIndex];
+  const isYoutube = !!current.youtubeId;
 
-  const handlePrev = () => {
+  // Sync play/pause for native videos only
+  useEffect(() => {
+    if (isYoutube) return;
+    const video = videoRef.current;
+    if (!video) return;
+    if (isPlaying) {
+      video.play().catch(() => setIsPlaying(false));
+    } else {
+      video.pause();
+    }
+  }, [isPlaying, isYoutube]);
+
+  // Reset state when switching videos
+  useEffect(() => {
+    setIsPlaying(false);
+    setProgress(0);
+    setElapsed(0);
+  }, [currentIndex]);
+
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video || !video.duration) return;
+    setElapsed(video.currentTime);
+    setProgress((video.currentTime / video.duration) * 100);
+  };
+
+  const handlePrev = () =>
     setCurrentIndex((i) => (i - 1 + videos.length) % videos.length);
-    setIsPlaying(false);
-    setProgress(0);
-  };
 
-  const handleNext = () => {
+  const handleNext = () =>
     setCurrentIndex((i) => (i + 1) % videos.length);
-    setIsPlaying(false);
-    setProgress(0);
-  };
 
   const selectVideo = (index: number) => {
     setCurrentIndex(index);
-    setIsPlaying(false);
-    setProgress(0);
     setShowAllVideos(false);
   };
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const pct = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    if (videoRef.current?.duration) {
+      videoRef.current.currentTime = pct * videoRef.current.duration;
+    }
     setProgress(pct * 100);
+  };
+
+  const toggleMute = () => {
+    setMuted((m) => {
+      if (videoRef.current) videoRef.current.muted = !m;
+      return !m;
+    });
+  };
+
+  const handleFullscreen = () => {
+    videoRef.current?.requestFullscreen?.();
   };
 
   return (
@@ -118,7 +179,6 @@ export default function VideoStories() {
         <div className="flex flex-col lg:flex-row gap-10 items-center">
           {/* ── Video Player Column ── */}
           <div className="flex-1 w-full">
-            {/* Player + Prev/Next row */}
             <div className="flex items-center gap-3">
               {/* Prev */}
               <button
@@ -132,81 +192,134 @@ export default function VideoStories() {
               {/* Player */}
               <div className="relative flex-1 rounded-2xl overflow-hidden shadow-2xl bg-black group">
                 <div className="aspect-video relative">
-                  {/* Thumbnail */}
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={currentIndex}
-                      initial={{ opacity: 0, scale: 1.04 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.97 }}
-                      transition={{ duration: 0.35 }}
-                      src={current.thumbnail}
-                      alt={current.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </AnimatePresence>
 
-                  {/* Subtle dark overlay */}
-                  <div className="absolute inset-0 bg-black/25" />
-
-                  {/* Center Play / Pause */}
-                  <button
-                    onClick={() => setIsPlaying((p) => !p)}
-                    className="absolute inset-0 flex items-center justify-center"
-                    aria-label={isPlaying ? "Pause" : "Play"}
-                  >
-                    <motion.div
-                      key={isPlaying ? "pause" : "play"}
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.93 }}
-                      transition={{ duration: 0.2 }}
-                      className="w-16 h-16 rounded-full bg-white/90 shadow-lg flex items-center justify-center"
-                    >
-                      {isPlaying ? (
-                        <Pause size={26} className="text-slate-800" />
-                      ) : (
-                        <Play size={26} className="text-slate-800 ml-1" />
-                      )}
-                    </motion.div>
-                  </button>
-
-                  {/* Bottom Controls */}
-                  <div className="absolute bottom-0 left-0 right-0 px-4 pb-3 pt-8 bg-gradient-to-t from-black/70 to-transparent">
-                    {/* Progress bar */}
-                    <div
-                      className="flex-1 h-1 bg-white/30 rounded-full cursor-pointer mb-2 relative"
-                      onClick={handleProgressClick}
-                    >
-                      <div
-                        className="h-full bg-white rounded-full"
-                        style={{ width: `${progress}%` }}
+                  {/* ── YouTube: show iframe when playing, thumbnail when paused ── */}
+                  {isYoutube ? (
+                    isPlaying ? (
+                      <iframe
+                        key={`yt-${currentIndex}`}
+                        src={`https://www.youtube.com/embed/${current.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        title={current.title}
                       />
-                      {/* Scrubber dot */}
-                      <div
-                        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow"
-                        style={{ left: `${progress}%`, transform: "translate(-50%, -50%)" }}
+                    ) : (
+                      <>
+                        <img
+                          src={current.thumbnail}
+                          alt={current.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/25 pointer-events-none" />
+                        {/* Play overlay for YouTube */}
+                        <button
+                          onClick={() => setIsPlaying(true)}
+                          className="absolute inset-0 flex items-center justify-center"
+                          aria-label="Play"
+                        >
+                          <div className="w-20 h-20 rounded-full bg-red-600 shadow-xl flex items-center justify-center hover:bg-red-500 transition">
+                            <Play size={32} className="text-white ml-1.5" />
+                          </div>
+                        </button>
+                        {/* YouTube badge */}
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full font-medium">
+                          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-red-500">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                          </svg>
+                          YouTube
+                        </div>
+                      </>
+                    )
+                  ) : (
+                    /* ── Native video ── */
+                    <>
+                      <video
+                        key={currentIndex}
+                        ref={videoRef}
+                        src={current.videoUrl}
+                        poster={current.thumbnail}
+                        className="w-full h-full object-cover"
+                        onTimeUpdate={handleTimeUpdate}
+                        onEnded={() => {
+                          setIsPlaying(false);
+                          setProgress(100);
+                        }}
+                        muted={muted}
+                        playsInline
                       />
-                    </div>
 
-                    <div className="flex items-center justify-between">
+                      {/* Subtle overlay */}
+                      <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+
+                      {/* Center play/pause — fades while playing, reappears on hover */}
                       <button
                         onClick={() => setIsPlaying((p) => !p)}
-                        className="text-white hover:text-white/80 transition"
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+                          isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
+                        }`}
                         aria-label={isPlaying ? "Pause" : "Play"}
                       >
-                        {isPlaying ? <Pause size={15} /> : <Play size={15} />}
+                        <div className="w-16 h-16 rounded-full bg-white/90 shadow-lg flex items-center justify-center">
+                          {isPlaying ? (
+                            <Pause size={26} className="text-slate-800" />
+                          ) : (
+                            <Play size={26} className="text-slate-800 ml-1" />
+                          )}
+                        </div>
                       </button>
-                      <div className="flex items-center gap-3">
-                        <Volume2 size={15} className="text-white cursor-pointer hover:text-white/80" />
-                        <span className="text-white text-xs tabular-nums">
-                          0:00 / {current.duration}
-                        </span>
-                        <Maximize2 size={15} className="text-white cursor-pointer hover:text-white/80" />
+
+                      {/* Bottom Controls */}
+                      <div className="absolute bottom-0 left-0 right-0 px-4 pb-3 pt-8 bg-linear-to-t from-black/70 to-transparent">
+                        {/* Progress bar */}
+                        <div
+                          className="h-1 bg-white/30 rounded-full cursor-pointer mb-2 relative"
+                          onClick={handleProgressClick}
+                        >
+                          <div
+                            className="h-full bg-white rounded-full"
+                            style={{ width: `${progress}%` }}
+                          />
+                          <div
+                            className="absolute top-1/2 w-3 h-3 bg-white rounded-full shadow"
+                            style={{
+                              left: `${progress}%`,
+                              transform: "translate(-50%, -50%)",
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <button
+                            onClick={() => setIsPlaying((p) => !p)}
+                            className="text-white hover:text-white/80 transition"
+                            aria-label={isPlaying ? "Pause" : "Play"}
+                          >
+                            {isPlaying ? <Pause size={15} /> : <Play size={15} />}
+                          </button>
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={toggleMute}
+                              className="text-white hover:text-white/80 transition"
+                              aria-label={muted ? "Unmute" : "Mute"}
+                            >
+                              {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+                            </button>
+                            <span className="text-white text-xs tabular-nums">
+                              {fmt(elapsed)} / {current.duration}
+                            </span>
+                            <button
+                              onClick={handleFullscreen}
+                              className="text-white hover:text-white/80 transition"
+                              aria-label="Fullscreen"
+                            >
+                              <Maximize2 size={15} />
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -222,7 +335,6 @@ export default function VideoStories() {
 
             {/* Dots + See All */}
             <div className="flex flex-col items-center gap-3 mt-4">
-              {/* Dot indicators */}
               <div className="flex items-center gap-2">
                 {videos.map((_, i) => (
                   <button
@@ -238,7 +350,6 @@ export default function VideoStories() {
                 ))}
               </div>
 
-              {/* See All Videos */}
               <button
                 onClick={() => setShowAllVideos(true)}
                 className="flex items-center gap-2 px-5 py-2 bg-[#1e3a8a] text-white rounded-full text-sm font-semibold hover:bg-[#1e40af] transition shadow-sm"
@@ -259,59 +370,61 @@ export default function VideoStories() {
               variants={{
                 hidden: {},
                 visible: { transition: { staggerChildren: 0.08 } },
-                exit:   { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+                exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
               }}
               className="flex-1 max-w-lg"
             >
-              {/* Label */}
               <motion.p
                 variants={{
                   hidden: { opacity: 0, y: 16 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-                  exit:   { opacity: 0, y: -10, transition: { duration: 0.2 } },
+                  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
                 }}
                 className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-3"
               >
                 Watch Our Story
               </motion.p>
 
-              {/* Heading */}
               <motion.h2
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-                  exit:   { opacity: 0, y: -12, transition: { duration: 0.2 } },
+                  exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
                 }}
-                className="text-3xl xl:text-4xl font-bold text-[#1e293b] leading-snug mb-4"
+                className="text-3xl xl:text-4xl font-bold text-heading leading-snug mb-4"
               >
                 {current.title}
               </motion.h2>
 
-              {/* Description */}
               <motion.p
                 variants={{
                   hidden: { opacity: 0, y: 18 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-                  exit:   { opacity: 0, y: -10, transition: { duration: 0.2 } },
+                  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
                 }}
                 className="text-body leading-relaxed mb-8"
               >
                 {current.description}
               </motion.p>
 
-              {/* Feature icons */}
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: 16 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-                  exit:   { opacity: 0, y: -8, transition: { duration: 0.2 } },
+                  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
                 }}
                 className="flex gap-6 mb-8"
               >
                 {features.map(({ key, bgColor, iconColor, label, Icon, filled }) => (
                   <div key={key} className="flex flex-col items-center gap-2 text-center">
-                    <div className={`w-14 h-14 rounded-full ${bgColor} flex items-center justify-center`}>
-                      <Icon size={24} className={iconColor} fill={filled ? "currentColor" : "none"} />
+                    <div
+                      className={`w-14 h-14 rounded-full ${bgColor} flex items-center justify-center`}
+                    >
+                      <Icon
+                        size={24}
+                        className={iconColor}
+                        fill={filled ? "currentColor" : "none"}
+                      />
                     </div>
                     <span className="text-xs font-semibold text-heading whitespace-pre-line leading-tight">
                       {label}
@@ -320,19 +433,22 @@ export default function VideoStories() {
                 ))}
               </motion.div>
 
-              {/* Watch Video button */}
               <motion.button
                 variants={{
                   hidden: { opacity: 0, y: 14 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-                  exit:   { opacity: 0, y: -8, transition: { duration: 0.2 } },
+                  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
                 }}
                 onClick={() => setIsPlaying((p) => !p)}
                 className="flex items-center gap-3 px-6 py-3 bg-[#1e3a8a] text-white rounded-full font-semibold hover:bg-[#1e40af] transition shadow-md"
               >
-                Watch Video
+                {isPlaying ? "Pause Video" : "Watch Video"}
                 <span className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
-                  <Play size={12} className="text-[#1e3a8a] ml-0.5" />
+                  {isPlaying ? (
+                    <Pause size={12} className="text-[#1e3a8a]" />
+                  ) : (
+                    <Play size={12} className="text-[#1e3a8a] ml-0.5" />
+                  )}
                 </span>
               </motion.button>
             </motion.div>
@@ -359,13 +475,12 @@ export default function VideoStories() {
               className="bg-white rounded-2xl p-7 w-full max-w-3xl max-h-[85vh] overflow-y-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-1">
                     Watch Our Story
                   </p>
-                  <h3 className="text-xl font-bold text-[#1e293b]">All Videos</h3>
+                  <h3 className="text-xl font-bold text-heading">All Videos</h3>
                 </div>
                 <button
                   onClick={() => setShowAllVideos(false)}
@@ -376,7 +491,6 @@ export default function VideoStories() {
                 </button>
               </div>
 
-              {/* Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {videos.map((video, index) => (
                   <button
@@ -388,7 +502,6 @@ export default function VideoStories() {
                         : "border-transparent hover:border-[#1e3a8a]/40"
                     }`}
                   >
-                    {/* Thumbnail */}
                     <div className="aspect-video relative">
                       <img
                         src={video.thumbnail}
@@ -397,29 +510,42 @@ export default function VideoStories() {
                       />
                       <div className="absolute inset-0 bg-black/30 group-hover:bg-black/45 transition" />
 
-                      {/* Play circle */}
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-11 h-11 rounded-full bg-white/90 flex items-center justify-center shadow">
-                          <Play size={16} className="text-slate-800 ml-0.5" />
+                        <div
+                          className={`w-11 h-11 rounded-full flex items-center justify-center shadow ${
+                            video.youtubeId ? "bg-red-600" : "bg-white/90"
+                          }`}
+                        >
+                          <Play
+                            size={16}
+                            className={`ml-0.5 ${video.youtubeId ? "text-white" : "text-slate-800"}`}
+                          />
                         </div>
                       </div>
 
-                      {/* Active badge */}
+                      {/* YouTube badge in grid */}
+                      {video.youtubeId && (
+                        <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
+                          <svg viewBox="0 0 24 24" className="w-3 h-3 fill-red-500">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                          </svg>
+                          YouTube
+                        </div>
+                      )}
+
                       {index === currentIndex && (
                         <div className="absolute top-2 right-2 bg-[#f97316] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                           Now Playing
                         </div>
                       )}
 
-                      {/* Duration */}
                       <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-0.5 rounded-md tabular-nums">
                         {video.duration}
                       </div>
                     </div>
 
-                    {/* Caption */}
                     <div className="p-3 bg-white">
-                      <p className="text-sm font-semibold text-[#1e293b] line-clamp-2 leading-snug">
+                      <p className="text-sm font-semibold text-heading line-clamp-2 leading-snug">
                         {video.title}
                       </p>
                     </div>

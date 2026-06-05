@@ -1,4 +1,4 @@
-import { Leaf, BookOpen, HeartPulse, Utensils } from "lucide-react";
+import { Leaf, BookOpen, HeartPulse, Utensils, Scale, Compass } from "lucide-react";
 import { Link } from "react-router-dom";
 import CampaignCard, {
   type CampaignCardData,
@@ -57,6 +57,30 @@ const campaigns: CampaignCardData[] = [
     description: "Feed families and end food insecurity.",
     amountRaised: 95000,
     percentage: 30,
+  },
+  {
+    id: 5,
+    image:
+      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&q=80",
+    imageAlt: "Legal Service & Awareness",
+    categoryIcon: <Scale size={18} className="text-white" />,
+    categoryColor: "#7c3aed",
+    title: "Legal Service & Awareness",
+    description: "Empower communities with free legal aid and rights education.",
+    amountRaised: 138000,
+    percentage: 52,
+  },
+  {
+    id: 6,
+    image:
+      "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=400&q=80",
+    imageAlt: "Youth Explore",
+    categoryIcon: <Compass size={18} className="text-white" />,
+    categoryColor: "#0ea5e9",
+    title: "Youth Explore",
+    description: "Open doors for young minds through adventure, skills, and discovery.",
+    amountRaised: 72000,
+    percentage: 38,
   },
 ];
 

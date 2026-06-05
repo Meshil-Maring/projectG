@@ -5,42 +5,58 @@ const photos = [
   {
     id: 1,
     src: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1200&q=90",
-    alt: "Children planting trees",
+    alt: "Children Planting Trees",
+    description:
+      "Young community members learn environmental stewardship by planting trees in their neighborhood park — one sapling at a time, they are reshaping the future.",
   },
   {
     id: 2,
     src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&q=90",
-    alt: "Children having a meal",
+    alt: "Children Having a Meal",
+    description:
+      "Nutritious meals are provided daily to over 500 children through our feeding program, ensuring no child has to study on an empty stomach.",
   },
   {
     id: 3,
     src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=90",
-    alt: "Doctor with students",
+    alt: "Doctor With Students",
+    description:
+      "Healthcare volunteers bring free medical check-ups and health education to underserved school communities, bridging the gap between care and access.",
   },
   {
     id: 4,
     src: "https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=1200&q=90",
-    alt: "Children raising hands",
+    alt: "Children Raising Hands",
+    description:
+      "Eager students participate in our after-school learning program, breaking barriers to quality education and discovering the joy of curiosity.",
   },
   {
     id: 5,
     src: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&q=90",
-    alt: "Volunteer distributing supplies",
+    alt: "Volunteer Distributing Supplies",
+    description:
+      "Dedicated volunteers distribute emergency relief kits to families in need, bringing warmth, dignity, and hope during the most difficult times.",
   },
   {
     id: 6,
     src: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200&q=90",
-    alt: "Education for all",
+    alt: "Education for All",
+    description:
+      "Books and learning materials donated to rural schools where resources are scarce — because every child deserves the tools to dream bigger.",
   },
   {
     id: 7,
     src: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1200&q=90",
-    alt: "Environment protection",
+    alt: "Environment Protection",
+    description:
+      "Community-led clean energy and conservation initiatives help reduce carbon footprints across rural villages, protecting nature for generations to come.",
   },
   {
     id: 8,
     src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1200&q=90",
-    alt: "Community gathering",
+    alt: "Community Gathering",
+    description:
+      "Neighbors unite at our annual community fair to celebrate shared progress, strengthen bonds, and plan a brighter future together.",
   },
 ];
 
@@ -51,30 +67,12 @@ export default function ImageGallery() {
   const isLightboxOpen = activeIndex !== null;
   const isAnyOverlayOpen = showGrid || isLightboxOpen;
 
-  function openGrid() {
-    setShowGrid(true);
-  }
-
-  function closeAll() {
-    setShowGrid(false);
-    setActiveIndex(null);
-  }
-
-  function openLightbox(index: number) {
-    setActiveIndex(index);
-  }
-
-  function closeLightbox() {
-    setActiveIndex(null);
-  }
-
-  function prev() {
-    setActiveIndex((i) => (i === null ? 0 : (i - 1 + photos.length) % photos.length));
-  }
-
-  function next() {
-    setActiveIndex((i) => (i === null ? 0 : (i + 1) % photos.length));
-  }
+  function openGrid() { setShowGrid(true); }
+  function closeAll() { setShowGrid(false); setActiveIndex(null); }
+  function openLightbox(index: number) { setActiveIndex(index); }
+  function closeLightbox() { setActiveIndex(null); }
+  function prev() { setActiveIndex((i) => (i === null ? 0 : (i - 1 + photos.length) % photos.length)); }
+  function next() { setActiveIndex((i) => (i === null ? 0 : (i + 1) % photos.length)); }
 
   useEffect(() => {
     if (!isAnyOverlayOpen) return;
@@ -151,10 +149,10 @@ export default function ImageGallery() {
         </div>
       </section>
 
-      {/* ── Grid overlay ── */}
+      {/* ── Grid overlay (View All Photos) ── */}
       {showGrid && !isLightboxOpen && (
         <div className="fixed inset-0 z-50 flex flex-col bg-black/90 backdrop-blur-sm">
-          {/* Grid header */}
+          {/* Header */}
           <div className="flex items-center justify-between px-8 py-5 border-b border-white/10 shrink-0">
             <div className="flex items-center gap-2 text-white">
               <LayoutGrid size={20} className="text-white/60" />
@@ -168,6 +166,24 @@ export default function ImageGallery() {
             >
               <X size={26} />
             </button>
+          </div>
+
+          {/* ── Description section ── */}
+          <div className="px-8 py-5 border-b border-white/10 shrink-0">
+            <div className="max-w-3xl">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-2">
+                Our Gallery
+              </p>
+              <h3 className="text-xl font-bold text-white mb-2">
+                Every Picture Tells a Story of Hope
+              </h3>
+              <p className="text-white/60 text-sm leading-relaxed">
+                A glimpse into the lives we touch — from classrooms to community fields, each
+                photograph captures a real moment of change. These are the faces, places, and
+                stories that fuel our mission every single day. Click any photo to explore the
+                story behind it.
+              </p>
+            </div>
           </div>
 
           {/* Scrollable photo grid */}
@@ -184,9 +200,9 @@ export default function ImageGallery() {
                     alt={photo.alt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-400"
                   />
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-end p-3">
-                    <span className="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
+                  {/* Hover overlay with title */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors duration-300 flex items-end p-3">
+                    <span className="text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2 text-left">
                       {photo.alt}
                     </span>
                   </div>
@@ -204,12 +220,11 @@ export default function ImageGallery() {
           onClick={showGrid ? closeLightbox : closeAll}
         >
           <div
-            className="relative flex items-center justify-center w-full max-w-5xl px-16"
+            className="relative flex flex-col items-center w-full max-w-5xl px-16"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top bar */}
-            <div className="absolute -top-12 inset-x-0 flex items-center justify-between">
-              {/* Back to grid (only if came from grid) */}
+            <div className="w-full flex items-center justify-between mb-4">
               {showGrid ? (
                 <button
                   onClick={closeLightbox}
@@ -241,36 +256,49 @@ export default function ImageGallery() {
               </div>
             </div>
 
-            {/* Prev */}
-            <button
-              onClick={prev}
-              className="absolute left-0 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
-              aria-label="Previous photo"
-            >
-              <ChevronLeft size={26} />
-            </button>
+            {/* Image + Prev/Next */}
+            <div className="relative flex items-center w-full">
+              {/* Prev */}
+              <button
+                onClick={prev}
+                className="absolute left-0 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
+                aria-label="Previous photo"
+              >
+                <ChevronLeft size={26} />
+              </button>
 
-            {/* Image */}
-            <div className="w-full overflow-hidden rounded-2xl shadow-2xl">
-              <img
-                key={activeIndex}
-                src={photos[activeIndex].src}
-                alt={photos[activeIndex].alt}
-                className="w-full max-h-[80vh] object-contain bg-black"
-              />
+              {/* Image */}
+              <div className="w-full overflow-hidden rounded-t-2xl shadow-2xl">
+                <img
+                  key={activeIndex}
+                  src={photos[activeIndex].src}
+                  alt={photos[activeIndex].alt}
+                  className="w-full max-h-[65vh] object-contain bg-black"
+                />
+              </div>
+
+              {/* Next */}
+              <button
+                onClick={next}
+                className="absolute right-0 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
+                aria-label="Next photo"
+              >
+                <ChevronRight size={26} />
+              </button>
             </div>
 
-            {/* Next */}
-            <button
-              onClick={next}
-              className="absolute right-0 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
-              aria-label="Next photo"
-            >
-              <ChevronRight size={26} />
-            </button>
+            {/* ── Description panel ── */}
+            <div className="w-full bg-white/5 border border-white/10 rounded-b-2xl px-6 py-4 backdrop-blur-sm">
+              <h4 className="text-white font-semibold text-base mb-1">
+                {photos[activeIndex].alt}
+              </h4>
+              <p className="text-white/60 text-sm leading-relaxed">
+                {photos[activeIndex].description}
+              </p>
+            </div>
 
             {/* Dot indicators */}
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
+            <div className="flex gap-2 mt-5">
               {photos.map((_, i) => (
                 <button
                   key={i}
