@@ -1,22 +1,29 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import "./App.css";
-import HomePage from "./pages/HomePage";
-import GroupPage from "./components/groups/GroupPage";
-import AboutUsPage from "./pages/AboutUsPage";
-import StoriesPage from "./pages/StoriesPage";
-import NoticePage from "./pages/NoticePage";
-import NotFoundPage from "./pages/NotFoundPage";
-import CausesPage from "./pages/CausesPage";
-import ContactPage from "./pages/ContactPage";
-import GetInvolvedPage from "./pages/GetInvolvedPage";
-import DonatePage from "./pages/DonatePage";
-import ImpactPage from "./pages/ImpactPage";
-import LacPage from "./pages/LacPage";
-import WhgPage from "./pages/WhgPage";
-import HrdsPage from "./pages/HrdsPage";
-import CwgPage from "./pages/CwgPage";
-import FsedsPage from "./pages/FsedsPage";
+
+// User pages
+import HomePage from "./pages/users/HomePage";
+import AboutUsPage from "./pages/users/AboutUsPage";
+import StoriesPage from "./pages/users/StoriesPage";
+import NoticePage from "./pages/users/NoticePage";
+import CausesPage from "./pages/users/CausesPage";
+import ContactPage from "./pages/users/ContactPage";
+import GetInvolvedPage from "./pages/users/GetInvolvedPage";
+import DonatePage from "./pages/users/DonatePage";
+import ImpactPage from "./pages/users/ImpactPage";
+import LacPage from "./pages/users/LacPage";
+import WhgPage from "./pages/users/WhgPage";
+import HrdsPage from "./pages/users/HrdsPage";
+import CwgPage from "./pages/users/CwgPage";
+import FsedsPage from "./pages/users/FsedsPage";
+import NotFoundPage from "./pages/users/NotFoundPage";
+
+// User components
+import GroupPage from "./components/user/groups/GroupPage";
+
+// Admin pages
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -31,6 +38,7 @@ function App() {
     <>
       <ScrollToTop />
       <Routes>
+        {/* User routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/stories" element={<StoriesPage />} />
@@ -51,6 +59,10 @@ function App() {
         <Route path="/fseds" element={<FsedsPage />} />
         <Route path="/groups/fseds" element={<FsedsPage />} />
         <Route path="/groups/:slug" element={<GroupPage />} />
+
+        {/* Admin routes */}
+        <Route path="/projectG-admin" element={<AdminLoginPage />} />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
