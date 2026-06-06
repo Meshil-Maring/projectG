@@ -4,6 +4,13 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
+import SectionNavigator from "../../shared/components/SectionNavigator";
+
+const sections = [
+  { id: "notice-hero", label: "Overview" },
+  { id: "notice-filter", label: "Filter" },
+  { id: "notice-list", label: "Notices" },
+];
 
 type Notice = {
   id: number;
@@ -98,9 +105,10 @@ export default function NoticePage() {
   return (
     <>
       <Navbar />
+      <SectionNavigator sections={sections} />
 
       {/* Hero */}
-      <section style={{ backgroundColor: "#1a3270", padding: "4rem 0 3rem" }}>
+      <section id="notice-hero" style={{ backgroundColor: "#1a3270", padding: "4rem 0 3rem" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1.5rem" }}>
           <Link
             to="/"
@@ -166,7 +174,7 @@ export default function NoticePage() {
       </section>
 
       {/* Filter bar */}
-      <section style={{ backgroundColor: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+      <section id="notice-filter" style={{ backgroundColor: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
         <div
           style={{
             maxWidth: "1280px",
@@ -207,7 +215,7 @@ export default function NoticePage() {
       </section>
 
       {/* Notices list */}
-      <section style={{ backgroundColor: "#f8fafc", padding: "2.5rem 0 4rem" }}>
+      <section id="notice-list" style={{ backgroundColor: "#f8fafc", padding: "2.5rem 0 4rem" }}>
         <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 1.5rem" }}>
           {filtered.length === 0 ? (
             <p style={{ textAlign: "center", color: "#94a3b8", fontFamily: "'Poppins', sans-serif" }}>

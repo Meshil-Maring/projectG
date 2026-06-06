@@ -3,7 +3,13 @@ import { ArrowLeft, MapPin, Calendar, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
+import SectionNavigator from "../../shared/components/SectionNavigator";
 import { stories } from "../../data/stories";
+
+const sections = [
+  { id: "stories-hero", label: "Overview" },
+  { id: "stories-grid", label: "All Stories" },
+];
 
 export default function StoriesPage() {
   const [selected, setSelected] = useState<(typeof stories)[number] | null>(null);
@@ -11,9 +17,10 @@ export default function StoriesPage() {
   return (
     <>
       <Navbar />
+      <SectionNavigator sections={sections} />
 
       {/* Hero */}
-      <section className="bg-[color:var(--color-primary)] py-16">
+      <section id="stories-hero" className="bg-[color:var(--color-primary)] py-16">
         <div className="max-w-7xl mx-auto px-6">
           <Link
             to="/"
@@ -36,7 +43,7 @@ export default function StoriesPage() {
       </section>
 
       {/* Grid */}
-      <section className="py-16 bg-white">
+      <section id="stories-grid" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {stories.map((story) => (

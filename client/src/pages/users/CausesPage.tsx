@@ -3,7 +3,13 @@ import { ArrowLeft, Users, MapPin, Target, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
+import SectionNavigator from "../../shared/components/SectionNavigator";
 import { causes, categories, type Cause } from "../../data/causes";
+
+const sections = [
+  { id: "causes-hero", label: "Overview" },
+  { id: "causes-grid", label: "All Causes" },
+];
 
 export default function CausesPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -17,9 +23,10 @@ export default function CausesPage() {
   return (
     <>
       <Navbar />
+      <SectionNavigator sections={sections} />
 
       {/* Hero */}
-      <section className="bg-[color:var(--color-primary)] py-16">
+      <section id="causes-hero" className="bg-[color:var(--color-primary)] py-16">
         <div className="max-w-7xl mx-auto px-6">
           <Link
             to="/"
@@ -67,7 +74,7 @@ export default function CausesPage() {
       </section>
 
       {/* Filter + Grid */}
-      <section className="py-12 bg-[color:var(--color-surface)] min-h-[60vh]">
+      <section id="causes-grid" className="py-12 bg-[color:var(--color-surface)] min-h-[60vh]">
         <div className="max-w-7xl mx-auto px-6">
           {/* Category filters */}
           <div className="flex flex-wrap gap-2 mb-8">

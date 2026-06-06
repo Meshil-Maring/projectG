@@ -1,4 +1,5 @@
 import Navbar from "../../shared/components/Navbar";
+import SectionNavigator from "../../shared/components/SectionNavigator";
 import Hero from "../../components/user/home/Hero";
 import Mission from "../../components/user/home/Mission";
 import VideoStories from "../../components/user/home/VideoStories";
@@ -13,9 +14,22 @@ import NewsletterSubscribe from "../../components/user/home/NewsletterSubscribe"
 import Footer from "../../shared/components/Footer";
 
 export default function HomePage() {
+  const sections = [
+    { id: "home", label: "Home" },
+    { id: "about", label: "About Us" },
+    { id: "groups", label: "Our Groups" },
+    { id: "causes", label: "Causes" },
+    { id: "impact", label: "Impact" },
+    { id: "stories", label: "Stories" },
+    { id: "get-involved", label: "Get Involved" },
+    { id: "donate", label: "Donate" },
+    { id: "contact", label: "Contact" },
+  ];
+
   return (
     <>
       <Navbar />
+      <SectionNavigator sections={sections} />
       <section id="home">
         <Hero />
       </section>
