@@ -21,11 +21,18 @@ export default function AdminLogin() {
     }
 
     setLoading(true);
-    // TODO: replace with actual auth call
     setTimeout(() => {
       setLoading(false);
-      setError("Invalid credentials. Please try again.");
-    }, 1000);
+      if (
+        email === "admin@projectgeneration.org" &&
+        password === "admin123"
+      ) {
+        localStorage.setItem("pg_admin_auth", "1");
+        navigate("/projectG-admin/dashboard");
+      } else {
+        setError("Invalid credentials. Please try again.");
+      }
+    }, 600);
   }
 
   return (

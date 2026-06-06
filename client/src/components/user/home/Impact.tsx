@@ -1,15 +1,32 @@
 import earthImg from "../../../assets/image/earth.png";
-import { Users, GraduationCap, Leaf, HandHeart } from "lucide-react";
+import {
+  Users,
+  GraduationCap,
+  Leaf,
+  HandHeart,
+  Heart,
+  Star,
+  Globe,
+  BookOpen,
+} from "lucide-react";
 import { Link } from "react-router-dom";
+import { useHomePageData, type IconKey } from "../../../context/HomePageContext";
 
-const stats = [
-  { icon: Users, value: "25K+", label: "Lives\nImpacted" },
-  { icon: GraduationCap, value: "10K+", label: "Children\nEducated" },
-  { icon: Leaf, value: "150+", label: "Communities\nServed" },
-  { icon: HandHeart, value: "500+", label: "Volunteers\nWorldwide" },
-];
+const ICON_MAP: Record<IconKey, React.ElementType> = {
+  Users,
+  GraduationCap,
+  Leaf,
+  HandHeart,
+  Heart,
+  Star,
+  Globe,
+  BookOpen,
+};
 
 export default function Impact() {
+  const { data } = useHomePageData();
+  const stats = data.stats;
+
   return (
     <section className="py-16 px-8 bg-white">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10">
@@ -33,9 +50,11 @@ export default function Impact() {
 
           {/* Stat cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {stats.map(({ icon: Icon, value, label }) => (
+            {stats.map(({ id, iconKey, value, label }) => {
+              const Icon = ICON_MAP[iconKey] ?? Users;
+              return (
               <div
-                key={value}
+                key={id}
                 className="flex flex-col items-center gap-3 bg-[#f0fdf9] border border-[#ccfbf1] rounded-2xl py-6 px-4 text-center"
               >
                 <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center">
@@ -48,7 +67,8 @@ export default function Impact() {
                   {label}
                 </span>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-8">

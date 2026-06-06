@@ -1,5 +1,5 @@
-import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useEffect, type ReactNode } from "react";
 import "./App.css";
 
 // User pages
@@ -24,6 +24,12 @@ import GroupPage from "./components/user/groups/GroupPage";
 
 // Admin pages
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+
+function ProtectedAdminRoute({ children }: { children: ReactNode }) {
+  const isAuth = localStorage.getItem("pg_admin_auth") === "1";
+  return isAuth ? <>{children}</> : <Navigate to="/projectG-admin" replace />;
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -62,6 +68,14 @@ function App() {
 
         {/* Admin routes */}
         <Route path="/projectG-admin" element={<AdminLoginPage />} />
+        <Route
+          path="/projectG-admin/dashboard"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardPage />
+            </ProtectedAdminRoute>
+          }
+        />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

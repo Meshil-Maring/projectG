@@ -1,66 +1,10 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight, LayoutGrid, X } from "lucide-react";
-
-const photos = [
-  {
-    id: 1,
-    src: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1200&q=90",
-    alt: "Children Planting Trees",
-    description:
-      "Young community members learn environmental stewardship by planting trees in their neighborhood park — one sapling at a time, they are reshaping the future.",
-  },
-  {
-    id: 2,
-    src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&q=90",
-    alt: "Children Having a Meal",
-    description:
-      "Nutritious meals are provided daily to over 500 children through our feeding program, ensuring no child has to study on an empty stomach.",
-  },
-  {
-    id: 3,
-    src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=90",
-    alt: "Doctor With Students",
-    description:
-      "Healthcare volunteers bring free medical check-ups and health education to underserved school communities, bridging the gap between care and access.",
-  },
-  {
-    id: 4,
-    src: "https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=1200&q=90",
-    alt: "Children Raising Hands",
-    description:
-      "Eager students participate in our after-school learning program, breaking barriers to quality education and discovering the joy of curiosity.",
-  },
-  {
-    id: 5,
-    src: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&q=90",
-    alt: "Volunteer Distributing Supplies",
-    description:
-      "Dedicated volunteers distribute emergency relief kits to families in need, bringing warmth, dignity, and hope during the most difficult times.",
-  },
-  {
-    id: 6,
-    src: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200&q=90",
-    alt: "Education for All",
-    description:
-      "Books and learning materials donated to rural schools where resources are scarce — because every child deserves the tools to dream bigger.",
-  },
-  {
-    id: 7,
-    src: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1200&q=90",
-    alt: "Environment Protection",
-    description:
-      "Community-led clean energy and conservation initiatives help reduce carbon footprints across rural villages, protecting nature for generations to come.",
-  },
-  {
-    id: 8,
-    src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1200&q=90",
-    alt: "Community Gathering",
-    description:
-      "Neighbors unite at our annual community fair to celebrate shared progress, strengthen bonds, and plan a brighter future together.",
-  },
-];
+import { useHomePageData } from "../../../context/HomePageContext";
 
 export default function ImageGallery() {
+  const { data } = useHomePageData();
+  const photos = data.photos;
   const [showGrid, setShowGrid] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 

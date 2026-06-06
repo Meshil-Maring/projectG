@@ -13,62 +13,7 @@ import {
   Maximize2,
   LayoutGrid,
 } from "lucide-react";
-import familyImg from "../../../assets/image/family.jpeg";
-import plantingImg from "../../../assets/image/planting_tree.png";
-import donateImg from "../../../assets/image/donate.png";
-import earthImg from "../../../assets/image/earth.png";
-
-type VideoEntry = {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail: string;
-  youtubeId?: string;
-  videoUrl?: string;
-  duration: string;
-};
-
-const videos: VideoEntry[] = [
-  {
-    id: 1,
-    title: "Every Step We Take, Creates a Better Tomorrow",
-    description:
-      "See how your support helps us bring hope, opportunities, and change to those who need it most.",
-    thumbnail: familyImg as string,
-    youtubeId: "lArdfIpLlAA",
-    duration: "—",
-  },
-  {
-    id: 2,
-    title: "Planting Seeds of Change for Future Generations",
-    description:
-      "Join us as we transform barren landscapes into thriving green spaces for communities in need.",
-    thumbnail: plantingImg as string,
-    videoUrl:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    duration: "10:54",
-  },
-  {
-    id: 3,
-    title: "Your Donation Changes Lives Every Single Day",
-    description:
-      "Witness the real-world impact of every rupee donated — from meals to medicine to education.",
-    thumbnail: donateImg as string,
-    videoUrl:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    duration: "0:15",
-  },
-  {
-    id: 4,
-    title: "Together We Build a Greener, Fairer World",
-    description:
-      "Our volunteers and partners unite across borders to create lasting change for vulnerable families.",
-    thumbnail: earthImg as string,
-    videoUrl:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-    duration: "12:14",
-  },
-];
+import { useHomePageData } from "../../../context/HomePageContext";
 
 const fmt = (s: number) => {
   if (!s || isNaN(s)) return "0:00";
@@ -105,6 +50,8 @@ const features = [
 ];
 
 export default function VideoStories() {
+  const { data } = useHomePageData();
+  const videos = data.videos;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAllVideos, setShowAllVideos] = useState(false);
@@ -113,7 +60,10 @@ export default function VideoStories() {
   const [muted, setMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const current = videos[currentIndex];
+  const safeIndex = videos.length > 0 ? Math.min(currentIndex, videos.length - 1) : 0;
+  const current = videos[safeIndex];
+
+  if (!current) return null;
   const isYoutube = !!current.youtubeId;
 
   // Sync play/pause for native videos only
@@ -143,10 +93,10 @@ export default function VideoStories() {
   };
 
   const handlePrev = () =>
-    setCurrentIndex((i) => (i - 1 + videos.length) % videos.length);
+    setCurrentIndex((i) => (i - 1 + videos.length) % Math.max(videos.length, 1));
 
   const handleNext = () =>
-    setCurrentIndex((i) => (i + 1) % videos.length);
+    setCurrentIndex((i) => (i + 1) % Math.max(videos.length, 1));
 
   const selectVideo = (index: number) => {
     setCurrentIndex(index);
@@ -363,7 +313,7 @@ export default function VideoStories() {
           {/* ── Right Content Column ── */}
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentIndex}
+              key={safeIndex}
               initial="hidden"
               animate="visible"
               exit="exit"

@@ -8,35 +8,17 @@ import {
   Brain,
   Star,
   TrendingUp,
+  Camera,
 } from "lucide-react";
 import { PRIMARY, LIGHT_BG, fade } from "./cwg.constants";
+import { useGroupActivities } from "../../../context/GroupActivitiesContext";
 
 const whatWeDo = [
-  {
-    icon: BookOpen,
-    title: "Academic Excellence Training",
-    desc: "Preparing students and members for competitive exams, Olympiads, and academic tournaments.",
-  },
-  {
-    icon: Megaphone,
-    title: "Quiz & Debate Programs",
-    desc: "Hosting and coaching for interschool, college, and open-category quiz and debate competitions.",
-  },
-  {
-    icon: Trophy,
-    title: "Sports & Athletics",
-    desc: "Developing physical excellence through organized sports events, fitness camps, and athletic coaching.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Creative Arts & Innovation",
-    desc: "Encouraging creative expression through art, science, and innovation challenges.",
-  },
-  {
-    icon: Target,
-    title: "Life Skills Development",
-    desc: "Building communication, leadership, and confidence for real-world competitive environments.",
-  },
+  { icon: BookOpen, title: "Academic Excellence Training", desc: "Preparing students and members for competitive exams, Olympiads, and academic tournaments." },
+  { icon: Megaphone, title: "Quiz & Debate Programs", desc: "Hosting and coaching for interschool, college, and open-category quiz and debate competitions." },
+  { icon: Trophy, title: "Sports & Athletics", desc: "Developing physical excellence through organized sports events, fitness camps, and athletic coaching." },
+  { icon: Lightbulb, title: "Creative Arts & Innovation", desc: "Encouraging creative expression through art, science, and innovation challenges." },
+  { icon: Target, title: "Life Skills Development", desc: "Building communication, leadership, and confidence for real-world competitive environments." },
 ];
 
 const focusAreas = [
@@ -57,73 +39,35 @@ const impactStats = [
 ];
 
 const sectionLabel: React.CSSProperties = {
-  fontSize: "0.7rem",
-  fontWeight: 700,
-  letterSpacing: "0.14em",
-  textTransform: "uppercase",
-  color: PRIMARY,
-  marginBottom: "0.5rem",
-  display: "block",
+  fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em",
+  textTransform: "uppercase", color: PRIMARY, marginBottom: "0.5rem", display: "block",
 };
 
 const sectionTitle: React.CSSProperties = {
-  fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)",
-  fontWeight: 800,
-  color: "#0f172a",
-  marginBottom: "2.5rem",
-  lineHeight: 1.2,
+  fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800,
+  color: "#0f172a", marginBottom: "2.5rem", lineHeight: 1.2,
 };
 
 export default function CwgActivities() {
+  const { data } = useGroupActivities();
+  const activities = data.cwg;
+
   return (
     <section style={{ background: "#f0fdfa", padding: "6rem 1.5rem" }}>
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
-        {/* ── What We Do ── */}
         <motion.div {...fade(0)} style={{ marginBottom: "5rem" }}>
           <span style={sectionLabel}>What We Do</span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
           <h2 style={sectionTitle}>Our Core Programs</h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "1.25rem",
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.25rem" }}>
             {whatWeDo.map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={title}
-                {...fade(i * 0.07)}
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "1rem",
-                  background: "#ffffff",
-                  borderRadius: "1rem",
-                  padding: "1.25rem 1.5rem",
-                  boxShadow: "0 2px 12px rgba(15,118,110,0.06)",
-                  border: "1px solid #d1faf5",
-                }}
-              >
-                <div
-                  style={{
-                    width: "44px",
-                    height: "44px",
-                    borderRadius: "10px",
-                    background: LIGHT_BG,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
+              <motion.div key={title} {...fade(i * 0.07)} style={{ display: "flex", alignItems: "flex-start", gap: "1rem", background: "#ffffff", borderRadius: "1rem", padding: "1.25rem 1.5rem", boxShadow: "0 2px 12px rgba(15,118,110,0.06)", border: "1px solid #d1faf5" }}>
+                <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <Icon size={19} color={PRIMARY} strokeWidth={1.6} />
                 </div>
                 <div>
-                  <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.3rem" }}>
-                    {title}
-                  </div>
+                  <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.3rem" }}>{title}</div>
                   <div style={{ fontSize: "0.8rem", color: "#64748b", lineHeight: 1.6 }}>{desc}</div>
                 </div>
               </motion.div>
@@ -131,103 +75,68 @@ export default function CwgActivities() {
           </div>
         </motion.div>
 
-        {/* ── Focus Areas ── */}
         <motion.div {...fade(0.1)} style={{ marginBottom: "5rem" }}>
           <span style={sectionLabel}>Focus Areas</span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
           <h2 style={sectionTitle}>Where We Compete & Excel</h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "1.25rem",
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem" }}>
             {focusAreas.map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={title}
-                {...fade(i * 0.07)}
-                style={{
-                  background: "#ffffff",
-                  borderRadius: "1rem",
-                  padding: "2rem 1.5rem",
-                  textAlign: "center",
-                  boxShadow: "0 2px 12px rgba(15,118,110,0.06)",
-                  border: "1px solid #d1faf5",
-                }}
-              >
-                <div
-                  style={{
-                    width: "52px",
-                    height: "52px",
-                    borderRadius: "50%",
-                    background: LIGHT_BG,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 1rem",
-                  }}
-                >
+              <motion.div key={title} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", padding: "2rem 1.5rem", textAlign: "center", boxShadow: "0 2px 12px rgba(15,118,110,0.06)", border: "1px solid #d1faf5" }}>
+                <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1rem" }}>
                   <Icon size={22} color={PRIMARY} strokeWidth={1.6} />
                 </div>
-                <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.4rem" }}>
-                  {title}
-                </div>
+                <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.4rem" }}>{title}</div>
                 <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.55 }}>{desc}</div>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* ── Our Impact ── */}
-        <motion.div {...fade(0.2)}>
+        <motion.div {...fade(0.2)} style={{ marginBottom: "5rem" }}>
           <span style={sectionLabel}>Our Impact</span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
           <h2 style={sectionTitle}>By The Numbers</h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: "1.25rem",
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1.25rem" }}>
             {impactStats.map(({ value, label }, i) => (
-              <motion.div
-                key={value}
-                {...fade(i * 0.07)}
-                style={{
-                  background: "#ffffff",
-                  borderRadius: "1rem",
-                  padding: "2rem 1rem",
-                  textAlign: "center",
-                  boxShadow: "0 2px 12px rgba(15,118,110,0.06)",
-                  border: "1px solid #d1faf5",
-                }}
-              >
-                <div
-                  style={{
-                    width: "44px",
-                    height: "44px",
-                    borderRadius: "50%",
-                    background: LIGHT_BG,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 1rem",
-                  }}
-                >
+              <motion.div key={value} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", padding: "2rem 1rem", textAlign: "center", boxShadow: "0 2px 12px rgba(15,118,110,0.06)", border: "1px solid #d1faf5" }}>
+                <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1rem" }}>
                   <TrendingUp size={19} color={PRIMARY} strokeWidth={1.6} />
                 </div>
-                <div style={{ fontSize: "1.6rem", fontWeight: 800, color: PRIMARY, lineHeight: 1 }}>
-                  {value}
-                </div>
-                <div style={{ fontSize: "0.78rem", color: "#475569", marginTop: "0.4rem", lineHeight: 1.4 }}>
-                  {label}
-                </div>
+                <div style={{ fontSize: "1.6rem", fontWeight: 800, color: PRIMARY, lineHeight: 1 }}>{value}</div>
+                <div style={{ fontSize: "0.78rem", color: "#475569", marginTop: "0.4rem", lineHeight: 1.4 }}>{label}</div>
               </motion.div>
             ))}
           </div>
         </motion.div>
+
+        {/* Activities Gallery */}
+        {activities.length > 0 && (
+          <motion.div {...fade(0.25)}>
+            <span style={sectionLabel}>Our Activities</span>
+            <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
+            <h2 style={{ ...sectionTitle, marginBottom: "2rem" }}>What We've Been Doing</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
+              {activities.map(({ id, title, desc, imageUrl }, i) => (
+                <motion.div key={id} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", overflow: "hidden", boxShadow: "0 2px 12px rgba(15,118,110,0.07)", border: "1px solid #d1faf5" }}>
+                  <div style={{ position: "relative" as const, paddingTop: "62%", background: LIGHT_BG }}>
+                    {imageUrl ? (
+                      <img src={imageUrl} alt={title} style={{ position: "absolute" as const, inset: 0, width: "100%", height: "100%", objectFit: "cover" as const }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                    ) : (
+                      <div style={{ position: "absolute" as const, inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" as const, gap: "0.5rem" }}>
+                        <Camera size={36} color={PRIMARY} strokeWidth={1.4} style={{ opacity: 0.3 }} />
+                        <span style={{ fontSize: "0.68rem", color: PRIMARY, opacity: 0.4, letterSpacing: "0.05em" }}>Add Photo</span>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ padding: "1rem 1.25rem 1.25rem" }}>
+                    <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.4rem" }}>{title}</div>
+                    <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.65 }}>{desc}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
       </div>
     </section>

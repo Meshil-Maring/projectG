@@ -1,8 +1,9 @@
-import { Users, ArrowRight } from "lucide-react";
+import { Users } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "../../../assets/image/herosection_small.png";
 import { INK_PATHS } from "./heroInkPaths";
 import { useNavigate } from "react-router-dom";
+import { useHomePageData } from "../../../context/HomePageContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -24,6 +25,8 @@ const fadeIn = {
 
 export default function Hero() {
   const navigate = useNavigate();
+  const { data } = useHomePageData();
+  const bgSrc = data.heroImageUrl || heroBg;
 
   return (
     <section
@@ -32,7 +35,7 @@ export default function Hero() {
     >
       {/* Background — subtle zoom-in on mount */}
       <motion.img
-        src={heroBg}
+        src={bgSrc}
         alt=""
         aria-hidden="true"
         variants={fadeIn}

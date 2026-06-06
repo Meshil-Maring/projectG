@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { stories } from "../../../data/stories";
+import { useHomePageData } from "../../../context/HomePageContext";
 
 const VISIBLE = 3;
 
 export default function StoriesOfChange() {
+  const { data } = useHomePageData();
+  const stories = data.stories;
   const [index, setIndex] = useState(0);
-  const maxIndex = stories.length - VISIBLE;
+  const maxIndex = Math.max(stories.length - VISIBLE, 0);
 
   const prev = () => setIndex((i) => Math.max(i - 1, 0));
   const next = () => setIndex((i) => Math.min(i + 1, maxIndex));
@@ -89,7 +91,12 @@ export default function StoriesOfChange() {
   );
 }
 
-type StoryCardProps = (typeof stories)[number];
+type StoryCardProps = {
+  image: string;
+  quote: string;
+  name: string;
+  role: string;
+};
 
 function StoryCard({ image, quote, name, role }: StoryCardProps) {
   return (
