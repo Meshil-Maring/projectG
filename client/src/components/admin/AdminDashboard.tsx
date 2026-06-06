@@ -38,6 +38,11 @@ import {
   type GroupKey,
   type ActivityEntry,
 } from "../../context/GroupActivitiesContext";
+import {
+  useTeamData,
+  type BoardMember,
+  type TeamMember,
+} from "../../context/TeamContext";
 import Logo from "../../assets/image/logo.jpeg";
 
 // ── Icon map ──────────────────────────────────────────────────────────────────
@@ -1503,17 +1508,303 @@ const secondaryBtnStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
+// ── Tab: Team ─────────────────────────────────────────────────────────────────
+
+type BoardForm  = Omit<BoardMember,  "id">;
+type MemberForm = Omit<TeamMember, "id">;
+const BLANK_BOARD:  BoardForm  = { name: "", role: "", badge: "", color: "#1a3270" };
+const BLANK_MEMBER: MemberForm = { name: "", role: "", color: "#4a90d9" };
+
+const COLOR_PRESETS = [
+  "#1a3270","#2563eb","#4a90d9","#0891b2","#059669",
+  "#2ecc71","#e74c3c","#f39c12","#9b59b6","#7c3aed","#d97706",
+];
+
+function ColorPicker({ value, onChange }: { value: string; onChange: (c: string) => void }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap" }}>
+      {COLOR_PRESETS.map((c) => (
+        <button
+          key={c}
+          title={c}
+          onClick={() => onChange(c)}
+          style={{
+            width: "22px", height: "22px", borderRadius: "50%",
+            background: c, border: value === c ? "3px solid #0f1e4a" : "2px solid transparent",
+            cursor: "pointer", flexShrink: 0,
+          }}
+        />
+      ))}
+      <input
+        type="color"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        title="Custom colour"
+        style={{ width: "28px", height: "28px", border: "none", background: "none", cursor: "pointer", padding: 0 }}
+      />
+    </div>
+  );
+}
+
+function TeamTab() {
+  const { data, updateBoard, updateMembers } = useTeamData();
+  const [board,   setBoard]   = useState<BoardMember[]>(data.board);
+  const [members, setMembers] = useState<TeamMember[]>(data.members);
+
+  // board state
+  const [boardEditId,  setBoardEditId]  = useState<number | null>(null);
+  const [boardForm,    setBoardForm]    = useState<BoardForm>(BLANK_BOARD);
+  const [addingBoard,  setAddingBoard]  = useState(false);
+  const [newBoardForm, setNewBoardForm] = useState<BoardForm>(BLANK_BOARD);
+
+  // member state
+  const [memberEditId,  setMemberEditId]  = useState<number | null>(null);
+  const [memberForm,    setMemberForm]    = useState<MemberForm>(BLANK_MEMBER);
+  const [addingMember,  setAddingMember]  = useState(false);
+  const [newMemberForm, setNewMemberForm] = useState<MemberForm>(BLANK_MEMBER);
+
+  // ── Board helpers ──────────────────────────────────────────────────────────
+  function startEditBoard(b: BoardMember) {
+    setBoardEditId(b.id);
+    setBoardForm({ name: b.name, role: b.role, badge: b.badge, color: b.color });
+    setAddingBoard(false);
+  }
+  function saveEditBoard() {
+    const updated = board.map((b) => b.id === boardEditId ? { ...b, ...boardForm } : b);
+    setBoard(updated); updateBoard(updated); setBoardEditId(null);
+  }
+  function deleteBoard(id: number) {
+    const updated = board.filter((b) => b.id !== id);
+    setBoard(updated); updateBoard(updated);
+    if (boardEditId === id) setBoardEditId(null);
+  }
+  function addBoard() {
+    const entry: BoardMember = { ...newBoardForm, id: nextId(board) };
+    const updated = [...board, entry];
+    setBoard(updated); updateBoard(updated);
+    setAddingBoard(false); setNewBoardForm(BLANK_BOARD);
+  }
+
+  // ── Member helpers ─────────────────────────────────────────────────────────
+  function startEditMember(m: TeamMember) {
+    setMemberEditId(m.id);
+    setMemberForm({ name: m.name, role: m.role, color: m.color });
+    setAddingMember(false);
+  }
+  function saveEditMember() {
+    const updated = members.map((m) => m.id === memberEditId ? { ...m, ...memberForm } : m);
+    setMembers(updated); updateMembers(updated); setMemberEditId(null);
+  }
+  function deleteMember(id: number) {
+    const updated = members.filter((m) => m.id !== id);
+    setMembers(updated); updateMembers(updated);
+    if (memberEditId === id) setMemberEditId(null);
+  }
+  function moveMemberUp(idx: number) {
+    if (idx === 0) return;
+    const arr = [...members]; [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+    setMembers(arr); updateMembers(arr);
+  }
+  function moveMemberDown(idx: number) {
+    if (idx === members.length - 1) return;
+    const arr = [...members]; [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+    setMembers(arr); updateMembers(arr);
+  }
+  function addMember() {
+    const entry: TeamMember = { ...newMemberForm, id: nextId(members) };
+    const updated = [...members, entry];
+    setMembers(updated); updateMembers(updated);
+    setAddingMember(false); setNewMemberForm(BLANK_MEMBER);
+  }
+
+  const subHead: React.CSSProperties = {
+    fontSize: "0.82rem", fontWeight: 700, color: "#0f1e4a",
+    margin: "1.5rem 0 0.75rem", paddingBottom: "0.4rem",
+    borderBottom: "1px solid #e2e8f0",
+  };
+  const avatarDot = (color: string) => ({
+    width: "32px", height: "32px", borderRadius: "8px",
+    background: color, flexShrink: 0,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    color: "#fff", fontSize: "0.7rem", fontWeight: 700,
+  });
+
+  return (
+    <div>
+      <SectionHeader
+        title="Meet Our Team"
+        subtitle="Manage Board Committee Cum Chairman members and the general team shown on the About Us page."
+      />
+
+      {/* ── Board Committee ── */}
+      <p style={subHead}>Board Committee Cum Chairman</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+        {board.map((b) => {
+          const initials = b.name.split(" ").map((w) => w[0]).join("").slice(0, 2);
+          return (
+            <div key={b.id} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.7rem 1rem", borderBottom: boardEditId === b.id ? "1px solid #e2e8f0" : "none" }}>
+                <div style={avatarDot(b.color)}>{initials}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: "0.83rem", fontWeight: 700, color: "#0f1e4a" }}>{b.name || "(No name)"}</p>
+                  <p style={{ fontSize: "0.72rem", color: "#64748b" }}>{b.role} · <span style={{ fontWeight: 600, color: "#1a3270" }}>{b.badge}</span></p>
+                </div>
+                <div style={{ display: "flex", gap: "0.3rem" }}>
+                  <button onClick={() => boardEditId === b.id ? setBoardEditId(null) : startEditBoard(b)} style={iconBtnStyle(false)}>
+                    {boardEditId === b.id ? <X size={14} /> : <Edit3 size={14} />}
+                  </button>
+                  <button onClick={() => deleteBoard(b.id)} style={{ ...iconBtnStyle(false), color: "#dc2626" }}>
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+              {boardEditId === b.id && (
+                <div style={{ padding: "1rem", background: "#f8fafc" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+                    <FieldGroup label="Name">
+                      <Input value={boardForm.name} onChange={(v) => setBoardForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
+                    </FieldGroup>
+                    <FieldGroup label="Role / Title">
+                      <Input value={boardForm.role} onChange={(v) => setBoardForm((f) => ({ ...f, role: v }))} placeholder="e.g. Chairman" />
+                    </FieldGroup>
+                  </div>
+                  <FieldGroup label="Badge Label">
+                    <Input value={boardForm.badge} onChange={(v) => setBoardForm((f) => ({ ...f, badge: v }))} placeholder="e.g. Chairman" />
+                  </FieldGroup>
+                  <FieldGroup label="Avatar Colour">
+                    <ColorPicker value={boardForm.color} onChange={(c) => setBoardForm((f) => ({ ...f, color: c }))} />
+                  </FieldGroup>
+                  <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+                    <button onClick={saveEditBoard} style={primaryBtnStyle}><Check size={13} /> Save</button>
+                    <button onClick={() => setBoardEditId(null)} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {addingBoard ? (
+          <div style={{ background: "#fff", border: "2px dashed #1a3270", borderRadius: "0.75rem", padding: "1.25rem" }}>
+            <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>New Board Member</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+              <FieldGroup label="Name">
+                <Input value={newBoardForm.name} onChange={(v) => setNewBoardForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
+              </FieldGroup>
+              <FieldGroup label="Role / Title">
+                <Input value={newBoardForm.role} onChange={(v) => setNewBoardForm((f) => ({ ...f, role: v }))} placeholder="e.g. Chairman" />
+              </FieldGroup>
+            </div>
+            <FieldGroup label="Badge Label">
+              <Input value={newBoardForm.badge} onChange={(v) => setNewBoardForm((f) => ({ ...f, badge: v }))} placeholder="e.g. Chairman" />
+            </FieldGroup>
+            <FieldGroup label="Avatar Colour">
+              <ColorPicker value={newBoardForm.color} onChange={(c) => setNewBoardForm((f) => ({ ...f, color: c }))} />
+            </FieldGroup>
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+              <button onClick={addBoard} style={primaryBtnStyle}><Plus size={13} /> Add Member</button>
+              <button onClick={() => { setAddingBoard(false); setNewBoardForm(BLANK_BOARD); }} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => { setAddingBoard(true); setBoardEditId(null); }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", padding: "0.7rem", border: "2px dashed #cbd5e1", borderRadius: "0.75rem", background: "transparent", color: "#64748b", fontSize: "0.83rem", fontWeight: 600, cursor: "pointer", width: "100%" }}
+          >
+            <Plus size={16} /> Add Board Member
+          </button>
+        )}
+      </div>
+
+      {/* ── Team Members ── */}
+      <p style={subHead}>Team Members</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+        {members.map((m, idx) => {
+          const initials = m.name.split(" ").map((w) => w[0]).join("").slice(0, 2);
+          return (
+            <div key={m.id} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.7rem 1rem", borderBottom: memberEditId === m.id ? "1px solid #e2e8f0" : "none" }}>
+                <div style={avatarDot(m.color)}>{initials}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: "0.83rem", fontWeight: 700, color: "#0f1e4a" }}>{m.name || "(No name)"}</p>
+                  <p style={{ fontSize: "0.72rem", color: "#64748b" }}>{m.role}</p>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                  <button onClick={() => moveMemberUp(idx)} disabled={idx === 0} style={iconBtnStyle(idx === 0)}><ChevronUp size={14} /></button>
+                  <button onClick={() => moveMemberDown(idx)} disabled={idx === members.length - 1} style={iconBtnStyle(idx === members.length - 1)}><ChevronDown size={14} /></button>
+                  <button onClick={() => memberEditId === m.id ? setMemberEditId(null) : startEditMember(m)} style={iconBtnStyle(false)}>
+                    {memberEditId === m.id ? <X size={14} /> : <Edit3 size={14} />}
+                  </button>
+                  <button onClick={() => deleteMember(m.id)} style={{ ...iconBtnStyle(false), color: "#dc2626" }}><Trash2 size={14} /></button>
+                </div>
+              </div>
+              {memberEditId === m.id && (
+                <div style={{ padding: "1rem", background: "#f8fafc" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+                    <FieldGroup label="Name">
+                      <Input value={memberForm.name} onChange={(v) => setMemberForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
+                    </FieldGroup>
+                    <FieldGroup label="Role / Title">
+                      <Input value={memberForm.role} onChange={(v) => setMemberForm((f) => ({ ...f, role: v }))} placeholder="e.g. Programs Manager" />
+                    </FieldGroup>
+                  </div>
+                  <FieldGroup label="Avatar Colour">
+                    <ColorPicker value={memberForm.color} onChange={(c) => setMemberForm((f) => ({ ...f, color: c }))} />
+                  </FieldGroup>
+                  <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+                    <button onClick={saveEditMember} style={primaryBtnStyle}><Check size={13} /> Save</button>
+                    <button onClick={() => setMemberEditId(null)} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {addingMember ? (
+          <div style={{ background: "#fff", border: "2px dashed #1a3270", borderRadius: "0.75rem", padding: "1.25rem" }}>
+            <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>New Team Member</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+              <FieldGroup label="Name">
+                <Input value={newMemberForm.name} onChange={(v) => setNewMemberForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
+              </FieldGroup>
+              <FieldGroup label="Role / Title">
+                <Input value={newMemberForm.role} onChange={(v) => setNewMemberForm((f) => ({ ...f, role: v }))} placeholder="e.g. Programs Manager" />
+              </FieldGroup>
+            </div>
+            <FieldGroup label="Avatar Colour">
+              <ColorPicker value={newMemberForm.color} onChange={(c) => setNewMemberForm((f) => ({ ...f, color: c }))} />
+            </FieldGroup>
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+              <button onClick={addMember} style={primaryBtnStyle}><Plus size={13} /> Add Member</button>
+              <button onClick={() => { setAddingMember(false); setNewMemberForm(BLANK_MEMBER); }} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => { setAddingMember(true); setMemberEditId(null); }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", padding: "0.7rem", border: "2px dashed #cbd5e1", borderRadius: "0.75rem", background: "transparent", color: "#64748b", fontSize: "0.83rem", fontWeight: 600, cursor: "pointer", width: "100%" }}
+          >
+            <Plus size={16} /> Add Team Member
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Tab definitions ───────────────────────────────────────────────────────────
 
-type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities";
+type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities" | "team";
 
 const TABS: { id: TabId; label: string; Icon: React.ElementType }[] = [
-  { id: "hero", label: "Hero Image", Icon: Image },
-  { id: "videos", label: "Watch Our Story", Icon: Video },
-  { id: "gallery", label: "Moments of Change", Icon: LayoutGrid },
-  { id: "impact", label: "Our Impact", Icon: BarChart2 },
-  { id: "stories", label: "Stories of Change", Icon: MessageSquare },
-  { id: "activities", label: "Group Activities", Icon: Users },
+  { id: "hero",       label: "Hero Image",        Icon: Image },
+  { id: "videos",     label: "Watch Our Story",    Icon: Video },
+  { id: "gallery",    label: "Moments of Change",  Icon: LayoutGrid },
+  { id: "impact",     label: "Our Impact",         Icon: BarChart2 },
+  { id: "stories",    label: "Stories of Change",  Icon: MessageSquare },
+  { id: "activities", label: "Group Activities",   Icon: Users },
+  { id: "team",       label: "Meet Our Team",      Icon: Users },
 ];
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
@@ -1743,6 +2034,7 @@ export default function AdminDashboard() {
           {activeTab === "impact" && <ImpactTab />}
           {activeTab === "stories" && <StoriesTab />}
           {activeTab === "activities" && <GroupActivitiesTab />}
+          {activeTab === "team" && <TeamTab />}
         </div>
       </main>
     </div>

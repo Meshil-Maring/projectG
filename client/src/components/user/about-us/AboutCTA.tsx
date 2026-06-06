@@ -16,7 +16,9 @@ export default function AboutCTA() {
   return (
     <section
       className="relative py-24 px-6 overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #1a3270 0%, #2563eb 100%)" }}
+      style={{
+        background: "linear-gradient(135deg, #1a3270 0%, #2563eb 100%)",
+      }}
     >
       {/* Hands background image */}
       <div className="absolute inset-0 pointer-events-none">
@@ -34,31 +36,78 @@ export default function AboutCTA() {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M80 20 C110 60, 155 130, 130 260 C110 360, 30 380, 10 300 C-10 210, 30 80, 80 20Z" fill="white" />
-        <path d="M90 10 C120 50, 162 122, 138 252" stroke="white" strokeWidth="2" fill="none" />
-        <line x1="80" y1="20" x2="62" y2="270" stroke="white" strokeWidth="1.5" />
-        <line x1="68" y1="90" x2="35" y2="130" stroke="white" strokeWidth="1.2" />
-        <line x1="70" y1="150" x2="110" y2="175" stroke="white" strokeWidth="1.2" />
-        <line x1="66" y1="200" x2="38" y2="230" stroke="white" strokeWidth="1.2" />
+        <path
+          d="M80 20 C110 60, 155 130, 130 260 C110 360, 30 380, 10 300 C-10 210, 30 80, 80 20Z"
+          fill="white"
+        />
+        <path
+          d="M90 10 C120 50, 162 122, 138 252"
+          stroke="white"
+          strokeWidth="2"
+          fill="none"
+        />
+        <line
+          x1="80"
+          y1="20"
+          x2="62"
+          y2="270"
+          stroke="white"
+          strokeWidth="1.5"
+        />
+        <line
+          x1="68"
+          y1="90"
+          x2="35"
+          y2="130"
+          stroke="white"
+          strokeWidth="1.2"
+        />
+        <line
+          x1="70"
+          y1="150"
+          x2="110"
+          y2="175"
+          stroke="white"
+          strokeWidth="1.2"
+        />
+        <line
+          x1="66"
+          y1="200"
+          x2="38"
+          y2="230"
+          stroke="white"
+          strokeWidth="1.2"
+        />
       </svg>
 
       {/* Content */}
       <div className="relative z-10 max-w-xl mx-auto text-center">
         <motion.h2
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
           className="text-3xl xl:text-4xl font-extrabold text-white mb-3 leading-tight"
         >
           Be Part of Our Journey
         </motion.h2>
         <motion.p
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={1}
           className="text-sm text-white/70 leading-relaxed mb-10"
         >
           Your support helps us turn hope into reality.
         </motion.p>
 
         <motion.div
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={2}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Link
