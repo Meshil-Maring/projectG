@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight, LayoutGrid, X } from "lucide-react";
 import { useHomePageData } from "../../../context/HomePageContext";
 
@@ -48,25 +49,46 @@ export default function ImageGallery() {
           {/* Header */}
           <div className="flex items-start justify-between mb-8">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-widest text-(--color-secondary) mb-1">
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="text-sm font-semibold uppercase tracking-widest text-(--color-secondary) mb-1"
+              >
                 Moments of Change
-              </p>
-              <h2 className="text-3xl font-bold text-heading">
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.55, ease: "easeOut", delay: 0.08 }}
+                className="text-3xl font-bold text-heading"
+              >
                 Moments That Inspire Us
-              </h2>
+              </motion.h2>
             </div>
-            <button
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.12 }}
+              whileHover={{ x: 3 }}
               onClick={openGrid}
               className="flex items-center gap-1.5 text-primary font-semibold text-sm hover:underline mt-1 shrink-0"
             >
               View All Photos
               <ArrowRight size={16} />
-            </button>
+            </motion.button>
           </div>
 
           {/* Gallery grid */}
           <div className="grid grid-cols-3 grid-rows-2 gap-4 h-120">
-            <button
+            <motion.button
+              initial={{ opacity: 0, scale: 0.93 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => openLightbox(0)}
               className="row-span-2 overflow-hidden rounded-2xl focus:outline-none group"
             >
@@ -75,10 +97,14 @@ export default function ImageGallery() {
                 alt={large.alt}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-            </button>
+            </motion.button>
             {small.slice(0, 4).map((photo, i) => (
-              <button
+              <motion.button
                 key={photo.id}
+                initial={{ opacity: 0, scale: 0.9, y: 16 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ delay: 0.1 + i * 0.08, duration: 0.5, ease: "easeOut" }}
                 onClick={() => openLightbox(i + 1)}
                 className="overflow-hidden rounded-2xl focus:outline-none group"
               >
@@ -87,7 +113,7 @@ export default function ImageGallery() {
                   alt={photo.alt}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>

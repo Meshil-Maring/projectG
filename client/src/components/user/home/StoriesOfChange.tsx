@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { useHomePageData } from "../../../context/HomePageContext";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" },
+  }),
+};
 
 const VISIBLE = 3;
 
@@ -22,69 +32,109 @@ export default function StoriesOfChange() {
         {/* Header row */}
         <div className="flex items-start justify-between mb-10">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-[color:var(--color-secondary)] mb-2">
+            <motion.p
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={0}
+              className="text-xs font-bold uppercase tracking-widest text-(--color-secondary) mb-2"
+            >
               Stories of Change
-            </p>
-            <h2 className="text-3xl font-bold text-[color:var(--color-heading)]">
+            </motion.p>
+            <motion.h2
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={1}
+              className="text-3xl font-bold text-heading"
+            >
               Real People. Real Impact.
-            </h2>
+            </motion.h2>
           </div>
-          <Link
-            to="/stories"
-            className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[color:var(--color-primary-light)] hover:underline mt-1 shrink-0"
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={2}
           >
-            Read More Stories <span aria-hidden>→</span>
-          </Link>
+            <Link
+              to="/stories"
+              className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-(--color-primary-light) hover:underline mt-1 shrink-0"
+            >
+              Read More Stories <span aria-hidden>→</span>
+            </Link>
+          </motion.div>
         </div>
 
         {/* Cards + nav wrapper */}
         <div className="flex items-center gap-4">
           {/* Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 flex-1 min-w-0">
-            {visible.map((story) => (
-              <StoryCard key={story.id} {...story} />
-            ))}
+            <AnimatePresence mode="popLayout">
+              {visible.map((story, i) => (
+                <motion.div
+                  key={story.id}
+                  initial={{ opacity: 0, y: 24, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -16, scale: 0.96 }}
+                  transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
+                >
+                  <StoryCard {...story} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
 
           {/* Nav arrows */}
           <div className="hidden lg:flex flex-col gap-2 shrink-0">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.93 }}
               onClick={prev}
               disabled={index === 0}
               aria-label="Previous stories"
-              className="w-10 h-10 rounded-full border border-[color:var(--color-border)] flex items-center justify-center text-[color:var(--color-muted)] hover:border-[color:var(--color-primary-light)] hover:text-[color:var(--color-primary-light)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 rounded-full border border-(--color-border) flex items-center justify-center text-muted hover:border-(--color-primary-light) hover:text-(--color-primary-light) disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft size={18} />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.93 }}
               onClick={next}
               disabled={index >= maxIndex}
               aria-label="Next stories"
-              className="w-10 h-10 rounded-full border border-[color:var(--color-primary-light)] flex items-center justify-center text-[color:var(--color-primary-light)] hover:bg-[color:var(--color-primary-light)] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 rounded-full border border-(--color-primary-light) flex items-center justify-center text-(--color-primary-light) hover:bg-(--color-primary-light) hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight size={18} />
-            </button>
+            </motion.button>
           </div>
         </div>
 
         {/* Mobile nav */}
         <div className="flex justify-center gap-3 mt-8 lg:hidden">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.93 }}
             onClick={prev}
             disabled={index === 0}
             aria-label="Previous stories"
-            className="w-10 h-10 rounded-full border border-[color:var(--color-border)] flex items-center justify-center text-[color:var(--color-muted)] disabled:opacity-30 transition-colors"
+            className="w-10 h-10 rounded-full border border-(--color-border) flex items-center justify-center text-muted disabled:opacity-30 transition-colors"
           >
             <ChevronLeft size={18} />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.93 }}
             onClick={next}
             disabled={index >= maxIndex}
             aria-label="Next stories"
-            className="w-10 h-10 rounded-full border border-[color:var(--color-primary-light)] flex items-center justify-center text-[color:var(--color-primary-light)] disabled:opacity-30 transition-colors"
+            className="w-10 h-10 rounded-full border border-(--color-primary-light) flex items-center justify-center text-(--color-primary-light) disabled:opacity-30 transition-colors"
           >
             <ChevronRight size={18} />
-          </button>
+          </motion.button>
         </div>
       </div>
     </section>
@@ -100,35 +150,36 @@ type StoryCardProps = {
 
 function StoryCard({ image, quote, name, role }: StoryCardProps) {
   return (
-    <div className="flex gap-4 p-5 rounded-2xl border border-[color:var(--color-border)] bg-white hover:shadow-[var(--shadow-card)] transition-shadow duration-200">
+    <motion.div
+      whileHover={{ y: -4, boxShadow: "var(--shadow-card)" }}
+      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      className="flex gap-4 p-5 rounded-2xl border border-(--color-border) bg-white transition-shadow duration-200"
+    >
       {/* Avatar */}
       <div className="shrink-0">
         <img
           src={image}
           alt={name}
-          className="w-14 h-14 rounded-full object-cover ring-2 ring-[color:var(--color-border)]"
+          className="w-14 h-14 rounded-full object-cover ring-2 ring-(--color-border)"
         />
       </div>
 
       {/* Content */}
       <div className="flex flex-col gap-2 min-w-0">
-        {/* Opening quote mark */}
         <span
-          className="text-4xl leading-none font-serif text-[color:var(--color-primary-light)] select-none -mt-1"
+          className="text-4xl leading-none font-serif text-(--color-primary-light) select-none -mt-1"
           aria-hidden
         >
           &ldquo;
         </span>
-        <p className="text-sm text-[color:var(--color-body)] leading-relaxed -mt-2">
+        <p className="text-sm text-body leading-relaxed -mt-2">
           {quote}
         </p>
         <div className="mt-1">
-          <p className="text-sm font-bold text-[color:var(--color-heading)]">
-            {name}
-          </p>
-          <p className="text-xs text-[color:var(--color-muted)]">{role}</p>
+          <p className="text-sm font-bold text-heading">{name}</p>
+          <p className="text-xs text-muted">{role}</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

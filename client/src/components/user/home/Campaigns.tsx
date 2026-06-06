@@ -1,8 +1,18 @@
 import { Leaf, BookOpen, HeartPulse, Utensils, Scale, Compass } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import CampaignCard, {
   type CampaignCardData,
 } from "../../../shared/components/CampaignCard";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.09, duration: 0.55, ease: "easeOut" },
+  }),
+};
 
 /**
  * Replace this static array with a real API/TanStack Query fetch.
@@ -90,30 +100,64 @@ export default function Campaigns() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="mb-10 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[color:var(--color-secondary)] mb-2">
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0}
+            className="text-sm font-semibold uppercase tracking-widest text-(--color-secondary) mb-2"
+          >
             Active Campaigns
-          </p>
-          <h2 className="text-3xl font-bold text-[color:var(--color-heading)]">
+          </motion.p>
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={1}
+            className="text-3xl font-bold text-heading"
+          >
             Causes That Need Your Support
-          </h2>
+          </motion.h2>
         </div>
 
         {/* Cards */}
         <div className="flex flex-wrap justify-center gap-6">
-          {campaigns.map(({ id, ...card }) => (
-            <CampaignCard key={id} {...card} />
+          {campaigns.map(({ id, ...card }, i) => (
+            <motion.div
+              key={id}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-40px" }}
+              custom={i}
+              whileHover={{ y: -6, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            >
+              <CampaignCard {...card} />
+            </motion.div>
           ))}
         </div>
 
         {/* View All */}
-        <div className="mt-10 flex justify-center">
-          <Link
-            to="/causes"
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full border-2 border-[color:var(--color-secondary)] text-[color:var(--color-secondary)] text-sm font-semibold hover:bg-[color:var(--color-secondary)] hover:text-white transition-colors duration-200"
-          >
-            View All Causes <span aria-hidden>→</span>
-          </Link>
-        </div>
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0}
+          className="mt-10 flex justify-center"
+        >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+            <Link
+              to="/causes"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full border-2 border-(--color-secondary) text-(--color-secondary) text-sm font-semibold hover:bg-(--color-secondary) hover:text-white transition-colors duration-200"
+            >
+              View All Causes <span aria-hidden>→</span>
+            </Link>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

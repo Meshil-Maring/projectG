@@ -6,8 +6,6 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Heart,
-  Users,
   Volume2,
   VolumeX,
   Maximize2,
@@ -22,32 +20,6 @@ const fmt = (s: number) => {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 };
 
-const features = [
-  {
-    key: "heart",
-    bgColor: "bg-blue-100",
-    iconColor: "text-blue-600",
-    label: "Real People\nReal Stories",
-    Icon: Heart,
-    filled: true,
-  },
-  {
-    key: "impact",
-    bgColor: "bg-green-100",
-    iconColor: "text-green-600",
-    label: "Meaningful\nImpact",
-    Icon: Users,
-    filled: false,
-  },
-  {
-    key: "together",
-    bgColor: "bg-orange-100",
-    iconColor: "text-orange-500",
-    label: "Stronger\nTogether",
-    Icon: Users,
-    filled: false,
-  },
-];
 
 export default function VideoStories() {
   const { data } = useHomePageData();
@@ -357,31 +329,6 @@ export default function VideoStories() {
                 {current.description}
               </motion.p>
 
-              <motion.div
-                variants={{
-                  hidden: { opacity: 0, y: 16 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-                  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
-                }}
-                className="flex gap-6 mb-8"
-              >
-                {features.map(({ key, bgColor, iconColor, label, Icon, filled }) => (
-                  <div key={key} className="flex flex-col items-center gap-2 text-center">
-                    <div
-                      className={`w-14 h-14 rounded-full ${bgColor} flex items-center justify-center`}
-                    >
-                      <Icon
-                        size={24}
-                        className={iconColor}
-                        fill={filled ? "currentColor" : "none"}
-                      />
-                    </div>
-                    <span className="text-xs font-semibold text-heading whitespace-pre-line leading-tight">
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </motion.div>
 
               <motion.button
                 variants={{

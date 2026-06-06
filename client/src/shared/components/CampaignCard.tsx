@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export interface CampaignCardData {
   id: string | number;
@@ -10,7 +11,7 @@ export interface CampaignCardData {
   title: string;
   description: string;
   amountRaised: number;
-  percentage: number; // 0–100, sourced from backend
+  percentage: number;
 }
 
 type Props = Omit<CampaignCardData, "id">;
@@ -29,15 +30,20 @@ export default function CampaignCard({
   const formatted = new Intl.NumberFormat("en-IN").format(amountRaised);
 
   return (
-    <div className="bg-white rounded-2xl shadow-[var(--shadow-card)] overflow-hidden w-64 shrink-0">
+    <motion.div
+      whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(0,0,0,0.12)" }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
+      className="bg-white rounded-2xl shadow-(--shadow-card) overflow-hidden w-64 shrink-0"
+    >
       {/* ── Image ── */}
-      <div className="relative">
-        <img
+      <div className="relative overflow-hidden">
+        <motion.img
+          whileHover={{ scale: 1.06 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           src={image}
           alt={imageAlt}
           className="w-full h-40 object-cover"
         />
-        {/* Category icon badge — sits half over the image */}
         <span
           className="absolute bottom-0 left-4 translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
           style={{ backgroundColor: categoryColor }}
@@ -49,40 +55,41 @@ export default function CampaignCard({
 
       {/* ── Body ── */}
       <div className="px-4 pt-8 pb-4 flex flex-col gap-2">
-        <h3 className="text-[color:var(--color-heading)] font-bold text-base leading-snug">
+        <h3 className="text-heading font-bold text-base leading-snug">
           {title}
         </h3>
-        <p className="text-[color:var(--color-body)] text-xs leading-relaxed">
+        <p className="text-body text-xs leading-relaxed">
           {description}
         </p>
 
-        {/* Amount + percentage */}
         <div className="flex items-center justify-between mt-1">
-          <span className="text-[color:var(--color-heading)] font-semibold text-sm">
+          <span className="text-heading font-semibold text-sm">
             ₹{formatted} raised
           </span>
-          <span className="text-[color:var(--color-body)] text-sm font-medium">
+          <span className="text-body text-sm font-medium">
             {clamped}%
           </span>
         </div>
 
-        {/* Progress bar */}
-        <div className="w-full h-1.5 rounded-full bg-[color:var(--color-track)] overflow-hidden">
-          <div
-            className="h-full rounded-full transition-[width] duration-500 ease-out"
-            style={{ width: `${clamped}%`, backgroundColor: categoryColor }}
+        <div className="w-full h-1.5 rounded-full bg-(--color-track) overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            whileInView={{ width: `${clamped}%` }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
+            className="h-full rounded-full"
+            style={{ backgroundColor: categoryColor }}
           />
         </div>
 
-        {/* Donate button */}
         <Link
           to="/donate"
-          className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-90"
-          style={{ backgroundColor: categoryColor }}
+          className="mt-2 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
+          style={{ color: categoryColor }}
         >
-          Donate Now
+          Support this cause <span aria-hidden>→</span>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }
