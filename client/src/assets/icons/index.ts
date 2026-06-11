@@ -1,0 +1,14 @@
+export { default as FacebookIcon } from "./FacebookIcon";
+export { default as LinkedinIcon } from "./LinkedinIcon";
+export { default as TwitterIcon } from "./TwitterIcon";
+export { default as InstagramIcon } from "./InstagramIcon";
+export { default as YoutubeIcon } from "./YoutubeIcon";
+export { default as YoutubeLogoIcon } from "./YoutubeLogoIcon";
+export { default as ChevronLeftIcon } from "./ChevronLeftIcon";
+export { default as ChevronRightIcon } from "./ChevronRightIcon";
+export { default as SpinnerIcon } from "./SpinnerIcon";
+export { default as GoogleIcon } from "./GoogleIcon";
+export { default as PhoneIcon } from "./PhoneIcon";
+export { default as MailIcon } from "./MailIcon";
+export { default as MapPinIcon } from "./MapPinIcon";
+export { default as HeartIcon } from "./HeartIcon";

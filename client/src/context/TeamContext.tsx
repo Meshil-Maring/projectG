@@ -77,10 +77,10 @@ export function TeamProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- context + hook co-location is intentional
 export function useTeamData() {
   const ctx = useContext(TeamContext);
   if (!ctx) throw new Error("useTeamData must be used within TeamProvider");
   return ctx;
 }
 
-export { DEFAULT_TEAM };

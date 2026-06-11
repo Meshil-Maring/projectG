@@ -1,49 +1,27 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTeamData } from "../../../context/TeamContext";
-
-const FacebookIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-  </svg>
-);
-const LinkedinIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect x="2" y="9" width="4" height="12" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
-);
-const TwitterIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
-  </svg>
-);
-
-const ChevronLeft = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="15 18 9 12 15 6" />
-  </svg>
-);
-const ChevronRight = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-);
+import {
+  FacebookIcon,
+  LinkedinIcon,
+  TwitterIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "../../../assets/icons";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" as const },
   }),
 };
 
 const slideVariants = {
   enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 60 : -60 }),
-  center: { opacity: 1, x: 0, transition: { duration: 0.38, ease: "easeOut" } },
-  exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -60 : 60, transition: { duration: 0.28, ease: "easeIn" } }),
+  center: { opacity: 1, x: 0, transition: { duration: 0.38, ease: "easeOut" as const } },
+  exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -60 : 60, transition: { duration: 0.28, ease: "easeIn" as const } }),
 };
 
 const CARDS_PER_PAGE = 6;
@@ -57,7 +35,7 @@ function SocialIcons() {
           title="Coming soon"
           className="w-7 h-7 rounded-full bg-[#f0f4ff] flex items-center justify-center text-primary opacity-40 cursor-not-allowed"
         >
-          <Icon />
+          <Icon width={12} height={12} />
         </span>
       ))}
     </div>
@@ -177,7 +155,7 @@ export default function AboutTeam() {
                 exit="exit"
                 className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5"
               >
-                {currentMembers.map(({ name, role, color }, i) => {
+                {currentMembers.map(({ name, role, color }) => {
                   const initials = name.split(" ").map((w) => w[0]).join("");
                   return (
                     <div
@@ -207,7 +185,7 @@ export default function AboutTeam() {
               disabled={page === 0}
               className="flex items-center gap-1.5 px-5 py-2 rounded-full border border-primary/20 text-primary text-sm font-semibold bg-white hover:bg-[#f0f4ff] disabled:opacity-30 disabled:cursor-not-allowed transition"
             >
-              <ChevronLeft /> Prev
+              <ChevronLeftIcon /> Prev
             </button>
 
             {/* Dots */}
@@ -226,7 +204,7 @@ export default function AboutTeam() {
               disabled={page === totalPages - 1}
               className="flex items-center gap-1.5 px-5 py-2 rounded-full border border-primary/20 text-primary text-sm font-semibold bg-white hover:bg-[#f0f4ff] disabled:opacity-30 disabled:cursor-not-allowed transition"
             >
-              Next <ChevronRight />
+              Next <ChevronRightIcon />
             </button>
           </div>
 

@@ -1,4 +1,5 @@
 import Navbar from "../../shared/components/Navbar";
+import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
 import ContactHero from "../../components/user/contact/ContactHero";
 import ContactFormSection from "../../components/user/contact/ContactFormSection";
@@ -15,6 +16,7 @@ export default function ContactPage() {
       <SectionNavigator sections={sections} />
       <div id="contact-hero"><ContactHero /></div>
       <div id="contact-form"><ContactFormSection /></div>
+      <Footer />
     </>
   );
 }

@@ -284,10 +284,10 @@ export function HomePageProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- context + hook co-location is intentional
 export function useHomePageData() {
   const ctx = useContext(HomePageContext);
   if (!ctx) throw new Error("useHomePageData must be used within HomePageProvider");
   return ctx;
 }
 
-export { DEFAULT_DATA };

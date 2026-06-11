@@ -15,7 +15,6 @@ const cardVariants = {
 export default function Groups() {
   return (
     <section
-      id="groups"
       style={{
         backgroundColor: "#f8fafc",
         padding: "5rem 1.5rem",

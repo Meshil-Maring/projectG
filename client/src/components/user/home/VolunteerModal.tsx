@@ -78,6 +78,9 @@ export default function VolunteerModal({ onClose }: Props) {
       >
         <motion.div
           key="card"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Volunteer sign-up"
           initial={{ opacity: 0, scale: 0.88, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 16 }}
@@ -87,6 +90,7 @@ export default function VolunteerModal({ onClose }: Props) {
         >
           <button
             onClick={onClose}
+            aria-label="Close dialog"
             className="absolute top-4 right-4 p-1.5 rounded-full text-gray-400 hover:bg-gray-100 transition-colors cursor-pointer"
           >
             <X size={18} />
@@ -120,11 +124,13 @@ export default function VolunteerModal({ onClose }: Props) {
               <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
                 {/* Name */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-name" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
                     Full Name <span className="text-[#e63975]">*</span>
                   </label>
                   <input
+                    id="volunteer-name"
                     type="text"
+                    aria-invalid={!!errors.name}
                     value={form.name}
                     onChange={(e) => {
                       setForm((p) => ({ ...p, name: e.target.value }));
@@ -140,11 +146,13 @@ export default function VolunteerModal({ onClose }: Props) {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-email" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
                     Email <span className="text-[#e63975]">*</span>
                   </label>
                   <input
+                    id="volunteer-email"
                     type="email"
+                    aria-invalid={!!errors.email}
                     value={form.email}
                     onChange={(e) => {
                       setForm((p) => ({ ...p, email: e.target.value }));
@@ -160,10 +168,11 @@ export default function VolunteerModal({ onClose }: Props) {
 
                 {/* Phone */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-phone" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
                     Phone <span className="text-gray-400 font-normal">(optional)</span>
                   </label>
                   <input
+                    id="volunteer-phone"
                     type="tel"
                     value={form.phone}
                     onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
@@ -184,6 +193,7 @@ export default function VolunteerModal({ onClose }: Props) {
                         <button
                           key={label}
                           type="button"
+                          aria-pressed={selected}
                           onClick={() => toggleArea(label)}
                           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-xs font-semibold transition-colors duration-150 cursor-pointer ${
                             selected
@@ -202,11 +212,12 @@ export default function VolunteerModal({ onClose }: Props) {
 
                 {/* Message */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-message" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
                     Why do you want to volunteer?{" "}
                     <span className="text-gray-400 font-normal">(optional)</span>
                   </label>
                   <textarea
+                    id="volunteer-message"
                     value={form.message}
                     onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
                     placeholder="Tell us a little about yourself..."

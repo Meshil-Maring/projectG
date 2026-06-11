@@ -96,10 +96,10 @@ export function GroupActivitiesProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- context + hook co-location is intentional
 export function useGroupActivities() {
   const ctx = useContext(GroupActivitiesContext);
   if (!ctx) throw new Error("useGroupActivities must be used within GroupActivitiesProvider");
   return ctx;
 }
 
-export { DEFAULT_DATA as GROUP_ACTIVITIES_DEFAULT };

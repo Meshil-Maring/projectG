@@ -14,7 +14,7 @@ export default function Donate() {
             initial={{ opacity: 0, x: -40, scale: 0.95 }}
             whileInView={{ opacity: 1, x: 0, scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }}
             className="shrink-0 w-full lg:w-95 flex justify-center"
           >
             <img
@@ -30,7 +30,7 @@ export default function Donate() {
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+              transition={{ duration: 0.5, ease: "easeOut" as const, delay: 0.1 }}
               className="text-sm font-semibold uppercase tracking-widest text-purple mb-3"
             >
               Make a Difference
@@ -39,7 +39,7 @@ export default function Donate() {
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.55, ease: "easeOut", delay: 0.18 }}
+              transition={{ duration: 0.55, ease: "easeOut" as const, delay: 0.18 }}
               className="text-3xl lg:text-4xl font-bold text-heading leading-tight mb-4"
             >
               Your Support Can <br className="hidden sm:block" />
@@ -49,7 +49,7 @@ export default function Donate() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: 0.26 }}
+              transition={{ duration: 0.5, ease: "easeOut" as const, delay: 0.26 }}
               className="text-body text-base leading-relaxed mb-8 max-w-md"
             >
               Every contribution, no matter how small, brings hope and creates a
@@ -60,7 +60,7 @@ export default function Donate() {
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: 0.34 }}
+              transition={{ duration: 0.5, ease: "easeOut" as const, delay: 0.34 }}
             >
               <motion.div
                 whileHover={{ scale: 1.06 }}

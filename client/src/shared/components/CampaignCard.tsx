@@ -39,7 +39,7 @@ export default function CampaignCard({
       <div className="relative overflow-hidden">
         <motion.img
           whileHover={{ scale: 1.06 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" as const }}
           src={image}
           alt={imageAlt}
           className="w-full h-40 object-cover"
@@ -76,7 +76,7 @@ export default function CampaignCard({
             initial={{ width: 0 }}
             whileInView={{ width: `${clamped}%` }}
             viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
+            transition={{ duration: 0.9, ease: "easeOut" as const, delay: 0.2 }}
             className="h-full rounded-full"
             style={{ backgroundColor: categoryColor }}
           />

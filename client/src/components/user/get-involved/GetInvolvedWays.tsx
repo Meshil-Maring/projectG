@@ -6,7 +6,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" as const },
   }),
 };
 
@@ -47,7 +47,7 @@ const ways = [
     description:
       "Organisations and businesses can collaborate with us to create sustainable impact through joint programs and resources.",
     cta: "Become a Partner",
-    href: "#partner",
+    href: "/contact",
     color: "#0d9488",
     bg: "#f0fdfa",
   },

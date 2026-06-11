@@ -122,7 +122,13 @@ export default function Navbar() {
           className="hidden md:flex"
         >
           {navLinks.map((link) => {
-            const isActive = link.route ? location.pathname === link.route : false;
+            const isActive = link.route
+              ? location.pathname === link.route
+              : link.label === "Our Groups"
+              ? location.pathname.startsWith("/groups")
+              : link.label === "Our Work"
+              ? ourWorkLinks.some((l) => l.href === location.pathname)
+              : false;
 
             /* ── Our Groups dropdown ── */
             if (link.label === "Our Groups") {
@@ -134,9 +140,11 @@ export default function Navbar() {
                   onMouseEnter={() => setGroupsOpen(true)}
                   onMouseLeave={() => setGroupsOpen(false)}
                 >
-                  <a
-                    href={link.href}
-                    onClick={(e) => e.preventDefault()}
+                  <button
+                    type="button"
+                    aria-haspopup="menu"
+                    aria-expanded={groupsOpen}
+                    onClick={() => setGroupsOpen((v) => !v)}
                     onMouseEnter={() => setHoveredLink(link.label)}
                     onMouseLeave={() => setHoveredLink(null)}
                     style={{
@@ -145,7 +153,10 @@ export default function Navbar() {
                       fontSize: "0.82rem",
                       fontWeight: isActive ? 600 : 500,
                       color: linkColor(link.label, isActive),
-                      textDecoration: "none",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
                       whiteSpace: "nowrap",
                       transition: "color 0.2s",
                       display: "inline-flex",
@@ -176,7 +187,7 @@ export default function Navbar() {
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
-                  </a>
+                  </button>
 
                   <AnimatePresence>
                     {groupsOpen && (
@@ -184,7 +195,7 @@ export default function Navbar() {
                         initial={{ opacity: 0, y: -6 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        transition={{ duration: 0.18, ease: "easeOut" as const }}
                         style={{
                           position: "absolute",
                           top: "calc(100% + 4px)",
@@ -271,9 +282,11 @@ export default function Navbar() {
                   onMouseEnter={() => setOurWorkOpen(true)}
                   onMouseLeave={() => setOurWorkOpen(false)}
                 >
-                  <a
-                    href={link.href}
-                    onClick={(e) => e.preventDefault()}
+                  <button
+                    type="button"
+                    aria-haspopup="menu"
+                    aria-expanded={ourWorkOpen}
+                    onClick={() => setOurWorkOpen((v) => !v)}
                     onMouseEnter={() => setHoveredLink(link.label)}
                     onMouseLeave={() => setHoveredLink(null)}
                     style={{
@@ -282,7 +295,10 @@ export default function Navbar() {
                       fontSize: "0.82rem",
                       fontWeight: isActive ? 600 : 500,
                       color: linkColor(link.label, isActive),
-                      textDecoration: "none",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
                       whiteSpace: "nowrap",
                       transition: "color 0.2s",
                       display: "inline-flex",
@@ -298,7 +314,22 @@ export default function Navbar() {
                         transform: ourWorkOpen ? "rotate(180deg)" : "rotate(0deg)",
                       }}
                     />
-                  </a>
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        style={{
+                          position: "absolute",
+                          bottom: "-2px",
+                          left: "0.65rem",
+                          right: "0.65rem",
+                          height: "2.5px",
+                          borderRadius: "2px",
+                          backgroundColor: "#1a3270",
+                        }}
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </button>
 
                   <AnimatePresence>
                     {ourWorkOpen && (
@@ -306,7 +337,7 @@ export default function Navbar() {
                         initial={{ opacity: 0, y: -6 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        transition={{ duration: 0.18, ease: "easeOut" as const }}
                         style={{
                           position: "absolute",
                           top: "calc(100% + 4px)",
@@ -456,6 +487,8 @@ export default function Navbar() {
           <button
             onClick={() => setMenuOpen((v) => !v)}
             className="md:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
             style={{
               background: "none",
               border: "none",
@@ -476,7 +509,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.25, ease: "easeInOut" as const }}
             style={{
               overflow: "hidden",
               borderTop: "1px solid #e2e8f0",
@@ -492,6 +525,7 @@ export default function Navbar() {
                     <div key={link.label}>
                       <button
                         onClick={() => setMobileGroupsOpen((v) => !v)}
+                        aria-expanded={mobileGroupsOpen}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -523,7 +557,7 @@ export default function Navbar() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2, ease: "easeInOut" }}
+                            transition={{ duration: 0.2, ease: "easeInOut" as const }}
                             style={{ overflow: "hidden" }}
                           >
                             {groups.map((group) => {
@@ -582,6 +616,7 @@ export default function Navbar() {
                     <div key={link.label}>
                       <button
                         onClick={() => setMobileOurWorkOpen((v) => !v)}
+                        aria-expanded={mobileOurWorkOpen}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -613,7 +648,7 @@ export default function Navbar() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2, ease: "easeInOut" }}
+                            transition={{ duration: 0.2, ease: "easeInOut" as const }}
                             style={{ overflow: "hidden" }}
                           >
                             {ourWorkLinks.map((item) => {

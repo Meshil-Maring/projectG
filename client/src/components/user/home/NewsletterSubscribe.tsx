@@ -92,6 +92,7 @@ export default function NewsletterSubscribe() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
+                  aria-label="Email address"
                   required
                   style={{
                     flex: 1,

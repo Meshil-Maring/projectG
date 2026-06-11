@@ -12,6 +12,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { useHomePageData } from "../../../context/HomePageContext";
+import { YoutubeLogoIcon } from "../../../assets/icons";
 
 const fmt = (s: number) => {
   if (!s || isNaN(s)) return "0:00";
@@ -34,9 +35,7 @@ export default function VideoStories() {
 
   const safeIndex = videos.length > 0 ? Math.min(currentIndex, videos.length - 1) : 0;
   const current = videos[safeIndex];
-
-  if (!current) return null;
-  const isYoutube = !!current.youtubeId;
+  const isYoutube = !!current?.youtubeId;
 
   // Sync play/pause for native videos only
   useEffect(() => {
@@ -50,13 +49,6 @@ export default function VideoStories() {
     }
   }, [isPlaying, isYoutube]);
 
-  // Reset state when switching videos
-  useEffect(() => {
-    setIsPlaying(false);
-    setProgress(0);
-    setElapsed(0);
-  }, [currentIndex]);
-
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (!video || !video.duration) return;
@@ -64,16 +56,29 @@ export default function VideoStories() {
     setProgress((video.currentTime / video.duration) * 100);
   };
 
+  const resetPlayback = () => {
+    setIsPlaying(false);
+    setProgress(0);
+    setElapsed(0);
+  };
+
+  const switchTo = (index: number) => {
+    setCurrentIndex(index);
+    resetPlayback();
+  };
+
   const handlePrev = () =>
-    setCurrentIndex((i) => (i - 1 + videos.length) % Math.max(videos.length, 1));
+    switchTo((safeIndex - 1 + videos.length) % Math.max(videos.length, 1));
 
   const handleNext = () =>
-    setCurrentIndex((i) => (i + 1) % Math.max(videos.length, 1));
+    switchTo((safeIndex + 1) % Math.max(videos.length, 1));
 
   const selectVideo = (index: number) => {
-    setCurrentIndex(index);
+    switchTo(index);
     setShowAllVideos(false);
   };
+
+  if (!current) return null;
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -146,9 +151,7 @@ export default function VideoStories() {
                         </button>
                         {/* YouTube badge */}
                         <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full font-medium">
-                          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-red-500">
-                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                          </svg>
+                          <YoutubeLogoIcon className="w-3.5 h-3.5 fill-red-500" />
                           YouTube
                         </div>
                       </>
@@ -299,7 +302,7 @@ export default function VideoStories() {
               <motion.p
                 variants={{
                   hidden: { opacity: 0, y: 16 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
                   exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
                 }}
                 className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-3"
@@ -310,7 +313,7 @@ export default function VideoStories() {
               <motion.h2
                 variants={{
                   hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
                   exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
                 }}
                 className="text-3xl xl:text-4xl font-bold text-heading leading-snug mb-4"
@@ -321,7 +324,7 @@ export default function VideoStories() {
               <motion.p
                 variants={{
                   hidden: { opacity: 0, y: 18 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
                   exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
                 }}
                 className="text-body leading-relaxed mb-8"
@@ -333,7 +336,7 @@ export default function VideoStories() {
               <motion.button
                 variants={{
                   hidden: { opacity: 0, y: 14 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
                   exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
                 }}
                 onClick={() => setIsPlaying((p) => !p)}
@@ -423,9 +426,7 @@ export default function VideoStories() {
                       {/* YouTube badge in grid */}
                       {video.youtubeId && (
                         <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
-                          <svg viewBox="0 0 24 24" className="w-3 h-3 fill-red-500">
-                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                          </svg>
+                          <YoutubeLogoIcon className="w-3 h-3 fill-red-500" />
                           YouTube
                         </div>
                       )}

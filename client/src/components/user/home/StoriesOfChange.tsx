@@ -9,7 +9,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" as const },
   }),
 };
 
@@ -80,7 +80,7 @@ export default function StoriesOfChange() {
                   initial={{ opacity: 0, y: 24, scale: 0.97 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -16, scale: 0.96 }}
-                  transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
+                  transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" as const }}
                 >
                   <StoryCard {...story} />
                 </motion.div>

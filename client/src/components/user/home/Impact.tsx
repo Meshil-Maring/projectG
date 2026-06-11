@@ -18,7 +18,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" as const },
   }),
 };
 
@@ -45,7 +45,7 @@ export default function Impact() {
           initial={{ opacity: 0, x: -40, rotate: -6 }}
           whileInView={{ opacity: 1, x: 0, rotate: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
           className="shrink-0 w-64 h-64 xl:w-80 xl:h-80"
         >
           <img
@@ -88,7 +88,7 @@ export default function Impact() {
                   initial={{ opacity: 0, scale: 0.85, y: 20 }}
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
+                  transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" as const }}
                   whileHover={{ y: -4, scale: 1.04 }}
                   className="flex flex-col items-center gap-3 bg-[#f0fdf9] border border-[#ccfbf1] rounded-2xl py-6 px-4 text-center"
                 >

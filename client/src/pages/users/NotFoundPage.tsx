@@ -24,7 +24,7 @@ export default function NotFoundPage() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: "easeOut" as const }}
           style={{ maxWidth: "520px", width: "100%" }}
         >
           {/* 404 number */}

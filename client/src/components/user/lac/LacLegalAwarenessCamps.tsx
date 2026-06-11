@@ -154,7 +154,7 @@ export default function LacLegalAwarenessCamps() {
             </p>
           </div>
           <a
-            href="#contact"
+            href="#contact-section"
             style={{
               background: GOLD,
               color: "#fff",

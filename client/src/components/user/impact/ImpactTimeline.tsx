@@ -77,7 +77,7 @@ export default function ImpactTimeline() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-20px" }}
-              transition={{ delay: i * 0.08, duration: 0.5, ease: "easeOut" }}
+              transition={{ delay: i * 0.08, duration: 0.5, ease: "easeOut" as const }}
               className="relative"
             >
               <div

@@ -8,7 +8,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" as const },
   }),
 };
 
@@ -103,7 +103,7 @@ export default function GetInvolvedDonate() {
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.65, ease: "easeOut" }}
+          transition={{ duration: 0.65, ease: "easeOut" as const }}
           className="flex-shrink-0 flex items-center justify-center"
         >
           <div className="relative w-72 h-64 xl:w-96 xl:h-80">

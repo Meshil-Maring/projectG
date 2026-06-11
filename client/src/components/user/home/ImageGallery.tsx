@@ -23,17 +23,17 @@ export default function ImageGallery() {
     if (!isAnyOverlayOpen) return;
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        if (isLightboxOpen) closeLightbox();
-        else closeAll();
+        if (isLightboxOpen) setActiveIndex(null);
+        else { setShowGrid(false); setActiveIndex(null); }
       }
       if (isLightboxOpen) {
-        if (e.key === "ArrowLeft") prev();
-        if (e.key === "ArrowRight") next();
+        if (e.key === "ArrowLeft") setActiveIndex((i) => (i === null ? 0 : (i - 1 + photos.length) % photos.length));
+        if (e.key === "ArrowRight") setActiveIndex((i) => (i === null ? 0 : (i + 1) % photos.length));
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isAnyOverlayOpen, isLightboxOpen]);
+  }, [isAnyOverlayOpen, isLightboxOpen, photos.length]);
 
   useEffect(() => {
     document.body.style.overflow = isAnyOverlayOpen ? "hidden" : "";
@@ -53,7 +53,7 @@ export default function ImageGallery() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                transition={{ duration: 0.5, ease: "easeOut" as const }}
                 className="text-sm font-semibold uppercase tracking-widest text-(--color-secondary) mb-1"
               >
                 Moments of Change
@@ -62,7 +62,7 @@ export default function ImageGallery() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.55, ease: "easeOut", delay: 0.08 }}
+                transition={{ duration: 0.55, ease: "easeOut" as const, delay: 0.08 }}
                 className="text-3xl font-bold text-heading"
               >
                 Moments That Inspire Us
@@ -72,7 +72,7 @@ export default function ImageGallery() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: 0.12 }}
+              transition={{ duration: 0.5, ease: "easeOut" as const, delay: 0.12 }}
               whileHover={{ x: 3 }}
               onClick={openGrid}
               className="flex items-center gap-1.5 text-primary font-semibold text-sm hover:underline mt-1 shrink-0"
@@ -88,7 +88,7 @@ export default function ImageGallery() {
               initial={{ opacity: 0, scale: 0.93 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
               onClick={() => openLightbox(0)}
               className="row-span-2 overflow-hidden rounded-2xl focus:outline-none group"
             >
@@ -104,7 +104,7 @@ export default function ImageGallery() {
                 initial={{ opacity: 0, scale: 0.9, y: 16 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: 0.1 + i * 0.08, duration: 0.5, ease: "easeOut" }}
+                transition={{ delay: 0.1 + i * 0.08, duration: 0.5, ease: "easeOut" as const }}
                 onClick={() => openLightbox(i + 1)}
                 className="overflow-hidden rounded-2xl focus:outline-none group"
               >

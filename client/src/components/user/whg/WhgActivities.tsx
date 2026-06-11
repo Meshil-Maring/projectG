@@ -12,7 +12,7 @@ import {
   AlertTriangle,
   Camera,
 } from "lucide-react";
-import { PRIMARY, LIGHT_BG, fade } from "./whg.constants";
+import { PRIMARY, SECONDARY, ACCENT, LIGHT_BG, fade } from "./whg.constants";
 import { useGroupActivities } from "../../../context/GroupActivitiesContext";
 
 const whatWeDo = [
@@ -47,73 +47,99 @@ export default function WhgActivities() {
     <section style={{ background: "#fff8f4", padding: "5rem 1.5rem" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
 
-        {/* What We Do / Focus Areas / Impact */}
-        <div
+        {/* ── What We Do ── */}
+        <motion.div {...fade(0)} style={{ marginBottom: "4.5rem" }}>
+          <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: PRIMARY, display: "block", marginBottom: "0.5rem" }}>
+            What We Do
+          </span>
+          <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
+          <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: "#0f172a", marginBottom: "2rem", lineHeight: 1.2 }}>
+            How We Serve
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+            {whatWeDo.map(({ icon: Icon, title, desc }, i) => (
+              <motion.div
+                key={title}
+                {...fade(0.05 + i * 0.06)}
+                whileHover={{ y: -4, boxShadow: "0 12px 28px rgba(194,65,12,0.12)" }}
+                style={{ background: "#ffffff", borderRadius: "1rem", padding: "1.4rem 1.25rem", border: "1px solid #fde8da", boxShadow: "0 2px 8px rgba(194,65,12,0.05)" }}
+              >
+                <div style={{ width: "42px", height: "42px", borderRadius: "11px", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "0.9rem" }}>
+                  <Icon size={19} color={PRIMARY} strokeWidth={1.6} />
+                </div>
+                <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.35rem" }}>{title}</div>
+                <div style={{ fontSize: "0.76rem", color: "#64748b", lineHeight: 1.6 }}>{desc}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── Our Focus Areas ── */}
+        <motion.div {...fade(0)} style={{ marginBottom: "4.5rem" }}>
+          <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: PRIMARY, display: "block", marginBottom: "0.5rem" }}>
+            Our Focus Areas
+          </span>
+          <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
+          <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: "#0f172a", marginBottom: "2rem", lineHeight: 1.2 }}>
+            Where We Make a Difference
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
+            {focusAreas.map(({ icon: Icon, title, desc }, i) => (
+              <motion.div
+                key={title}
+                {...fade(0.05 + i * 0.06)}
+                whileHover={{ y: -4, boxShadow: "0 12px 28px rgba(194,65,12,0.12)" }}
+                style={{ background: "#ffffff", borderRadius: "1rem", padding: "1.5rem 1rem", textAlign: "center" as const, border: "1px solid #fde8da", boxShadow: "0 2px 8px rgba(194,65,12,0.05)" }}
+              >
+                <div style={{ width: "46px", height: "46px", borderRadius: "50%", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 0.7rem" }}>
+                  <Icon size={20} color={PRIMARY} strokeWidth={1.6} />
+                </div>
+                <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.25rem" }}>{title}</div>
+                <div style={{ fontSize: "0.73rem", color: "#64748b", lineHeight: 1.5 }}>{desc}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── Our Impact band ── */}
+        <motion.div
+          {...fade(0.1)}
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "2.5rem",
-            alignItems: "start",
+            position: "relative",
+            overflow: "hidden",
+            background: `linear-gradient(120deg, ${ACCENT} 0%, ${PRIMARY} 55%, ${SECONDARY} 120%)`,
+            borderRadius: "1.25rem",
+            padding: "2.5rem 2rem",
             marginBottom: "5rem",
+            boxShadow: "0 18px 44px rgba(194,65,12,0.22)",
           }}
         >
-          <motion.div {...fade(0)}>
-            <h3 style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: PRIMARY, marginBottom: "1.25rem" }}>
-              WHAT WE DO
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.85rem" }}>
-              {whatWeDo.map(({ icon: Icon, title, desc }) => (
-                <div key={title} style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem", background: "#ffffff", borderRadius: "0.875rem", padding: "0.875rem 1rem", boxShadow: "0 2px 8px rgba(194,65,12,0.05)", border: "1px solid #fde8da" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "9px", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Icon size={17} color={PRIMARY} strokeWidth={1.6} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "0.83rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.15rem" }}>{title}</div>
-                    <div style={{ fontSize: "0.75rem", color: "#64748b", lineHeight: 1.5 }}>{desc}</div>
-                  </div>
+          <div style={{ position: "absolute", top: "-70px", right: "-70px", width: "220px", height: "220px", borderRadius: "50%", background: "rgba(255,255,255,0.07)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "-50px", left: "-50px", width: "170px", height: "170px", borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.75rem", position: "relative" }}>
+            <Heart size={15} color="rgba(255,255,255,0.85)" fill="rgba(255,255,255,0.85)" />
+            <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.85)" }}>
+              Our Impact
+            </span>
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gap: "1.5rem 1rem",
+              position: "relative",
+            }}
+          >
+            {impactStats.map(({ value, label, sub }, i) => (
+              <motion.div key={value} {...fade(0.15 + i * 0.07)} style={{ textAlign: "center" as const }}>
+                <div style={{ fontSize: "clamp(1.6rem, 3vw, 2.1rem)", fontWeight: 800, color: "#ffffff", lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
+                <div style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>
+                  {label} <span style={{ color: "rgba(255,255,255,0.6)", fontWeight: 500 }}>{sub}</span>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div {...fade(0.1)}>
-            <h3 style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: PRIMARY, marginBottom: "1.25rem" }}>
-              OUR FOCUS AREAS
-            </h3>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
-              {focusAreas.map(({ icon: Icon, title, desc }, i) => (
-                <div key={title} style={{ background: "#ffffff", borderRadius: "0.875rem", padding: "1.25rem 1rem", textAlign: "center" as const, boxShadow: "0 2px 8px rgba(194,65,12,0.05)", border: "1px solid #fde8da", ...(i === 4 ? { gridColumn: "1 / -1" } : {}) }}>
-                  <div style={{ width: "42px", height: "42px", borderRadius: "50%", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 0.6rem" }}>
-                    <Icon size={19} color={PRIMARY} strokeWidth={1.6} />
-                  </div>
-                  <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.2rem" }}>{title}</div>
-                  <div style={{ fontSize: "0.72rem", color: "#64748b", lineHeight: 1.45 }}>{desc}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div {...fade(0.2)}>
-            <h3 style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: PRIMARY, marginBottom: "1.25rem" }}>
-              OUR IMPACT
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.75rem" }}>
-              {impactStats.map(({ value, label, sub }) => (
-                <div key={value} style={{ display: "flex", alignItems: "center", gap: "1rem", background: "#ffffff", borderRadius: "0.875rem", padding: "0.875rem 1.1rem", boxShadow: "0 2px 8px rgba(194,65,12,0.05)", border: "1px solid #fde8da" }}>
-                  <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Heart size={18} color={PRIMARY} strokeWidth={1.6} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "1.3rem", fontWeight: 800, color: PRIMARY, lineHeight: 1 }}>{value}</div>
-                    <div style={{ fontSize: "0.75rem", color: "#475569", fontWeight: 600 }}>
-                      {label} <span style={{ color: "#94a3b8", fontWeight: 500 }}>{sub}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* Activities Gallery */}
         {activities.length > 0 && (

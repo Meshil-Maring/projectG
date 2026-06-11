@@ -74,7 +74,7 @@ export default function LacCTA() {
           }}
         >
           <a
-            href="/#contact"
+            href="/contact"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -93,7 +93,7 @@ export default function LacCTA() {
             <ArrowRight size={15} />
           </a>
           <a
-            href="/#contact"
+            href="/get-involved"
             style={{
               display: "inline-flex",
               alignItems: "center",

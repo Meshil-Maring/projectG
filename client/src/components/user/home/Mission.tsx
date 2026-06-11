@@ -19,18 +19,18 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.08, duration: 0.55, ease: "easeOut" },
+    transition: { delay: i * 0.08, duration: 0.55, ease: "easeOut" as const },
   }),
 };
 
 const slideLeft = {
   hidden: { opacity: 0, x: -40 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const slideRight = {
   hidden: { opacity: 0, x: 40 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const pillars = [
@@ -122,7 +122,7 @@ export default function Mission() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
+            transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.15 }}
             className="shrink-0 w-full lg:w-56 xl:w-64 rounded-xl overflow-hidden"
           >
             <img
@@ -178,7 +178,7 @@ export default function Mission() {
                   initial={{ opacity: 0, scale: 0.7, y: 12 }}
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1, duration: 0.45, ease: "easeOut" }}
+                  transition={{ delay: 0.3 + i * 0.1, duration: 0.45, ease: "easeOut" as const }}
                   whileHover={{ scale: 1.1, y: -3 }}
                   className="flex flex-col items-center gap-2 w-16 text-center cursor-default"
                 >

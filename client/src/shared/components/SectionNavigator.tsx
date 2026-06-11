@@ -60,7 +60,7 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
   const canPrev = activeIndex > 0;
   const canNext = activeIndex < sections.length - 1;
 
-  const arrowBtn = (onClick: () => void, enabled: boolean, children: React.ReactNode) => ({
+  const arrowBtn = (onClick: () => void, enabled: boolean) => ({
     onClick,
     style: {
       background: enabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.04)",
@@ -185,9 +185,10 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
       >
         {/* Prev button */}
         <button
-          {...arrowBtn(goPrev, canPrev && isHovered, null)}
+          {...arrowBtn(goPrev, canPrev && isHovered)}
+          aria-label="Previous section"
           style={{
-            ...arrowBtn(goPrev, canPrev && isHovered, null).style,
+            ...arrowBtn(goPrev, canPrev && isHovered).style,
             opacity: isHovered ? 1 : 0,
             transform: isHovered ? "scale(1)" : "scale(0.7)",
             transition: "opacity 0.2s ease, transform 0.2s ease, background 0.2s ease",
@@ -210,6 +211,7 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
               key={id}
               onClick={() => scrollTo(id)}
               title={sections.find((s) => s.id === id)?.label}
+              aria-label={`Go to ${sections.find((s) => s.id === id)?.label ?? id} section`}
               style={{
                 background: "none",
                 border: "none",
@@ -239,9 +241,10 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
 
         {/* Next button */}
         <button
-          {...arrowBtn(goNext, canNext && isHovered, null)}
+          {...arrowBtn(goNext, canNext && isHovered)}
+          aria-label="Next section"
           style={{
-            ...arrowBtn(goNext, canNext && isHovered, null).style,
+            ...arrowBtn(goNext, canNext && isHovered).style,
             opacity: isHovered ? 1 : 0,
             transform: isHovered ? "scale(1)" : "scale(0.7)",
             transition: "opacity 0.2s ease, transform 0.2s ease, background 0.2s ease",

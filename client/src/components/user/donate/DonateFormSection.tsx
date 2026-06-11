@@ -21,7 +21,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" as const },
   }),
 };
 
@@ -84,6 +84,7 @@ export default function DonateFormSection() {
             {PRESET_AMOUNTS.map(({ value, label, description }) => (
               <button
                 key={value}
+                aria-pressed={selected === value}
                 onClick={() => setSelected(value)}
                 className={`flex flex-col items-center px-4 py-4 rounded-2xl border-2 text-center transition-all duration-200 cursor-pointer ${
                   selected === value
@@ -107,30 +108,29 @@ export default function DonateFormSection() {
           </div>
 
           {/* Custom amount */}
-          <button
-            onClick={() => setSelected("other")}
-            className={`w-full flex items-center justify-center px-4 py-3.5 rounded-2xl border-2 transition-all duration-200 cursor-pointer mb-7 ${
-              selected === "other"
-                ? "border-[#1a3270] bg-[#eef1fb]"
-                : "border-[#e2e8f0] hover:border-[#93b5f0]"
-            }`}
-          >
-            {selected === "other" ? (
+          {selected === "other" ? (
+            <div className="w-full flex items-center justify-center px-4 py-3.5 rounded-2xl border-2 mb-7 border-[#1a3270] bg-[#eef1fb]">
               <input
                 autoFocus
                 type="number"
+                min={1}
                 placeholder="Enter amount in ₹"
+                aria-label="Custom donation amount in rupees"
                 value={otherValue}
                 onChange={(e) => setOtherValue(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
                 className="text-center text-base font-bold text-[#1a3270] bg-transparent outline-none border-none w-full placeholder:text-[#93b5f0]"
               />
-            ) : (
+            </div>
+          ) : (
+            <button
+              onClick={() => setSelected("other")}
+              className="w-full flex items-center justify-center px-4 py-3.5 rounded-2xl border-2 transition-all duration-200 cursor-pointer mb-7 border-[#e2e8f0] hover:border-[#93b5f0]"
+            >
               <span className="text-sm font-semibold text-[#64748b]">
                 Enter a custom amount
               </span>
-            )}
-          </button>
+            </button>
+          )}
 
           {/* Donate button */}
           <motion.button

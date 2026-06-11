@@ -6,16 +6,19 @@ import App from './App.tsx'
 import { HomePageProvider } from './context/HomePageContext.tsx'
 import { GroupActivitiesProvider } from './context/GroupActivitiesContext.tsx'
 import { TeamProvider } from './context/TeamContext.tsx'
+import { AboutUsProvider } from './context/AboutUsContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <HomePageProvider>
-        <GroupActivitiesProvider>
-          <TeamProvider>
-            <App />
-          </TeamProvider>
-        </GroupActivitiesProvider>
+        <AboutUsProvider>
+          <GroupActivitiesProvider>
+            <TeamProvider>
+              <App />
+            </TeamProvider>
+          </GroupActivitiesProvider>
+        </AboutUsProvider>
       </HomePageProvider>
     </BrowserRouter>
   </StrictMode>,

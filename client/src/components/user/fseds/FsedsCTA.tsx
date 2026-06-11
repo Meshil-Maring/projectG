@@ -119,7 +119,7 @@ export default function FsedsCTA() {
           </p>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" as const }}>
             <a
-              href="/#contact"
+              href="/get-involved"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -138,7 +138,7 @@ export default function FsedsCTA() {
               <ArrowRight size={15} />
             </a>
             <a
-              href="/#contact"
+              href="/contact"
               style={{
                 display: "inline-flex",
                 alignItems: "center",

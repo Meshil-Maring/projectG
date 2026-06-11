@@ -24,7 +24,7 @@ export default function Volunteer() {
           initial={{ opacity: 0, x: -36 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] as const }}
           className="shrink-0 max-w-xs"
         >
           <p className="text-xs font-bold uppercase tracking-widest text-[#e63975] mb-3">
@@ -55,7 +55,7 @@ export default function Volunteer() {
               initial={{ opacity: 0, scale: 0.7, y: 16 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 + i * 0.1, duration: 0.45, ease: "easeOut" }}
+              transition={{ delay: 0.1 + i * 0.1, duration: 0.45, ease: "easeOut" as const }}
               whileHover={{ scale: 1.12, y: -4 }}
               className="flex flex-col items-center gap-2 w-24 text-center cursor-default"
             >
@@ -74,7 +74,7 @@ export default function Volunteer() {
           initial={{ opacity: 0, x: 36, scale: 0.95 }}
           whileInView={{ opacity: 1, x: 0, scale: 1 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }}
           className="shrink-0 w-64 h-48 xl:w-80 xl:h-60 relative"
         >
           <img

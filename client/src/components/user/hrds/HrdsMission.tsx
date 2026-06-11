@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, GraduationCap, BookOpen, Briefcase, Star, Lightbulb } from "lucide-react";
+import { Users, GraduationCap, BookOpen, Briefcase, Star } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./hrds.constants";
 
 const missionPillars = [

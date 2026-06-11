@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, User, Mail, MessageSquare, Tag } from "lucide-react";
+import { SpinnerIcon } from "../../../assets/icons";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" as const },
   }),
 };
 
@@ -140,28 +141,6 @@ export default function ContactFormSection() {
               </motion.div>
             ))}
 
-            {/* Social links */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={3}
-              className="bg-white rounded-2xl p-6 shadow-sm border border-[#e2e8f0]"
-            >
-              <p className="text-sm font-bold text-[#1a1a4b] mb-4">Follow Us</p>
-              <div className="flex gap-3">
-                {["Facebook", "Instagram", "Twitter"].map((s) => (
-                  <div
-                    key={s}
-                    className="flex-1 text-center py-2 rounded-xl text-xs font-semibold text-[#1a3270] cursor-pointer"
-                    style={{ backgroundColor: "#f0f4ff", border: "1.5px solid #d0ddf7" }}
-                  >
-                    {s}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
           </div>
 
           {/* Right — form */}
@@ -195,17 +174,19 @@ export default function ContactFormSection() {
 
                   {/* Name */}
                   <div>
-                    <label className="block text-xs font-semibold text-[#475569] mb-1.5">
+                    <label htmlFor="contact-name" className="block text-xs font-semibold text-[#475569] mb-1.5">
                       Full Name <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94a3b8]" />
                       <input
+                        id="contact-name"
                         type="text"
                         name="name"
                         placeholder="Your full name"
                         value={form.name}
                         onChange={handleChange}
+                        aria-invalid={!!errors.name}
                         style={{ ...inputBase, paddingLeft: "2.25rem", borderColor: errors.name ? "#ef4444" : "#e2e8f0" }}
                         onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
                         onBlur={(e) => { e.target.style.borderColor = errors.name ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
@@ -216,17 +197,19 @@ export default function ContactFormSection() {
 
                   {/* Email */}
                   <div>
-                    <label className="block text-xs font-semibold text-[#475569] mb-1.5">
+                    <label htmlFor="contact-email" className="block text-xs font-semibold text-[#475569] mb-1.5">
                       Email Address <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94a3b8]" />
                       <input
+                        id="contact-email"
                         type="email"
                         name="email"
                         placeholder="you@example.com"
                         value={form.email}
                         onChange={handleChange}
+                        aria-invalid={!!errors.email}
                         style={{ ...inputBase, paddingLeft: "2.25rem", borderColor: errors.email ? "#ef4444" : "#e2e8f0" }}
                         onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
                         onBlur={(e) => { e.target.style.borderColor = errors.email ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
@@ -238,13 +221,15 @@ export default function ContactFormSection() {
 
                 {/* Subject */}
                 <div className="mb-5">
-                  <label className="block text-xs font-semibold text-[#475569] mb-1.5">
+                  <label htmlFor="contact-subject" className="block text-xs font-semibold text-[#475569] mb-1.5">
                     Subject <span className="text-red-500">*</span>
                   </label>
                   <select
+                    id="contact-subject"
                     name="subject"
                     value={form.subject}
                     onChange={handleChange}
+                    aria-invalid={!!errors.subject}
                     style={{ ...inputBase, borderColor: errors.subject ? "#ef4444" : "#e2e8f0" }}
                     onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
                     onBlur={(e) => { e.target.style.borderColor = errors.subject ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
@@ -262,15 +247,17 @@ export default function ContactFormSection() {
 
                 {/* Message */}
                 <div className="mb-7">
-                  <label className="block text-xs font-semibold text-[#475569] mb-1.5">
+                  <label htmlFor="contact-message" className="block text-xs font-semibold text-[#475569] mb-1.5">
                     Message <span className="text-red-500">*</span>
                   </label>
                   <textarea
+                    id="contact-message"
                     name="message"
                     rows={5}
                     placeholder="Tell us how we can help you…"
                     value={form.message}
                     onChange={handleChange}
+                    aria-invalid={!!errors.message}
                     style={{ ...inputBase, resize: "vertical", borderColor: errors.message ? "#ef4444" : "#e2e8f0" }}
                     onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
                     onBlur={(e) => { e.target.style.borderColor = errors.message ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
@@ -305,10 +292,7 @@ export default function ContactFormSection() {
                 >
                   {loading ? (
                     <>
-                      <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z" />
-                      </svg>
+                      <SpinnerIcon className="animate-spin h-4 w-4 text-white" />
                       Sending…
                     </>
                   ) : (

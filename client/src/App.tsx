@@ -1,30 +1,29 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useEffect, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, type ReactNode } from "react";
 import "./App.css";
 
-// User pages
+// Home stays eagerly loaded for the fastest first paint; every other
+// page is split into its own chunk and fetched on navigation.
 import HomePage from "./pages/users/HomePage";
-import AboutUsPage from "./pages/users/AboutUsPage";
-import StoriesPage from "./pages/users/StoriesPage";
-import NoticePage from "./pages/users/NoticePage";
-import CausesPage from "./pages/users/CausesPage";
-import ContactPage from "./pages/users/ContactPage";
-import GetInvolvedPage from "./pages/users/GetInvolvedPage";
-import DonatePage from "./pages/users/DonatePage";
-import ImpactPage from "./pages/users/ImpactPage";
-import LacPage from "./pages/users/LacPage";
-import WhgPage from "./pages/users/WhgPage";
-import HrdsPage from "./pages/users/HrdsPage";
-import CwgPage from "./pages/users/CwgPage";
-import FsedsPage from "./pages/users/FsedsPage";
-import NotFoundPage from "./pages/users/NotFoundPage";
 
-// User components
-import GroupPage from "./components/user/groups/GroupPage";
+const AboutUsPage = lazy(() => import("./pages/users/AboutUsPage"));
+const StoriesPage = lazy(() => import("./pages/users/StoriesPage"));
+const NoticePage = lazy(() => import("./pages/users/NoticePage"));
+const CausesPage = lazy(() => import("./pages/users/CausesPage"));
+const ContactPage = lazy(() => import("./pages/users/ContactPage"));
+const GetInvolvedPage = lazy(() => import("./pages/users/GetInvolvedPage"));
+const DonatePage = lazy(() => import("./pages/users/DonatePage"));
+const ImpactPage = lazy(() => import("./pages/users/ImpactPage"));
+const LacPage = lazy(() => import("./pages/users/LacPage"));
+const WhgPage = lazy(() => import("./pages/users/WhgPage"));
+const HrdsPage = lazy(() => import("./pages/users/HrdsPage"));
+const CwgPage = lazy(() => import("./pages/users/CwgPage"));
+const FsedsPage = lazy(() => import("./pages/users/FsedsPage"));
+const NotFoundPage = lazy(() => import("./pages/users/NotFoundPage"));
 
 // Admin pages
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
-import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
+const AdminDashboardPage = lazy(() => import("./pages/admin/AdminDashboardPage"));
 
 function ProtectedAdminRoute({ children }: { children: ReactNode }) {
   const isAuth = localStorage.getItem("pg_admin_auth") === "1";
@@ -32,17 +31,52 @@ function ProtectedAdminRoute({ children }: { children: ReactNode }) {
 }
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (hash) {
+      // Wait a frame so the target page has rendered before scrolling.
+      requestAnimationFrame(() => {
+        document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" });
+      });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
   return null;
+}
+
+function PageLoader() {
+  return (
+    <div
+      role="status"
+      aria-label="Loading page"
+      style={{
+        minHeight: "60vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <span
+        style={{
+          width: "36px",
+          height: "36px",
+          border: "3px solid #e2e8f0",
+          borderTopColor: "#1a3270",
+          borderRadius: "50%",
+          animation: "pg-spin 0.8s linear infinite",
+        }}
+      />
+      <style>{`@keyframes pg-spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
 }
 
 function App() {
   return (
     <>
       <ScrollToTop />
+      <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* User routes */}
         <Route path="/" element={<HomePage />} />
@@ -54,17 +88,18 @@ function App() {
         <Route path="/get-involved" element={<GetInvolvedPage />} />
         <Route path="/donate" element={<DonatePage />} />
         <Route path="/impact" element={<ImpactPage />} />
-        <Route path="/lac" element={<LacPage />} />
+
+        {/* Group pages — /groups/* is canonical; short slugs redirect */}
         <Route path="/groups/lac" element={<LacPage />} />
-        <Route path="/whg" element={<WhgPage />} />
         <Route path="/groups/whg" element={<WhgPage />} />
-        <Route path="/hrds" element={<HrdsPage />} />
         <Route path="/groups/hrds" element={<HrdsPage />} />
-        <Route path="/cwg" element={<CwgPage />} />
         <Route path="/groups/cwg" element={<CwgPage />} />
-        <Route path="/fseds" element={<FsedsPage />} />
         <Route path="/groups/fseds" element={<FsedsPage />} />
-        <Route path="/groups/:slug" element={<GroupPage />} />
+        <Route path="/lac" element={<Navigate to="/groups/lac" replace />} />
+        <Route path="/whg" element={<Navigate to="/groups/whg" replace />} />
+        <Route path="/hrds" element={<Navigate to="/groups/hrds" replace />} />
+        <Route path="/cwg" element={<Navigate to="/groups/cwg" replace />} />
+        <Route path="/fseds" element={<Navigate to="/groups/fseds" replace />} />
 
         {/* Admin routes */}
         <Route path="/projectG-admin" element={<AdminLoginPage />} />
@@ -79,6 +114,7 @@ function App() {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
     </>
   );
 }

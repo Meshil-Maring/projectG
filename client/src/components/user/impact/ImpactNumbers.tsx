@@ -6,7 +6,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" as const },
   }),
 };
 
@@ -63,7 +63,7 @@ const stats = [
 
 export default function ImpactNumbers() {
   return (
-    <section id="impact-numbers" className="py-20 px-6 bg-white">
+    <section className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <motion.p

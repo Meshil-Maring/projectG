@@ -211,7 +211,7 @@ export default function HrdsHero() {
                 Get Involved
               </a>
               <a
-                href="/#contact"
+                href="/contact"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
