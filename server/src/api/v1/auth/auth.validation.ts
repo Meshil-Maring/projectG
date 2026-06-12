@@ -6,3 +6,15 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export const updateMeSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    email: z.string().email().optional(),
+    password: z.string().min(8, 'Password must be at least 8 characters').optional(),
+  })
+  .refine((data) => data.email || data.password, {
+    message: 'Provide a new email and/or password',
+  });
+
+export type UpdateMeInput = z.infer<typeof updateMeSchema>;

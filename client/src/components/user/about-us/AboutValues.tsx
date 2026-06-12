@@ -3,6 +3,14 @@ import {
   Heart, Shield, Users, GraduationCap, Handshake, Leaf,
   Search, Lightbulb, Zap, BarChart2,
 } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_VALUES = {
+  valuesEyebrow: "Our Values",
+  valuesHeading: "What Guides Us",
+  approachEyebrow: "Our Approach",
+  approachHeading: "How We Work",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -30,6 +38,9 @@ const approach = [
 ];
 
 export default function AboutValues() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_VALUES, ...getSectionData("about-values") };
+
   return (
     <section className="py-20 px-6 bg-[#f8fafc] overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 relative">
@@ -40,13 +51,13 @@ export default function AboutValues() {
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-2"
           >
-            Our Values
+            {content.valuesEyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
             className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-8"
           >
-            What Guides Us
+            {content.valuesHeading}
           </motion.h2>
 
           <div className="grid grid-cols-3 gap-6">
@@ -72,13 +83,13 @@ export default function AboutValues() {
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-2"
           >
-            Our Approach
+            {content.approachEyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
             className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-8"
           >
-            How We Work
+            {content.approachHeading}
           </motion.h2>
 
           <div className="flex flex-col gap-5">

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { api } from "../lib/api";
 import familyImg from "../assets/image/family.jpeg";
 
 export type StoryVideo = {
@@ -25,43 +26,65 @@ const DEFAULT_DATA: AboutUsData = {
   },
 };
 
+type SiteSettings = {
+  storyTitle: string;
+  storyDescription: string;
+  storyThumbnail: string;
+  storyYoutubeId: string;
+  storyVideoUrl: string;
+  storyDuration: string;
+};
+
 type AboutUsContextType = {
   data: AboutUsData;
+  loading: boolean;
   updateStoryVideo: (video: StoryVideo) => void;
-  resetToDefaults: () => void;
 };
 
 const AboutUsContext = createContext<AboutUsContextType | null>(null);
 
 export function AboutUsProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<AboutUsData>(() => {
-    try {
-      const saved = localStorage.getItem("pg_aboutus_data");
-      if (saved) return { ...DEFAULT_DATA, ...JSON.parse(saved) };
-    } catch {
-      /* ignore */
-    }
-    return DEFAULT_DATA;
-  });
+  const [data, setData] = useState<AboutUsData>(DEFAULT_DATA);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      localStorage.setItem("pg_aboutus_data", JSON.stringify(data));
-    } catch {
-      /* ignore */
-    }
-  }, [data]);
+    let cancelled = false;
+    api
+      .get<SiteSettings>("/content/settings")
+      .then((settings) => {
+        if (cancelled) return;
+        if (!settings.storyTitle && !settings.storyDescription && !settings.storyThumbnail) return;
+        setData({
+          storyVideo: {
+            title: settings.storyTitle,
+            description: settings.storyDescription,
+            thumbnail: settings.storyThumbnail,
+            youtubeId: settings.storyYoutubeId || undefined,
+            videoUrl: settings.storyVideoUrl || undefined,
+            duration: settings.storyDuration,
+          },
+        });
+      })
+      .finally(() => !cancelled && setLoading(false));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const updateStoryVideo = (storyVideo: StoryVideo) =>
+  const updateStoryVideo = (storyVideo: StoryVideo) => {
     setData((d) => ({ ...d, storyVideo }));
-
-  const resetToDefaults = () => {
-    localStorage.removeItem("pg_aboutus_data");
-    setData(DEFAULT_DATA);
+    void api.put("/content/settings", {
+      storyTitle: storyVideo.title,
+      storyDescription: storyVideo.description,
+      storyThumbnail: storyVideo.thumbnail,
+      storyYoutubeId: storyVideo.youtubeId ?? "",
+      storyVideoUrl: storyVideo.videoUrl ?? "",
+      storyDuration: storyVideo.duration,
+    });
   };
 
   return (
-    <AboutUsContext.Provider value={{ data, updateStoryVideo, resetToDefaults }}>
+    <AboutUsContext.Provider value={{ data, loading, updateStoryVideo }}>
       {children}
     </AboutUsContext.Provider>
   );
@@ -73,4 +96,3 @@ export function useAboutUsData() {
   if (!ctx) throw new Error("useAboutUsData must be used within AboutUsProvider");
   return ctx;
 }
-

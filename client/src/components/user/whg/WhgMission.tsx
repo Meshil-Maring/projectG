@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Heart, Users, HandHeart, Star } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./whg.constants";
+import { usePageSections } from "../../../context/PageContext";
 
 const missionValues = [
   { icon: Heart, label: "Humanity First" },
@@ -15,7 +16,18 @@ const pillars = [
   { value: "Hope", sub: "for all communities" },
 ];
 
+const DEFAULT_MISSION = {
+  eyebrow: "OUR MISSION",
+  headingLine1: "Empathy in Action.",
+  headingLine2: "Change in Motion.",
+  description:
+    "We believe every act of kindness creates ripples of change. Our mission is to serve humanity by addressing real needs, spreading kindness, and empowering people to live with dignity and hope.",
+};
+
 export default function WhgMission() {
+  const { getSectionData } = usePageSections();
+  const mission = { ...DEFAULT_MISSION, ...getSectionData("whg-mission") };
+
   return (
     <section style={{ background: "#fafaf8", padding: "5rem 1.5rem" }}>
       <div
@@ -91,7 +103,7 @@ export default function WhgMission() {
               marginBottom: "0.5rem",
             }}
           >
-            OUR MISSION
+            {mission.eyebrow}
           </span>
           <div
             style={{
@@ -111,9 +123,9 @@ export default function WhgMission() {
               marginBottom: "1rem",
             }}
           >
-            Empathy in Action.
+            {mission.headingLine1}
             <br />
-            Change in Motion.
+            {mission.headingLine2}
           </h2>
           <p
             style={{
@@ -123,9 +135,7 @@ export default function WhgMission() {
               marginBottom: "2rem",
             }}
           >
-            We believe every act of kindness creates ripples of change. Our mission is to serve
-            humanity by addressing real needs, spreading kindness, and empowering people to live
-            with dignity and hope.
+            {mission.description}
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
             {missionValues.map(({ icon: Icon, label }) => (

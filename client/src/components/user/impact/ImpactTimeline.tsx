@@ -1,4 +1,10 @@
 import { motion } from "framer-motion";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_TIMELINE = {
+  eyebrow: "Our Journey",
+  heading: "A Decade of Impact",
+};
 
 const milestones = [
   {
@@ -46,6 +52,9 @@ const milestones = [
 ];
 
 export default function ImpactTimeline() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_TIMELINE, ...getSectionData("impact-timeline") };
+
   return (
     <section className="py-20 px-6 bg-white">
       <div className="max-w-3xl mx-auto">
@@ -57,7 +66,7 @@ export default function ImpactTimeline() {
             transition={{ duration: 0.5 }}
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-2"
           >
-            Our Journey
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -66,7 +75,7 @@ export default function ImpactTimeline() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-2xl xl:text-4xl font-extrabold text-[#1e293b]"
           >
-            A Decade of Impact
+            {content.heading}
           </motion.h2>
         </div>
 

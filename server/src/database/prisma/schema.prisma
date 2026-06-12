@@ -23,3 +23,118 @@ model User {
 
   @@map("users")
 }
+
+model SiteSettings {
+  id               String   @id @default("main")
+  heroImageUrl     String   @default("")
+  heroTitle        String   @default("")
+  heroDescription  String   @default("")
+  storyTitle       String   @default("")
+  storyDescription String   @default("")
+  storyThumbnail   String   @default("")
+  storyYoutubeId   String   @default("")
+  storyVideoUrl    String   @default("")
+  storyDuration    String   @default("")
+  updatedAt        DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model HomeVideo {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  thumbnail   String
+  youtubeId   String  @default("")
+  videoUrl    String  @default("")
+  duration    String
+  order       Int     @default(0)
+
+  @@map("home_videos")
+}
+
+model GalleryPhoto {
+  id          Int    @id @default(autoincrement())
+  src         String
+  alt         String
+  description String
+  order       Int    @default(0)
+
+  @@map("gallery_photos")
+}
+
+model ImpactStat {
+  id      Int    @id @default(autoincrement())
+  iconKey String
+  value   String
+  label   String
+  order   Int    @default(0)
+
+  @@map("impact_stats")
+}
+
+model Story {
+  id    Int    @id @default(autoincrement())
+  image String
+  quote String
+  name  String
+  role  String
+  order Int    @default(0)
+
+  @@map("stories")
+}
+
+model Activity {
+  id       Int    @id @default(autoincrement())
+  group    String
+  title    String
+  desc     String
+  imageUrl String @default("")
+  order    Int    @default(0)
+
+  @@map("activities")
+}
+
+model BoardMember {
+  id    Int    @id @default(autoincrement())
+  name  String
+  role  String
+  badge String
+  color String
+  order Int    @default(0)
+
+  @@map("board_members")
+}
+
+model TeamMember {
+  id    Int    @id @default(autoincrement())
+  name  String
+  role  String
+  color String
+  order Int    @default(0)
+
+  @@map("team_members")
+}
+
+model Page {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  title     String
+  sections  Section[]
+  updatedAt DateTime  @updatedAt
+
+  @@map("pages")
+}
+
+model Section {
+  id      Int     @id @default(autoincrement())
+  pageId  String
+  page    Page    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type    String
+  enabled Boolean @default(true)
+  order   Int     @default(0)
+  data    Json
+
+  @@index([pageId, order])
+  @@map("sections")
+}

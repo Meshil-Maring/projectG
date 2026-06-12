@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Users, Clock, TrendingUp, Heart, UserCheck, ArrowRight } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./hrds.constants";
+import { usePageSections } from "../../../context/PageContext";
 
 const ctaActions = [
   { icon: Clock, label: "Volunteer Your Time" },
@@ -9,7 +10,18 @@ const ctaActions = [
   { icon: Heart, label: "Support Our Mission" },
 ];
 
+const DEFAULT_CTA = {
+  eyebrow: "BE THE CHANGE",
+  headingLine1: "Together, We Develop",
+  headingLine2: "Stronger Communities.",
+  description:
+    "Your participation creates ripples of growth. Join us in shaping a skilled and empowered society.",
+};
+
 export default function HrdsCTA() {
+  const { getSectionData } = usePageSections();
+  const cta = { ...DEFAULT_CTA, ...getSectionData("hrds-cta") };
+
   return (
     <section
       id="get-involved"
@@ -78,7 +90,7 @@ export default function HrdsCTA() {
               marginBottom: "0.6rem",
             }}
           >
-            BE THE CHANGE
+            {cta.eyebrow}
           </span>
           <h2
             style={{
@@ -89,13 +101,12 @@ export default function HrdsCTA() {
               lineHeight: 1.25,
             }}
           >
-            Together, We Develop
+            {cta.headingLine1}
             <br />
-            Stronger Communities.
+            {cta.headingLine2}
           </h2>
           <p style={{ fontSize: "0.9rem", color: "#64748b", lineHeight: 1.7, marginBottom: "1.75rem" }}>
-            Your participation creates ripples of growth. Join us in shaping a skilled and empowered
-            society.
+            {cta.description}
           </p>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" as const }}>
             <a

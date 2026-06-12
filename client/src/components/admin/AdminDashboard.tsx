@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Image,
@@ -24,6 +24,13 @@ import {
   Star,
   Globe,
   BookOpen,
+  Settings,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  FileText,
 } from "lucide-react";
 import {
   useHomePageData,
@@ -43,6 +50,8 @@ import {
   type BoardMember,
   type TeamMember,
 } from "../../context/TeamContext";
+import { type Section } from "../../context/PageContext";
+import { api } from "../../lib/api";
 import Logo from "../../assets/image/logo.jpeg";
 
 // ── Icon map ──────────────────────────────────────────────────────────────────
@@ -231,8 +240,10 @@ function Textarea({
 // ── Tab: Hero Image ───────────────────────────────────────────────────────────
 
 function HeroTab() {
-  const { data, updateHeroImage } = useHomePageData();
+  const { data, updateHeroImage, updateHeroTitle, updateHeroDescription } = useHomePageData();
   const [url, setUrl] = useState(data.heroImageUrl);
+  const [title, setTitle] = useState(data.heroTitle);
+  const [description, setDescription] = useState(data.heroDescription);
 
   return (
     <div>
@@ -302,12 +313,45 @@ function HeroTab() {
           Leave blank to use the default hero image. Recommended size: 1920×1080px.
         </p>
 
+        <FieldGroup label="Title">
+          <Input
+            value={title}
+            onChange={setTitle}
+            placeholder="Together We Can Change Lives"
+          />
+        </FieldGroup>
+        <p style={{ fontSize: "0.72rem", color: "#94a3b8", marginBottom: "1rem" }}>
+          Leave blank to use the default animated title.
+        </p>
+
+        <FieldGroup label="Description">
+          <Textarea
+            value={description}
+            onChange={setDescription}
+            placeholder="We're committed to building a better future for children, families and communities through education, care and support."
+            rows={3}
+          />
+        </FieldGroup>
+        <p style={{ fontSize: "0.72rem", color: "#94a3b8", marginBottom: "1rem" }}>
+          Leave blank to use the default description.
+        </p>
+
         <div style={{ display: "flex", gap: "0.75rem" }}>
-          <SaveBtn onClick={() => updateHeroImage(url)} />
+          <SaveBtn
+            onClick={() => {
+              updateHeroImage(url);
+              updateHeroTitle(title);
+              updateHeroDescription(description);
+            }}
+          />
           <button
             onClick={() => {
               setUrl("");
+              setTitle("");
+              setDescription("");
               updateHeroImage("");
+              updateHeroTitle("");
+              updateHeroDescription("");
             }}
             style={{
               display: "inline-flex",
@@ -347,6 +391,7 @@ const BLANK_VIDEO: VideoFormData = {
 function VideoTab() {
   const { data, updateVideos } = useHomePageData();
   const [videos, setVideos] = useState<VideoEntry[]>(data.videos);
+  useEffect(() => setVideos(data.videos), [data.videos]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<VideoFormData>(BLANK_VIDEO);
   const [addingNew, setAddingNew] = useState(false);
@@ -698,6 +743,7 @@ const BLANK_PHOTO: PhotoFormData = { src: "", alt: "", description: "" };
 function GalleryTab() {
   const { data, updatePhotos } = useHomePageData();
   const [photos, setPhotos] = useState<PhotoEntry[]>(data.photos);
+  useEffect(() => setPhotos(data.photos), [data.photos]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<PhotoFormData>(BLANK_PHOTO);
   const [addingNew, setAddingNew] = useState(false);
@@ -897,6 +943,7 @@ function GalleryTab() {
 function ImpactTab() {
   const { data, updateStats } = useHomePageData();
   const [stats, setStats] = useState<ImpactStat[]>(data.stats);
+  useEffect(() => setStats(data.stats), [data.stats]);
 
   function updateStat(id: number, field: keyof ImpactStat, value: string) {
     const updated = stats.map((s) =>
@@ -1058,6 +1105,7 @@ const BLANK_STORY: StoryFormData = { image: "", quote: "", name: "", role: "" };
 function StoriesTab() {
   const { data, updateStories } = useHomePageData();
   const [stories, setStories] = useState<StoryEntry[]>(data.stories);
+  useEffect(() => setStories(data.stories), [data.stories]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<StoryFormData>(BLANK_STORY);
   const [addingNew, setAddingNew] = useState(false);
@@ -1550,6 +1598,8 @@ function TeamTab() {
   const { data, updateBoard, updateMembers } = useTeamData();
   const [board,   setBoard]   = useState<BoardMember[]>(data.board);
   const [members, setMembers] = useState<TeamMember[]>(data.members);
+  useEffect(() => setBoard(data.board), [data.board]);
+  useEffect(() => setMembers(data.members), [data.members]);
 
   // board state
   const [boardEditId,  setBoardEditId]  = useState<number | null>(null);
@@ -1795,7 +1845,7 @@ function TeamTab() {
 
 // ── Tab definitions ───────────────────────────────────────────────────────────
 
-type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities" | "team";
+type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities" | "team" | "pages" | "settings";
 
 const TABS: { id: TabId; label: string; Icon: React.ElementType }[] = [
   { id: "hero",       label: "Hero Image",        Icon: Image },
@@ -1805,17 +1855,414 @@ const TABS: { id: TabId; label: string; Icon: React.ElementType }[] = [
   { id: "stories",    label: "Stories of Change",  Icon: MessageSquare },
   { id: "activities", label: "Group Activities",   Icon: Users },
   { id: "team",       label: "Meet Our Team",      Icon: Users },
+  { id: "pages",      label: "Pages",              Icon: FileText },
+  { id: "settings",   label: "Account Settings",   Icon: Settings },
 ];
+
+// ── Tab: Account Settings ─────────────────────────────────────────────────────
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "0.6rem 0.85rem",
+  fontSize: "0.85rem",
+  border: "1.5px solid #e2e8f0",
+  borderRadius: "0.5rem",
+  outline: "none",
+  color: "#1e293b",
+  backgroundColor: "#f8fafc",
+  boxSizing: "border-box",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: "0.78rem",
+  fontWeight: 600,
+  color: "#374151",
+  marginBottom: "0.4rem",
+};
+
+// ── Tab: Pages ────────────────────────────────────────────────────────────────
+
+const PAGES: { slug: string; title: string }[] = [
+  { slug: "whg", title: "Work for Humanity Group" },
+  { slug: "hrds", title: "Human Resources Developmental Society" },
+  { slug: "cwg", title: "Competitive World Group" },
+  { slug: "fseds", title: "Foundation for Socio-Economic Development Society" },
+  { slug: "lac", title: "Legal Aid Club" },
+  { slug: "about-us", title: "About Us" },
+];
+
+const PAGE_SECTION_LABELS: Record<string, string> = {
+  "whg-hero": "Hero Section",
+  "whg-mission": "Mission Section",
+  "whg-cta": "Get Involved (CTA)",
+  "whg-activities": "Activities Section",
+  "whg-communities": "Communities Section",
+  "hrds-hero": "Hero Section",
+  "hrds-mission": "Mission Section",
+  "hrds-cta": "Get Involved (CTA)",
+  "hrds-activities": "Activities Section",
+  "hrds-communities": "Communities Section",
+  "cwg-hero": "Hero Section",
+  "cwg-mission": "Mission Section",
+  "cwg-cta": "Get Involved (CTA)",
+  "cwg-activities": "Activities Section",
+  "cwg-communities": "Communities Section",
+  "fseds-hero": "Hero Section",
+  "fseds-mission": "Mission Section",
+  "fseds-cta": "Get Involved (CTA)",
+  "fseds-activities": "Activities Section",
+  "fseds-communities": "Communities Section",
+  "lac-hero": "Hero Section",
+  "lac-mission": "What We Do Section",
+  "lac-cta": "Get Involved (CTA)",
+  "lac-activities": "Activities Section",
+  "lac-communities": "Communities Section",
+  "lac-camps": "Legal Awareness Camps Section",
+  "lac-impact": "Impact Section",
+  "lac-contact": "Contact Section",
+  "about-hero": "Hero Section",
+  "about-story": "Our Story Section",
+  "about-objectives": "Objectives Section",
+  "about-societies": "Societies Section",
+  "about-values": "Values Section",
+  "about-team": "Team Section",
+};
+
+function fieldLabel(key: string) {
+  return key.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
+}
+
+function PagesTab() {
+  const [activeSlug, setActiveSlug] = useState(PAGES[0].slug);
+  const [sections, setSections] = useState<Section[] | null>(null);
+  const [edits, setEdits] = useState<Record<number, Record<string, string>>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    setError("");
+    setSections(null);
+    api
+      .get<{ sections: Section[] }>(`/pages/${activeSlug}`)
+      .then((page) => {
+        setSections(page.sections);
+        setEdits(Object.fromEntries(page.sections.map((s) => [s.id, { ...s.data }])));
+      })
+      .catch(() => setError("Could not load this page. It may not be seeded yet."))
+      .finally(() => setLoading(false));
+  }, [activeSlug]);
+
+  function setField(sectionId: number, key: string, value: string) {
+    setEdits((prev) => ({ ...prev, [sectionId]: { ...prev[sectionId], [key]: value } }));
+  }
+
+  function save(sectionId: number) {
+    void api.patch(`/sections/${sectionId}`, { data: edits[sectionId] });
+  }
+
+  const activeTitle = PAGES.find((p) => p.slug === activeSlug)?.title ?? activeSlug;
+
+  return (
+    <div>
+      <SectionHeader
+        title="Pages"
+        subtitle="Edit the text content for each section of the public-facing pages."
+      />
+
+      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" as const, marginBottom: "1.5rem" }}>
+        {PAGES.map((p) => (
+          <button
+            key={p.slug}
+            onClick={() => setActiveSlug(p.slug)}
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "0.5rem",
+              border: "1px solid #e2e8f0",
+              background: activeSlug === p.slug ? "#0f1e4a" : "#fff",
+              color: activeSlug === p.slug ? "#fff" : "#374151",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            {p.title}
+          </button>
+        ))}
+      </div>
+
+      <SectionHeader
+        title={`${activeTitle} Page`}
+        subtitle={`Edit the text content for each section of the ${activeTitle} page.`}
+      />
+
+      {error && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            backgroundColor: "#fef2f2",
+            border: "1px solid #fecaca",
+            color: "#b91c1c",
+            borderRadius: "0.5rem",
+            padding: "0.75rem 1rem",
+            fontSize: "0.8rem",
+            marginBottom: "1.25rem",
+            maxWidth: "640px",
+          }}
+        >
+          <AlertCircle size={15} style={{ flexShrink: 0 }} />
+          {error}
+        </div>
+      )}
+
+      {loading && <p style={{ fontSize: "0.85rem", color: "#94a3b8" }}>Loading...</p>}
+
+      {sections?.map((section) => (
+        <div
+          key={section.id}
+          style={{
+            background: "#fff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "0.75rem",
+            padding: "1.5rem",
+            maxWidth: "640px",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>
+            {PAGE_SECTION_LABELS[section.type] ?? section.type}
+          </h3>
+
+          {Object.keys(section.data).map((key) =>
+            key.toLowerCase().includes("description") ? (
+              <FieldGroup key={key} label={fieldLabel(key)}>
+                <Textarea
+                  value={edits[section.id]?.[key] ?? ""}
+                  onChange={(v) => setField(section.id, key, v)}
+                />
+              </FieldGroup>
+            ) : (
+              <FieldGroup key={key} label={fieldLabel(key)}>
+                <Input
+                  value={edits[section.id]?.[key] ?? ""}
+                  onChange={(v) => setField(section.id, key, v)}
+                />
+              </FieldGroup>
+            ),
+          )}
+
+          <SaveBtn onClick={() => save(section.id)} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SettingsTab() {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!currentPassword) {
+      setError("Please enter your current password.");
+      return;
+    }
+    if (!newEmail && !newPassword) {
+      setError("Enter a new email and/or a new password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("pg_admin_token");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          ...(newEmail ? { email: newEmail } : {}),
+          ...(newPassword ? { password: newPassword } : {}),
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.error?.message ?? "Unable to update account.");
+        return;
+      }
+
+      localStorage.setItem("pg_admin_token", data.data.token);
+      setSuccess("Account updated successfully.");
+      setCurrentPassword("");
+      setNewEmail("");
+      setNewPassword("");
+    } catch {
+      setError("Unable to reach the server. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div>
+      <SectionHeader
+        title="Account Settings"
+        subtitle="Update the admin login email and/or password. Your current password is required to confirm any change."
+      />
+
+      {error && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            backgroundColor: "#fef2f2",
+            border: "1px solid #fecaca",
+            color: "#b91c1c",
+            borderRadius: "0.5rem",
+            padding: "0.75rem 1rem",
+            fontSize: "0.8rem",
+            marginBottom: "1.25rem",
+            maxWidth: "440px",
+          }}
+        >
+          <AlertCircle size={15} style={{ flexShrink: 0 }} />
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            backgroundColor: "#f0fdf4",
+            border: "1px solid #bbf7d0",
+            color: "#15803d",
+            borderRadius: "0.5rem",
+            padding: "0.75rem 1rem",
+            fontSize: "0.8rem",
+            marginBottom: "1.25rem",
+            maxWidth: "440px",
+          }}
+        >
+          <Check size={15} style={{ flexShrink: 0 }} />
+          {success}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem", maxWidth: "440px" }}>
+        <div>
+          <label style={labelStyle} htmlFor="new-email">New Email (optional)</label>
+          <div style={{ position: "relative" }}>
+            <Mail size={16} style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+            <input
+              id="new-email"
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              placeholder="Leave blank to keep current email"
+              autoComplete="email"
+              style={{ ...inputStyle, paddingLeft: "2.5rem" }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label style={labelStyle} htmlFor="new-password">New Password (optional)</label>
+          <div style={{ position: "relative" }}>
+            <Lock size={16} style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+            <input
+              id="new-password"
+              type={showNew ? "text" : "password"}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Leave blank to keep current password"
+              autoComplete="new-password"
+              style={{ ...inputStyle, paddingLeft: "2.5rem", paddingRight: "3rem" }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowNew((v) => !v)}
+              aria-label={showNew ? "Hide password" : "Show password"}
+              style={{ position: "absolute", right: "0.85rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#94a3b8", display: "flex" }}
+            >
+              {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label style={labelStyle} htmlFor="current-password">Current Password</label>
+          <div style={{ position: "relative" }}>
+            <Lock size={16} style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+            <input
+              id="current-password"
+              type={showCurrent ? "text" : "password"}
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Required to confirm changes"
+              autoComplete="current-password"
+              style={{ ...inputStyle, paddingLeft: "2.5rem", paddingRight: "3rem" }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowCurrent((v) => !v)}
+              aria-label={showCurrent ? "Hide password" : "Show password"}
+              style={{ position: "absolute", right: "0.85rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#94a3b8", display: "flex" }}
+            >
+              {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            alignSelf: "flex-start",
+            padding: "0.6rem 1.4rem",
+            backgroundColor: loading ? "#93a8d4" : "#1a3270",
+            color: "#fff",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+            border: "none",
+            borderRadius: "0.5rem",
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
+        >
+          {loading ? "Saving..." : "Save Changes"}
+        </button>
+      </form>
+    </div>
+  );
+}
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<TabId>("hero");
-  const { resetToDefaults } = useHomePageData();
   const navigate = useNavigate();
 
   function logout() {
-    localStorage.removeItem("pg_admin_auth");
+    localStorage.removeItem("pg_admin_token");
     navigate("/projectG-admin");
   }
 
@@ -1936,29 +2383,6 @@ export default function AdminDashboard() {
           }}
         >
           <button
-            onClick={() => {
-              if (window.confirm("Reset ALL home page content to defaults? This cannot be undone.")) {
-                resetToDefaults();
-              }
-            }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              width: "100%",
-              padding: "0.6rem 0.85rem",
-              borderRadius: "0.5rem",
-              border: "1px solid rgba(255,255,255,0.15)",
-              background: "transparent",
-              color: "rgba(255,255,255,0.55)",
-              fontSize: "0.75rem",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
-          >
-            <RotateCcw size={13} /> Reset All to Defaults
-          </button>
-          <button
             onClick={logout}
             style={{
               display: "flex",
@@ -2035,6 +2459,8 @@ export default function AdminDashboard() {
           {activeTab === "stories" && <StoriesTab />}
           {activeTab === "activities" && <GroupActivitiesTab />}
           {activeTab === "team" && <TeamTab />}
+          {activeTab === "pages" && <PagesTab />}
+          {activeTab === "settings" && <SettingsTab />}
         </div>
       </main>
     </div>

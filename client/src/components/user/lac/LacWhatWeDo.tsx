@@ -11,6 +11,13 @@ import {
   Shield,
 } from "lucide-react";
 import { NAV_BLUE, BRIGHT_BLUE, GOLD, fade } from "./lac.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_MISSION = {
+  eyebrow: "WHAT WE DO",
+  description:
+    "The Legal Aid Club provides free legal support, awareness programs, and resources to help individuals navigate their rights and access justice with confidence.",
+};
 
 const services = [
   {
@@ -59,6 +66,9 @@ const stats = [
 ];
 
 export default function LacWhatWeDo() {
+  const { getSectionData } = usePageSections();
+  const mission = { ...DEFAULT_MISSION, ...getSectionData("lac-mission") };
+
   return (
     <section
       style={{
@@ -114,7 +124,7 @@ export default function LacWhatWeDo() {
               marginBottom: "1.25rem",
             }}
           >
-            WHAT WE DO
+            {mission.eyebrow}
           </span>
           <h2
             style={{
@@ -154,8 +164,7 @@ export default function LacWhatWeDo() {
               margin: "0 auto",
             }}
           >
-            The Legal Aid Club provides free legal support, awareness programs, and resources to
-            help individuals navigate their rights and access justice with confidence.
+            {mission.description}
           </p>
         </motion.div>
 

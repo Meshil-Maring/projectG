@@ -21,18 +21,26 @@ export default function AdminLogin() {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      if (
-        email === "admin@projectgeneration.org" &&
-        password === "admin123"
-      ) {
-        localStorage.setItem("pg_admin_auth", "1");
-        navigate("/projectG-admin/dashboard");
-      } else {
-        setError("Invalid credentials. Please try again.");
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.error?.message ?? "Invalid credentials. Please try again.");
+        return;
       }
-    }, 600);
+
+      localStorage.setItem("pg_admin_token", data.data.token);
+      navigate("/projectG-admin/dashboard");
+    } catch {
+      setError("Unable to reach the server. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

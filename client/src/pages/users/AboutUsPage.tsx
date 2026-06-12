@@ -8,6 +8,7 @@ import AboutSocieties from "../../components/user/about-us/AboutSocieties";
 import AboutValues from "../../components/user/about-us/AboutValues";
 import AboutTeam from "../../components/user/about-us/AboutTeam";
 import AboutStats from "../../components/user/about-us/AboutStats";
+import { PageProvider } from "../../context/PageContext";
 
 const sections = [
   { id: "about-hero", label: "Overview" },
@@ -21,7 +22,7 @@ const sections = [
 
 export default function AboutUsPage() {
   return (
-    <>
+    <PageProvider slug="about-us">
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="about-hero"><AboutHero /></div>
@@ -32,6 +33,6 @@ export default function AboutUsPage() {
       <div id="about-team"><AboutTeam /></div>
       <div id="about-stats"><AboutStats /></div>
       <Footer />
-    </>
+    </PageProvider>
   );
 }

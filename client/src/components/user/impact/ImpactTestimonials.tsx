@@ -1,5 +1,11 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_TESTIMONIALS = {
+  eyebrow: "Real Stories",
+  heading: "Voices of Change",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },

@@ -26,7 +26,7 @@ const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
 const AdminDashboardPage = lazy(() => import("./pages/admin/AdminDashboardPage"));
 
 function ProtectedAdminRoute({ children }: { children: ReactNode }) {
-  const isAuth = localStorage.getItem("pg_admin_auth") === "1";
+  const isAuth = !!localStorage.getItem("pg_admin_token");
   return isAuth ? <>{children}</> : <Navigate to="/projectG-admin" replace />;
 }
 

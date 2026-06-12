@@ -14,6 +14,16 @@ import {
   Swords,
 } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./cwg.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  eyebrow: "Competitive World Group",
+  titleLine1: "Sharpen Minds.",
+  titleEmphasis1: "Shape Champions.",
+  titleEmphasis2: "Build a Legacy of Excellence.",
+  description:
+    "We prepare individuals to compete, excel, and win — fostering a culture of academic rigor, athletic discipline, and creative brilliance across every arena.",
+};
 
 const heroFeatures = [
   { icon: Brain, title: "Sharpen Critical Thinking", sub: "Logic, reasoning & analysis" },
@@ -32,6 +42,9 @@ const cardItems = [
 ];
 
 export default function CwgHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("cwg-hero") };
+
   return (
     <section
       style={{ background: "#ffffff", paddingTop: "5.5rem", position: "relative", overflow: "hidden" }}
@@ -110,7 +123,7 @@ export default function CwgHero() {
                   maxWidth: "180px",
                 }}
               >
-                Competitive World Group
+                {hero.eyebrow}
               </span>
             </motion.div>
 
@@ -125,7 +138,7 @@ export default function CwgHero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Sharpen Minds.
+              {hero.titleLine1}
             </motion.h1>
 
             <motion.p
@@ -140,7 +153,7 @@ export default function CwgHero() {
                 lineHeight: 1.3,
               }}
             >
-              Shape Champions.
+              {hero.titleEmphasis1}
             </motion.p>
 
             <motion.p
@@ -155,7 +168,7 @@ export default function CwgHero() {
                 lineHeight: 1.3,
               }}
             >
-              Build a Legacy of Excellence.
+              {hero.titleEmphasis2}
             </motion.p>
 
             <div
@@ -178,8 +191,7 @@ export default function CwgHero() {
                 maxWidth: "420px",
               }}
             >
-              We prepare individuals to compete, excel, and win — fostering a culture of academic
-              rigor, athletic discipline, and creative brilliance across every arena.
+              {hero.description}
             </motion.p>
 
             <motion.div

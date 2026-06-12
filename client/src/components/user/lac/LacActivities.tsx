@@ -2,10 +2,18 @@ import { motion } from "framer-motion";
 import { Camera } from "lucide-react";
 import { NAV_BLUE, BRIGHT_BLUE, GOLD, fade } from "./lac.constants";
 import { useGroupActivities } from "../../../context/GroupActivitiesContext";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_ACTIVITIES = {
+  galleryEyebrow: "Our Activities",
+  galleryHeading: "What We've Been Doing",
+};
 
 export default function LacActivities() {
   const { data } = useGroupActivities();
   const activities = data.lac;
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_ACTIVITIES, ...getSectionData("lac-activities") };
 
   if (activities.length === 0) return null;
 
@@ -15,11 +23,11 @@ export default function LacActivities() {
 
         <motion.div {...fade(0)}>
           <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: BRIGHT_BLUE, display: "block", marginBottom: "0.5rem" }}>
-            Our Activities
+            {content.galleryEyebrow}
           </span>
           <div style={{ width: "40px", height: "3px", background: GOLD, borderRadius: "2px", marginBottom: "1rem" }} />
           <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: NAV_BLUE, marginBottom: "2rem", lineHeight: 1.2 }}>
-            What We've Been Doing
+            {content.galleryHeading}
           </h2>
         </motion.div>
 

@@ -9,6 +9,7 @@ import LacImpact from "../../components/user/lac/LacImpact";
 import LacContact from "../../components/user/lac/LacContact";
 import LacCTA from "../../components/user/lac/LacCTA";
 import LacCommunities from "../../components/user/lac/LacCommunities";
+import { PageProvider } from "../../context/PageContext";
 
 const sections = [
   { id: "lac-hero", label: "Overview" },
@@ -23,18 +24,20 @@ const sections = [
 
 export default function LacPage() {
   return (
-    <div style={{ fontFamily: "'Poppins', sans-serif", overflowX: "hidden" }}>
-      <Navbar />
-      <SectionNavigator sections={sections} />
-      <div id="lac-hero"><LacHero /></div>
-      <div id="lac-what-we-do"><LacWhatWeDo /></div>
-      <div id="lac-camps"><LacLegalAwarenessCamps /></div>
-      <div id="lac-activities"><LacActivities /></div>
-      <div id="lac-impact"><LacImpact /></div>
-      <div id="lac-contact"><LacContact /></div>
-      <div id="lac-cta"><LacCTA /></div>
-      <div id="lac-communities"><LacCommunities /></div>
-      <Footer />
-    </div>
+    <PageProvider slug="lac">
+      <div style={{ fontFamily: "'Poppins', sans-serif", overflowX: "hidden" }}>
+        <Navbar />
+        <SectionNavigator sections={sections} />
+        <div id="lac-hero"><LacHero /></div>
+        <div id="lac-what-we-do"><LacWhatWeDo /></div>
+        <div id="lac-camps"><LacLegalAwarenessCamps /></div>
+        <div id="lac-activities"><LacActivities /></div>
+        <div id="lac-impact"><LacImpact /></div>
+        <div id="lac-contact"><LacContact /></div>
+        <div id="lac-cta"><LacCTA /></div>
+        <div id="lac-communities"><LacCommunities /></div>
+        <Footer />
+      </div>
+    </PageProvider>
   );
 }

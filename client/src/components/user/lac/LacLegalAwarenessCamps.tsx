@@ -1,6 +1,18 @@
 import { motion } from "framer-motion";
 import { Scale, GraduationCap, Users, Megaphone, Phone, Calendar } from "lucide-react";
 import { NAV_BLUE, BRIGHT_BLUE, GOLD, fade } from "./lac.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_CAMPS = {
+  eyebrow: "Our Programs",
+  heading: "Legal Awareness Camps",
+  tagline: "Rights · Laws · Constitution",
+  description:
+    "We bring legal knowledge directly to communities through hands-on programs, making rights accessible to everyone — regardless of background or education.",
+  bannerHeading: "Want us to organize a camp in your area?",
+  bannerDescription:
+    "Reach out and we'll work with your school, college, or community organization.",
+};
 
 const programs = [
   {
@@ -36,6 +48,9 @@ const programs = [
 ];
 
 export default function LacLegalAwarenessCamps() {
+  const { getSectionData } = usePageSections();
+  const camps = { ...DEFAULT_CAMPS, ...getSectionData("lac-camps") };
+
   return (
     <section style={{ background: "#ffffff", padding: "5rem 1.5rem" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -51,7 +66,7 @@ export default function LacLegalAwarenessCamps() {
             display: "block",
             marginBottom: "0.6rem",
           }}>
-            Our Programs
+            {camps.eyebrow}
           </span>
           <h2 style={{
             fontSize: "clamp(1.5rem, 3vw, 2.1rem)",
@@ -60,17 +75,17 @@ export default function LacLegalAwarenessCamps() {
             lineHeight: 1.2,
             marginBottom: "0.75rem",
           }}>
-            Legal Awareness Camps
+            {camps.heading}
           </h2>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.25rem" }}>
             <div style={{ height: "3px", width: "32px", background: GOLD, borderRadius: "2px" }} />
             <span style={{ fontSize: "0.78rem", fontWeight: 600, color: BRIGHT_BLUE, letterSpacing: "0.06em" }}>
-              Rights · Laws · Constitution
+              {camps.tagline}
             </span>
             <div style={{ height: "3px", width: "32px", background: GOLD, borderRadius: "2px" }} />
           </div>
           <p style={{ fontSize: "0.9rem", color: "#475569", lineHeight: 1.8 }}>
-            We bring legal knowledge directly to communities through hands-on programs, making rights accessible to everyone — regardless of background or education.
+            {camps.description}
           </p>
         </motion.div>
 
@@ -147,10 +162,10 @@ export default function LacLegalAwarenessCamps() {
         >
           <div>
             <p style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff", marginBottom: "0.35rem" }}>
-              Want us to organize a camp in your area?
+              {camps.bannerHeading}
             </p>
             <p style={{ fontSize: "0.83rem", color: "rgba(255,255,255,0.75)", margin: 0 }}>
-              Reach out and we'll work with your school, college, or community organization.
+              {camps.bannerDescription}
             </p>
           </div>
           <a

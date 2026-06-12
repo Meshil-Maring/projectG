@@ -1,6 +1,16 @@
 import { motion } from "framer-motion";
 import { Trophy, Target, Star, Lightbulb, Megaphone } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./cwg.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_MISSION = {
+  eyebrow: "OUR MISSION",
+  headingLine1: "Empowering People.",
+  headingLine2: "Strengthening Livelihoods.",
+  headingLine3: "Transforming Communities.",
+  description:
+    "Our mission is to cultivate a competitive, growth-driven culture by providing platforms, training, and mentorship that help individuals achieve their highest potential in academics, sports, and beyond.",
+};
 
 const missionPillars = [
   { icon: Trophy, label: "Academic Excellence" },
@@ -18,6 +28,9 @@ const ladder = [
 ];
 
 export default function CwgMission() {
+  const { getSectionData } = usePageSections();
+  const mission = { ...DEFAULT_MISSION, ...getSectionData("cwg-mission") };
+
   return (
     <section style={{ background: "#fafaf8", padding: "5rem 1.5rem" }}>
       <div
@@ -99,7 +112,7 @@ export default function CwgMission() {
               marginBottom: "0.5rem",
             }}
           >
-            OUR MISSION
+            {mission.eyebrow}
           </span>
           <div
             style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }}
@@ -113,16 +126,14 @@ export default function CwgMission() {
               marginBottom: "1rem",
             }}
           >
-            Empowering People.
+            {mission.headingLine1}
             <br />
-            Strengthening Livelihoods.
+            {mission.headingLine2}
             <br />
-            Transforming Communities.
+            {mission.headingLine3}
           </h2>
           <p style={{ fontSize: "0.9rem", color: "#475569", lineHeight: 1.8, marginBottom: "2rem" }}>
-            Our mission is to cultivate a competitive, growth-driven culture by providing platforms,
-            training, and mentorship that help individuals achieve their highest potential in
-            academics, sports, and beyond.
+            {mission.description}
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "0.85rem" }}>
             {missionPillars.map(({ icon: Icon, label }) => (

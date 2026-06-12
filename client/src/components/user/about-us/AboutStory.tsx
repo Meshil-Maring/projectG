@@ -11,7 +11,17 @@ import {
   Maximize2,
 } from "lucide-react";
 import { useAboutUsData } from "../../../context/AboutUsContext";
+import { usePageSections } from "../../../context/PageContext";
 import { YoutubeLogoIcon } from "../../../assets/icons";
+
+const DEFAULT_STORY = {
+  eyebrow: "Our Story",
+  heading: "How It All Began",
+  paragraph1:
+    "Project Generation was founded with a simple belief — that small acts of kindness can create a big change.",
+  paragraph2:
+    "What started as a group of passionate students has grown into a movement that touches thousands of lives every year.",
+};
 
 const fmt = (s: number) => {
   if (!s || isNaN(s)) return "0:00";
@@ -38,6 +48,8 @@ const infoBadges = [
 export default function AboutStory() {
   const { data } = useAboutUsData();
   const video = data.storyVideo;
+  const { getSectionData } = usePageSections();
+  const story = { ...DEFAULT_STORY, ...getSectionData("about-story") };
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -229,7 +241,7 @@ export default function AboutStory() {
             custom={0}
             className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-2"
           >
-            Our Story
+            {story.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -239,7 +251,7 @@ export default function AboutStory() {
             custom={1}
             className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-3"
           >
-            How It All Began
+            {story.heading}
           </motion.h2>
           <div className="w-12 h-1 bg-primary rounded mb-6" />
 
@@ -251,14 +263,8 @@ export default function AboutStory() {
             custom={2}
             className="space-y-3 text-sm text-[#64748b] leading-relaxed mb-8"
           >
-            <p>
-              Project Generation was founded with a simple belief — that small acts
-              of kindness can create a big change.
-            </p>
-            <p>
-              What started as a group of passionate students has grown into a movement
-              that touches thousands of lives every year.
-            </p>
+            <p>{story.paragraph1}</p>
+            <p>{story.paragraph2}</p>
           </motion.div>
 
           {/* Info badges */}

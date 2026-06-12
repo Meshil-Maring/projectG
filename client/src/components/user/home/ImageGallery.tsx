@@ -40,6 +40,8 @@ export default function ImageGallery() {
     return () => { document.body.style.overflow = ""; };
   }, [isAnyOverlayOpen]);
 
+  if (photos.length === 0) return null;
+
   const [large, ...small] = photos;
 
   return (

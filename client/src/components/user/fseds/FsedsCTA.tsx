@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Users, Clock, TrendingUp, Star, Lightbulb, ArrowRight } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./fseds.constants";
+import { usePageSections } from "../../../context/PageContext";
 
 const ctaActions = [
   { icon: Clock, label: "Volunteer Your Time" },
@@ -11,7 +12,19 @@ const ctaActions = [
 
 const chartBars = [28, 44, 36, 56, 48, 64];
 
+const DEFAULT_CTA = {
+  eyebrow: "TOGETHER WE RISE",
+  headingLine1: "Empowered communities.",
+  headingLine2: "Stronger economies.",
+  headingLine3: "Brighter futures.",
+  description:
+    "Your support creates ripples of economic change. Join us in shaping thriving, self-reliant communities.",
+};
+
 export default function FsedsCTA() {
+  const { getSectionData } = usePageSections();
+  const cta = { ...DEFAULT_CTA, ...getSectionData("fseds-cta") };
+
   return (
     <section
       id="get-involved"
@@ -96,7 +109,7 @@ export default function FsedsCTA() {
               marginBottom: "0.6rem",
             }}
           >
-            TOGETHER WE RISE
+            {cta.eyebrow}
           </span>
           <h2
             style={{
@@ -107,15 +120,14 @@ export default function FsedsCTA() {
               lineHeight: 1.25,
             }}
           >
-            Empowered communities.
+            {cta.headingLine1}
             <br />
-            Stronger economies.
+            {cta.headingLine2}
             <br />
-            Brighter futures.
+            {cta.headingLine3}
           </h2>
           <p style={{ fontSize: "0.9rem", color: "#64748b", lineHeight: 1.7, marginBottom: "1.75rem" }}>
-            Your support creates ripples of economic change. Join us in shaping thriving,
-            self-reliant communities.
+            {cta.description}
           </p>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" as const }}>
             <a

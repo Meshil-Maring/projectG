@@ -12,6 +12,18 @@ import {
 } from "lucide-react";
 import { PRIMARY, LIGHT_BG, fade } from "./cwg.constants";
 import { useGroupActivities } from "../../../context/GroupActivitiesContext";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_ACTIVITIES = {
+  doEyebrow: "What We Do",
+  doHeading: "Our Core Programs",
+  focusEyebrow: "Focus Areas",
+  focusHeading: "Where We Compete & Excel",
+  impactEyebrow: "Our Impact",
+  impactHeading: "By The Numbers",
+  galleryEyebrow: "Our Activities",
+  galleryHeading: "What We've Been Doing",
+};
 
 const whatWeDo = [
   { icon: BookOpen, title: "Academic Excellence Training", desc: "Preparing students and members for competitive exams, Olympiads, and academic tournaments." },
@@ -51,15 +63,17 @@ const sectionTitle: React.CSSProperties = {
 export default function CwgActivities() {
   const { data } = useGroupActivities();
   const activities = data.cwg;
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_ACTIVITIES, ...getSectionData("cwg-activities") };
 
   return (
     <section style={{ background: "#f0fdfa", padding: "6rem 1.5rem" }}>
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
         <motion.div {...fade(0)} style={{ marginBottom: "5rem" }}>
-          <span style={sectionLabel}>What We Do</span>
+          <span style={sectionLabel}>{content.doEyebrow}</span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
-          <h2 style={sectionTitle}>Our Core Programs</h2>
+          <h2 style={sectionTitle}>{content.doHeading}</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.25rem" }}>
             {whatWeDo.map(({ icon: Icon, title, desc }, i) => (
               <motion.div key={title} {...fade(i * 0.07)} style={{ display: "flex", alignItems: "flex-start", gap: "1rem", background: "#ffffff", borderRadius: "1rem", padding: "1.25rem 1.5rem", boxShadow: "0 2px 12px rgba(15,118,110,0.06)", border: "1px solid #d1faf5" }}>
@@ -76,9 +90,9 @@ export default function CwgActivities() {
         </motion.div>
 
         <motion.div {...fade(0.1)} style={{ marginBottom: "5rem" }}>
-          <span style={sectionLabel}>Focus Areas</span>
+          <span style={sectionLabel}>{content.focusEyebrow}</span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
-          <h2 style={sectionTitle}>Where We Compete & Excel</h2>
+          <h2 style={sectionTitle}>{content.focusHeading}</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem" }}>
             {focusAreas.map(({ icon: Icon, title, desc }, i) => (
               <motion.div key={title} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", padding: "2rem 1.5rem", textAlign: "center", boxShadow: "0 2px 12px rgba(15,118,110,0.06)", border: "1px solid #d1faf5" }}>
@@ -93,9 +107,9 @@ export default function CwgActivities() {
         </motion.div>
 
         <motion.div {...fade(0.2)} style={{ marginBottom: "5rem" }}>
-          <span style={sectionLabel}>Our Impact</span>
+          <span style={sectionLabel}>{content.impactEyebrow}</span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
-          <h2 style={sectionTitle}>By The Numbers</h2>
+          <h2 style={sectionTitle}>{content.impactHeading}</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1.25rem" }}>
             {impactStats.map(({ value, label }, i) => (
               <motion.div key={value} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", padding: "2rem 1rem", textAlign: "center", boxShadow: "0 2px 12px rgba(15,118,110,0.06)", border: "1px solid #d1faf5" }}>
@@ -112,9 +126,9 @@ export default function CwgActivities() {
         {/* Activities Gallery */}
         {activities.length > 0 && (
           <motion.div {...fade(0.25)}>
-            <span style={sectionLabel}>Our Activities</span>
+            <span style={sectionLabel}>{content.galleryEyebrow}</span>
             <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
-            <h2 style={{ ...sectionTitle, marginBottom: "2rem" }}>What We've Been Doing</h2>
+            <h2 style={{ ...sectionTitle, marginBottom: "2rem" }}>{content.galleryHeading}</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
               {activities.map(({ id, title, desc, imageUrl }, i) => (
                 <motion.div key={id} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", overflow: "hidden", boxShadow: "0 2px 12px rgba(15,118,110,0.07)", border: "1px solid #d1faf5" }}>

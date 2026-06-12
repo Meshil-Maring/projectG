@@ -11,6 +11,18 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./fseds.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  eyebrow: "Foundation for Socio-Economic Development Society",
+  titleLine1: "Foundation for",
+  titleLine2: "Socio-Economic",
+  titleLine3: "Development Society",
+  taglineLine1: "Building communities through",
+  taglineLine2: "economic empowerment",
+  description:
+    "We work to create sustainable livelihoods, promote entrepreneurship, and strengthen local economies so communities can thrive with dignity and self-reliance.",
+};
 
 const heroFeatures = [
   { icon: Users, title: "Empower Communities", sub: "Inclusive growth for all" },
@@ -23,6 +35,9 @@ const heroFeatures = [
 const chartBars = [40, 60, 50, 75, 65, 90];
 
 export default function FsedsHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("fseds-hero") };
+
   return (
     <section
       style={{
@@ -110,7 +125,7 @@ export default function FsedsHero() {
                   maxWidth: "200px",
                 }}
               >
-                Foundation for Socio-Economic Development Society
+                {hero.eyebrow}
               </span>
             </motion.div>
 
@@ -125,7 +140,7 @@ export default function FsedsHero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Foundation for
+              {hero.titleLine1}
             </motion.h1>
             <motion.h1
               {...fade(0.12)}
@@ -138,7 +153,7 @@ export default function FsedsHero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Socio-Economic
+              {hero.titleLine2}
             </motion.h1>
             <motion.h1
               {...fade(0.14)}
@@ -151,7 +166,7 @@ export default function FsedsHero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Development Society
+              {hero.titleLine3}
             </motion.h1>
 
             <motion.p
@@ -166,9 +181,9 @@ export default function FsedsHero() {
                 lineHeight: 1.35,
               }}
             >
-              Building communities through
+              {hero.taglineLine1}
               <br />
-              economic empowerment
+              {hero.taglineLine2}
             </motion.p>
 
             <div
@@ -191,8 +206,7 @@ export default function FsedsHero() {
                 maxWidth: "420px",
               }}
             >
-              We work to create sustainable livelihoods, promote entrepreneurship, and strengthen
-              local economies so communities can thrive with dignity and self-reliance.
+              {hero.description}
             </motion.p>
 
             <motion.div

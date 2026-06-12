@@ -1,6 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowDown, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  eyebrow: "Project Generation",
+  headingLine1: "Measuring Change,",
+  headingLine2: "One Life at a Time",
+  description:
+    "Every number here represents a real person whose life has been touched. Explore the tangible difference our societies create every single day.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -12,6 +21,9 @@ const fadeUp = {
 };
 
 export default function ImpactHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("impact-hero") };
+
   return (
     <section
       className="relative py-28 px-6 overflow-hidden"
@@ -42,7 +54,7 @@ export default function ImpactHero() {
           className="text-xs font-bold uppercase tracking-widest text-white/70 mb-4 flex items-center justify-center gap-2"
         >
           <span className="inline-block w-6 h-0.5 bg-white/50" />
-          Project Generation
+          {hero.eyebrow}
           <span className="inline-block w-6 h-0.5 bg-white/50" />
         </motion.p>
 
@@ -53,7 +65,7 @@ export default function ImpactHero() {
           custom={1}
           className="text-4xl xl:text-6xl font-extrabold text-white leading-tight mb-5"
         >
-          Measuring Change,<br />One Life at a Time
+          {hero.headingLine1}<br />{hero.headingLine2}
         </motion.h1>
 
         <motion.p
@@ -63,8 +75,7 @@ export default function ImpactHero() {
           custom={2}
           className="text-base text-white/75 leading-relaxed mb-10 max-w-xl mx-auto"
         >
-          Every number here represents a real person whose life has been touched.
-          Explore the tangible difference our societies create every single day.
+          {hero.description}
         </motion.p>
 
         <motion.div

@@ -7,6 +7,7 @@ import FsedsActivities from "../../components/user/fseds/FsedsActivities";
 import FsedsCTA from "../../components/user/fseds/FsedsCTA";
 import FsedsStats from "../../components/user/fseds/FsedsStats";
 import FsedsCommunities from "../../components/user/fseds/FsedsCommunities";
+import { PageProvider } from "../../context/PageContext";
 
 const sections = [
   { id: "fseds-hero", label: "Overview" },
@@ -19,16 +20,18 @@ const sections = [
 
 export default function FsedsPage() {
   return (
-    <div style={{ fontFamily: "'Poppins', sans-serif", overflowX: "hidden" }}>
-      <Navbar />
-      <SectionNavigator sections={sections} />
-      <div id="fseds-hero"><FsedsHero /></div>
-      <div id="fseds-mission"><FsedsMission /></div>
-      <div id="fseds-activities"><FsedsActivities /></div>
-      <div id="fseds-cta"><FsedsCTA /></div>
-      <div id="fseds-stats"><FsedsStats /></div>
-      <div id="fseds-communities"><FsedsCommunities /></div>
-      <Footer />
-    </div>
+    <PageProvider slug="fseds">
+      <div style={{ fontFamily: "'Poppins', sans-serif", overflowX: "hidden" }}>
+        <Navbar />
+        <SectionNavigator sections={sections} />
+        <div id="fseds-hero"><FsedsHero /></div>
+        <div id="fseds-mission"><FsedsMission /></div>
+        <div id="fseds-activities"><FsedsActivities /></div>
+        <div id="fseds-cta"><FsedsCTA /></div>
+        <div id="fseds-stats"><FsedsStats /></div>
+        <div id="fseds-communities"><FsedsCommunities /></div>
+        <Footer />
+      </div>
+    </PageProvider>
   );
 }

@@ -9,6 +9,15 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { NAV_BLUE, BRIGHT_BLUE, GOLD, fade } from "./lac.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  badge: "A Project Generation Initiative",
+  titleLine1: "LEGAL AID CLUB",
+  tagline: "Justice for all, barriers for none",
+  description:
+    "We believe everyone has the right to justice. The Legal Aid Club works to break down legal barriers and empower individuals and communities with knowledge, support, and advocacy.",
+};
 
 const heroFeatures = [
   { icon: Scale, title: "Know Your Rights", sub: "Legal awareness for all" },
@@ -33,6 +42,9 @@ const heroFeatures = [
 const trustPoints = ["Free & confidential", "Open to everyone"];
 
 export default function LacHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("lac-hero") };
+
   return (
     <section
       style={{
@@ -102,7 +114,7 @@ export default function LacHero() {
               }}
             >
               <Scale size={13} strokeWidth={2.2} />
-              A Project Generation Initiative
+              {hero.badge}
             </motion.div>
 
             <motion.h1
@@ -116,7 +128,7 @@ export default function LacHero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              LEGAL AID CLUB
+              {hero.titleLine1}
               <span
                 style={{
                   display: "block",
@@ -141,7 +153,7 @@ export default function LacHero() {
                 lineHeight: 1.4,
               }}
             >
-              Justice for all, barriers for none
+              {hero.tagline}
             </motion.p>
 
             <motion.p
@@ -154,9 +166,7 @@ export default function LacHero() {
                 maxWidth: "420px",
               }}
             >
-              We believe everyone has the right to justice. The Legal Aid Club
-              works to break down legal barriers and empower individuals and
-              communities with knowledge, support, and advocacy.
+              {hero.description}
             </motion.p>
 
             <motion.div

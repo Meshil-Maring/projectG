@@ -1,5 +1,11 @@
 import { motion } from "framer-motion";
 import { Users, GraduationCap, Globe, HandHeart, Utensils, Clock } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_NUMBERS = {
+  eyebrow: "By the Numbers",
+  heading: "Our Impact in Numbers",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -62,6 +68,9 @@ const stats = [
 ];
 
 export default function ImpactNumbers() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_NUMBERS, ...getSectionData("impact-numbers") };
+
   return (
     <section className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
@@ -73,7 +82,7 @@ export default function ImpactNumbers() {
             viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#0d9488] mb-2"
           >
-            By the Numbers
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -83,7 +92,7 @@ export default function ImpactNumbers() {
             custom={1}
             className="text-2xl xl:text-4xl font-extrabold text-[#1e293b] mb-4"
           >
-            Our Impact in Numbers
+            {content.heading}
           </motion.h2>
           <motion.div
             variants={fadeUp}

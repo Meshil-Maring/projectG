@@ -3,6 +3,13 @@ import {
   GraduationCap, Heart, Trophy, Briefcase, Lightbulb,
   Users, Handshake, Shield, Star, Leaf,
 } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_OBJECTIVES = {
+  eyebrow: "What We Stand For",
+  heading: "Our Objectives",
+  description: "The guiding goals behind every program we run",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -57,6 +64,9 @@ const objectives = [
 ];
 
 export default function AboutObjectives() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_OBJECTIVES, ...getSectionData("about-objectives") };
+
   return (
     <section className="py-20 px-6 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
@@ -67,13 +77,13 @@ export default function AboutObjectives() {
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-2"
           >
-            What We Stand For
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
             className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
           >
-            Our Objectives
+            {content.heading}
           </motion.h2>
           <motion.div
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2}
@@ -81,7 +91,7 @@ export default function AboutObjectives() {
           >
             <div className="h-[3px] w-8 bg-[#b8860b] rounded" />
             <p className="text-sm text-[#64748b]">
-              The guiding goals behind every program we run
+              {content.description}
             </p>
             <div className="h-[3px] w-8 bg-[#b8860b] rounded" />
           </motion.div>

@@ -1,6 +1,16 @@
 import { motion } from "framer-motion";
 import { Users, Heart, Globe } from "lucide-react";
 import familyImg from "../../../assets/image/family.jpeg";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  eyebrow: "About Us",
+  headingLine1: "Together, We",
+  headingLine2: "Build a Better",
+  headingLine3: "Tomorrow",
+  description:
+    "Project Generation is a non-profit students' organisation dedicated to empowering lives and creating opportunities for children, families and communities to thrive.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -18,6 +28,9 @@ const badges = [
 ];
 
 export default function AboutHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("about-hero") };
+
   return (
     <section className="py-16 px-6 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
@@ -32,7 +45,7 @@ export default function AboutHero() {
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-4 flex items-center gap-2"
           >
             <span className="inline-block w-8 h-0.5 bg-[#1a3270]" />
-            About Us
+            {hero.eyebrow}
           </motion.p>
 
           <motion.h1
@@ -42,7 +55,7 @@ export default function AboutHero() {
             custom={1}
             className="text-4xl xl:text-5xl font-extrabold text-[#1a1a4b] leading-tight mb-5"
           >
-            Together, We<br />Build a Better<br />Tomorrow
+            {hero.headingLine1}<br />{hero.headingLine2}<br />{hero.headingLine3}
           </motion.h1>
 
           <motion.p
@@ -52,9 +65,7 @@ export default function AboutHero() {
             custom={2}
             className="text-sm text-[#64748b] leading-relaxed mb-8"
           >
-            Project Generation is a non-profit students' organisation dedicated to
-            empowering lives and creating opportunities for children, families and
-            communities to thrive.
+            {hero.description}
           </motion.p>
 
           <div className="flex flex-wrap gap-3">

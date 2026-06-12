@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Heart, Users, Clock, Megaphone, Star, ArrowRight } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./whg.constants";
+import { usePageSections } from "../../../context/PageContext";
 
 const ctaActions = [
   { icon: Clock, label: "Volunteer Your Time" },
@@ -9,7 +10,16 @@ const ctaActions = [
   { icon: Star, label: "Be the Change" },
 ];
 
+const DEFAULT_CTA = {
+  headingLine1: "Small Actions.",
+  headingLine2: "Big Impact.",
+  description: "Together, we can build a kinder, stronger, and more compassionate world.",
+};
+
 export default function WhgCTA() {
+  const { getSectionData } = usePageSections();
+  const cta = { ...DEFAULT_CTA, ...getSectionData("whg-cta") };
+
   return (
     <section
       id="get-involved"
@@ -75,12 +85,12 @@ export default function WhgCTA() {
               marginBottom: "0.6rem",
             }}
           >
-            Small Actions.
+            {cta.headingLine1}
             <br />
-            Big Impact.
+            {cta.headingLine2}
           </h2>
           <p style={{ fontSize: "0.9rem", color: "#64748b", lineHeight: 1.7, marginBottom: "1.75rem" }}>
-            Together, we can build a kinder, stronger, and more compassionate world.
+            {cta.description}
           </p>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" as const }}>
             <a

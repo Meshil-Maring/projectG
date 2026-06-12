@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Trophy, Users, ArrowRight, Clock, Flame } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./cwg.constants";
+import { usePageSections } from "../../../context/PageContext";
 
 const ctaActions = [
   { icon: Clock, label: "Train With Us" },
@@ -9,7 +10,19 @@ const ctaActions = [
   { icon: Flame, label: "Champion a Cause" },
 ];
 
+const DEFAULT_CTA = {
+  eyebrow: "RISE TO THE CHALLENGE",
+  headingLine1: "Empowered communities.",
+  headingLine2: "Stronger economies.",
+  headingLine3: "Brighter futures.",
+  description:
+    "Your competitive spirit creates ripples of inspiration. Join us to compete, grow, and champion excellence across every field.",
+};
+
 export default function CwgCTA() {
+  const { getSectionData } = usePageSections();
+  const cta = { ...DEFAULT_CTA, ...getSectionData("cwg-cta") };
+
   return (
     <section
       id="get-involved"
@@ -78,7 +91,7 @@ export default function CwgCTA() {
               marginBottom: "0.6rem",
             }}
           >
-            RISE TO THE CHALLENGE
+            {cta.eyebrow}
           </span>
           <h2
             style={{
@@ -89,15 +102,14 @@ export default function CwgCTA() {
               lineHeight: 1.25,
             }}
           >
-            Empowered communities.
+            {cta.headingLine1}
             <br />
-            Stronger economies.
+            {cta.headingLine2}
             <br />
-            Brighter futures.
+            {cta.headingLine3}
           </h2>
           <p style={{ fontSize: "0.9rem", color: "#64748b", lineHeight: 1.7, marginBottom: "1.75rem" }}>
-            Your competitive spirit creates ripples of inspiration. Join us to compete, grow, and
-            champion excellence across every field.
+            {cta.description}
           </p>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" as const }}>
             <a

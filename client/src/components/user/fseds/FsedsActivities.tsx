@@ -16,6 +16,15 @@ import {
 } from "lucide-react";
 import { PRIMARY, LIGHT_BG, fade } from "./fseds.constants";
 import { useGroupActivities } from "../../../context/GroupActivitiesContext";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_ACTIVITIES = {
+  doEyebrow: "WHAT WE DO",
+  focusEyebrow: "FOCUS AREAS",
+  impactEyebrow: "OUR IMPACT",
+  galleryEyebrow: "Our Activities",
+  galleryHeading: "What We've Been Doing",
+};
 
 const whatWeDo = [
   { icon: TrendingUp, title: "Livelihood Development", desc: "Promoting sustainable income opportunities and decent livelihoods for families and individuals." },
@@ -45,6 +54,8 @@ const impactStats = [
 export default function FsedsActivities() {
   const { data } = useGroupActivities();
   const activities = data.fseds;
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_ACTIVITIES, ...getSectionData("fseds-activities") };
 
   return (
     <section style={{ background: "#faf5ff", padding: "5rem 1.5rem" }}>
@@ -54,7 +65,7 @@ export default function FsedsActivities() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2.5rem", alignItems: "start", marginBottom: "5rem" }}>
           <motion.div {...fade(0)}>
             <h3 style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: PRIMARY, marginBottom: "1.25rem" }}>
-              WHAT WE DO
+              {content.doEyebrow}
             </h3>
             <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.85rem" }}>
               {whatWeDo.map(({ icon: Icon, title, desc }) => (
@@ -73,7 +84,7 @@ export default function FsedsActivities() {
 
           <motion.div {...fade(0.1)}>
             <h3 style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: PRIMARY, marginBottom: "1.25rem" }}>
-              FOCUS AREAS
+              {content.focusEyebrow}
             </h3>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
               {focusAreas.map(({ icon: Icon, title, desc }) => (
@@ -90,7 +101,7 @@ export default function FsedsActivities() {
 
           <motion.div {...fade(0.2)}>
             <h3 style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: PRIMARY, marginBottom: "1.25rem" }}>
-              OUR IMPACT
+              {content.impactEyebrow}
             </h3>
             <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.75rem" }}>
               {impactStats.map(({ value, label, sub }) => (
@@ -114,11 +125,11 @@ export default function FsedsActivities() {
         {activities.length > 0 && (
           <motion.div {...fade(0.25)}>
             <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: PRIMARY, display: "block", marginBottom: "0.5rem" }}>
-              Our Activities
+              {content.galleryEyebrow}
             </span>
             <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
             <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: "#0f172a", marginBottom: "2rem", lineHeight: 1.2 }}>
-              What We've Been Doing
+              {content.galleryHeading}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
               {activities.map(({ id, title, desc, imageUrl }, i) => (

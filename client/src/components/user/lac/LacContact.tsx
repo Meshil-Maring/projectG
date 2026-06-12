@@ -1,6 +1,14 @@
 import { motion } from "framer-motion";
 import { Scale, Phone, Mail, MapPin, Shield, DollarSign, Globe, Wifi } from "lucide-react";
 import { NAV_BLUE, fade } from "./lac.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_CONTACT = {
+  heading: "Need Legal Help?",
+  description:
+    "We're here to listen and help you take the first step towards your rights.",
+  cardCaption: "Our commitment to every person we serve",
+};
 
 const contactDetails = [
   { Icon: Phone, text: "+91 98765 43210" },
@@ -18,6 +26,9 @@ const contactFeatures = [
 const badges = ["Free Services", "Confidential", "For Everyone"];
 
 export default function LacContact() {
+  const { getSectionData } = usePageSections();
+  const contact = { ...DEFAULT_CONTACT, ...getSectionData("lac-contact") };
+
   return (
     <section
       id="contact-section"
@@ -72,7 +83,7 @@ export default function LacContact() {
               marginBottom: "0.5rem",
             }}
           >
-            Need Legal Help?
+            {contact.heading}
           </h2>
           <p
             style={{
@@ -82,7 +93,7 @@ export default function LacContact() {
               lineHeight: 1.6,
             }}
           >
-            We&apos;re here to listen and help you take the first step towards your rights.
+            {contact.description}
           </p>
 
           <div
@@ -215,7 +226,7 @@ export default function LacContact() {
               barriers for none"
             </blockquote>
             <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.8rem" }}>
-              Our commitment to every person we serve
+              {contact.cardCaption}
             </p>
 
             <div

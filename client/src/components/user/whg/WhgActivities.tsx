@@ -14,6 +14,17 @@ import {
 } from "lucide-react";
 import { PRIMARY, SECONDARY, ACCENT, LIGHT_BG, fade } from "./whg.constants";
 import { useGroupActivities } from "../../../context/GroupActivitiesContext";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_ACTIVITIES = {
+  doEyebrow: "What We Do",
+  doHeading: "How We Serve",
+  focusEyebrow: "Our Focus Areas",
+  focusHeading: "Where We Make a Difference",
+  impactEyebrow: "Our Impact",
+  galleryEyebrow: "Our Activities",
+  galleryHeading: "What We've Been Doing",
+};
 
 const whatWeDo = [
   { icon: Users, title: "Community Service", desc: "Organizing drives and activities to support those in need." },
@@ -42,6 +53,8 @@ const impactStats = [
 export default function WhgActivities() {
   const { data } = useGroupActivities();
   const activities = data.whg;
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_ACTIVITIES, ...getSectionData("whg-activities") };
 
   return (
     <section style={{ background: "#fff8f4", padding: "5rem 1.5rem" }}>
@@ -50,11 +63,11 @@ export default function WhgActivities() {
         {/* ── What We Do ── */}
         <motion.div {...fade(0)} style={{ marginBottom: "4.5rem" }}>
           <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: PRIMARY, display: "block", marginBottom: "0.5rem" }}>
-            What We Do
+            {content.doEyebrow}
           </span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
           <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: "#0f172a", marginBottom: "2rem", lineHeight: 1.2 }}>
-            How We Serve
+            {content.doHeading}
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
             {whatWeDo.map(({ icon: Icon, title, desc }, i) => (
@@ -77,11 +90,11 @@ export default function WhgActivities() {
         {/* ── Our Focus Areas ── */}
         <motion.div {...fade(0)} style={{ marginBottom: "4.5rem" }}>
           <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: PRIMARY, display: "block", marginBottom: "0.5rem" }}>
-            Our Focus Areas
+            {content.focusEyebrow}
           </span>
           <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
           <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: "#0f172a", marginBottom: "2rem", lineHeight: 1.2 }}>
-            Where We Make a Difference
+            {content.focusHeading}
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
             {focusAreas.map(({ icon: Icon, title, desc }, i) => (
@@ -119,7 +132,7 @@ export default function WhgActivities() {
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.75rem", position: "relative" }}>
             <Heart size={15} color="rgba(255,255,255,0.85)" fill="rgba(255,255,255,0.85)" />
             <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.85)" }}>
-              Our Impact
+              {content.impactEyebrow}
             </span>
           </div>
           <div
@@ -145,11 +158,11 @@ export default function WhgActivities() {
         {activities.length > 0 && (
           <motion.div {...fade(0.25)}>
             <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: PRIMARY, display: "block", marginBottom: "0.5rem" }}>
-              Our Activities
+              {content.galleryEyebrow}
             </span>
             <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
             <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: "#0f172a", marginBottom: "2rem", lineHeight: 1.2 }}>
-              What We've Been Doing
+              {content.galleryHeading}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
               {activities.map(({ id, title, desc, imageUrl }, i) => (

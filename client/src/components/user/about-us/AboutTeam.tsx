@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTeamData } from "../../../context/TeamContext";
+import { usePageSections } from "../../../context/PageContext";
 import {
   FacebookIcon,
   LinkedinIcon,
@@ -8,6 +9,12 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "../../../assets/icons";
+
+const DEFAULT_TEAM = {
+  heading: "Meet Our Team",
+  boardLabel: "Board Committee Cum Chairman",
+  teamLabel: "Our Team Members",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -46,6 +53,8 @@ export default function AboutTeam() {
   const { data } = useTeamData();
   const boardCommittee = data.board;
   const team = data.members;
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_TEAM, ...getSectionData("about-team") };
 
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -77,7 +86,7 @@ export default function AboutTeam() {
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
           >
-            Meet Our Team
+            {content.heading}
           </motion.h2>
           <div className="w-14 h-1 bg-[#1a3270] rounded" />
         </div>
@@ -93,7 +102,7 @@ export default function AboutTeam() {
             <div className="flex items-center gap-2 px-5 py-1.5 rounded-full border border-primary/20 bg-[#f0f4ff]">
               <span className="w-2 h-2 rounded-full bg-primary inline-block" />
               <span className="text-xs font-bold tracking-widest text-primary uppercase">
-                Board Committee Cum Chairman
+                {content.boardLabel}
               </span>
               <span className="w-2 h-2 rounded-full bg-primary inline-block" />
             </div>
@@ -138,7 +147,7 @@ export default function AboutTeam() {
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-[#e2e8f0]" />
             <span className="text-xs font-bold tracking-widest text-[#64748b] uppercase px-3">
-              Our Team Members
+              {content.teamLabel}
             </span>
             <div className="flex-1 h-px bg-[#e2e8f0]" />
           </div>

@@ -1,8 +1,18 @@
 import { motion } from "framer-motion";
 import { Scale, Users, ArrowRight } from "lucide-react";
 import { NAV_BLUE, BRIGHT_BLUE, fade } from "./lac.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_CTA = {
+  heading: "Be the Voice of Justice",
+  description:
+    "Join the Legal Aid Club and help us build a world where justice is not a privilege, but a right.",
+};
 
 export default function LacCTA() {
+  const { getSectionData } = usePageSections();
+  const cta = { ...DEFAULT_CTA, ...getSectionData("lac-cta") };
+
   return (
     <section
       style={{
@@ -49,7 +59,7 @@ export default function LacCTA() {
             marginBottom: "0.75rem",
           }}
         >
-          Be the Voice of Justice
+          {cta.heading}
         </h2>
         <p
           style={{
@@ -61,8 +71,7 @@ export default function LacCTA() {
             lineHeight: 1.7,
           }}
         >
-          Join the Legal Aid Club and help us build a world where justice is not a privilege, but a
-          right.
+          {cta.description}
         </p>
 
         <div

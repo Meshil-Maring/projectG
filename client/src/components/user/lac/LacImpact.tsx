@@ -1,6 +1,13 @@
 import { motion } from "framer-motion";
 import { Scale } from "lucide-react";
 import { NAV_BLUE, fade } from "./lac.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_IMPACT = {
+  heading: "Our Impact",
+  description:
+    "Through legal knowledge and support, we are creating a fairer, more just society.",
+};
 
 const stats = [
   { value: "3,200+", label: "People Provided", sub: "Legal Support" },
@@ -11,6 +18,9 @@ const stats = [
 ];
 
 export default function LacImpact() {
+  const { getSectionData } = usePageSections();
+  const impact = { ...DEFAULT_IMPACT, ...getSectionData("lac-impact") };
+
   return (
     <section style={{ background: "#faf9f5", padding: "5rem 1.5rem" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -31,10 +41,10 @@ export default function LacImpact() {
                 marginBottom: "0.75rem",
               }}
             >
-              Our Impact
+              {impact.heading}
             </h2>
             <p style={{ fontSize: "0.875rem", color: "#64748b", lineHeight: 1.7 }}>
-              Through legal knowledge and support, we are creating a fairer, more just society.
+              {impact.description}
             </p>
           </motion.div>
 

@@ -7,6 +7,14 @@ import {
   Globe,
   CheckCircle2,
 } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_SOCIETIES = {
+  eyebrow: "How We Operate",
+  heading: "Our Societies & Clubs",
+  description:
+    "PROJECT 'G' Foundation operates through five dedicated societies and clubs, each with a special focus area to drive meaningful community impact.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -91,6 +99,9 @@ const societies = [
 ];
 
 export default function AboutSocieties() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_SOCIETIES, ...getSectionData("about-societies") };
+
   return (
     <section className="py-24 px-6 bg-surface overflow-hidden">
       <div className="max-w-6xl mx-auto">
@@ -104,7 +115,7 @@ export default function AboutSocieties() {
             viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-3"
           >
-            How We Operate
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -115,7 +126,7 @@ export default function AboutSocieties() {
             className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-4"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Our Societies &amp; Clubs
+            {content.heading}
           </motion.h2>
           <div className="w-12 h-1 bg-[#1a3270] rounded mx-auto mb-5" />
           <motion.p
@@ -126,9 +137,7 @@ export default function AboutSocieties() {
             custom={2}
             className="text-sm text-[#64748b] leading-relaxed max-w-lg mx-auto"
           >
-            PROJECT 'G' Foundation operates through five dedicated societies
-            and clubs, each with a special focus area to drive meaningful
-            community impact.
+            {content.description}
           </motion.p>
         </div>
 

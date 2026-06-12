@@ -3,7 +3,10 @@ import { motion } from "framer-motion";
 import heroBg from "../../../assets/image/herosection_small.png";
 import { INK_PATHS } from "./heroInkPaths";
 import { useNavigate } from "react-router-dom";
-import { useHomePageData } from "../../../context/HomePageContext";
+import {
+  useHomePageData,
+  DEFAULT_HERO_DESCRIPTION,
+} from "../../../context/HomePageContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -27,6 +30,8 @@ export default function Hero() {
   const navigate = useNavigate();
   const { data } = useHomePageData();
   const bgSrc = data.heroImageUrl || heroBg;
+  const description = data.heroDescription || DEFAULT_HERO_DESCRIPTION;
+  const customTitle = data.heroTitle.trim();
 
   return (
     <section
@@ -53,64 +58,84 @@ export default function Hero() {
           }}
           className="py-16 lg:py-24 max-w-[64%] sm:max-w-[52%]"
         >
-          {/* "Together We Can" */}
-          <motion.h1
-            custom={0.2}
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            style={{
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 700,
-              lineHeight: 1.1,
-              color: "#1a3270",
-              fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-            }}
-          >
-            Together
-            <br />
-            We Can
-          </motion.h1>
-
-          {/* "Change Lives" — SVG handwriting draw animation */}
-          <svg
-            viewBox="0 0 1126 295"
-            aria-label="Change Lives"
-            style={{
-              height: "clamp(2.6rem, 5vw, 4.2rem)",
-              width: "auto",
-              display: "block",
-              marginTop: "-0.2em",
-              overflow: "visible",
-            }}
-          >
-            {INK_PATHS.map((p, i) => (
-              <motion.path
-                key={i}
-                d={p.d}
-                fillRule="evenodd"
-                fill="#2563eb"
-                stroke="#2563eb"
-                strokeWidth={1.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                initial={{ pathLength: 0, fillOpacity: 0 }}
-                animate={{ pathLength: 1, fillOpacity: 1 }}
-                transition={{
-                  pathLength: {
-                    delay: p.drawDelay,
-                    duration: p.drawDuration,
-                    ease: [0.55, 0.085, 0.4, 0.92] as const,
-                  },
-                  fillOpacity: {
-                    delay: p.fillDelay,
-                    duration: 0.12,
-                    ease: "easeOut" as const,
-                  },
+          {customTitle ? (
+            <motion.h1
+              custom={0.2}
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 700,
+                lineHeight: 1.1,
+                color: "#1a3270",
+                fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
+              }}
+            >
+              {customTitle}
+            </motion.h1>
+          ) : (
+            <>
+              {/* "Together We Can" */}
+              <motion.h1
+                custom={0.2}
+                variants={fadeUp}
+                initial="hidden"
+                animate="show"
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontWeight: 700,
+                  lineHeight: 1.1,
+                  color: "#1a3270",
+                  fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
                 }}
-              />
-            ))}
-          </svg>
+              >
+                Together
+                <br />
+                We Can
+              </motion.h1>
+
+              {/* "Change Lives" — SVG handwriting draw animation */}
+              <svg
+                viewBox="0 0 1126 295"
+                aria-label="Change Lives"
+                style={{
+                  height: "clamp(2.6rem, 5vw, 4.2rem)",
+                  width: "auto",
+                  display: "block",
+                  marginTop: "-0.2em",
+                  overflow: "visible",
+                }}
+              >
+                {INK_PATHS.map((p, i) => (
+                  <motion.path
+                    key={i}
+                    d={p.d}
+                    fillRule="evenodd"
+                    fill="#2563eb"
+                    stroke="#2563eb"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ pathLength: 0, fillOpacity: 0 }}
+                    animate={{ pathLength: 1, fillOpacity: 1 }}
+                    transition={{
+                      pathLength: {
+                        delay: p.drawDelay,
+                        duration: p.drawDuration,
+                        ease: [0.55, 0.085, 0.4, 0.92] as const,
+                      },
+                      fillOpacity: {
+                        delay: p.fillDelay,
+                        duration: 0.12,
+                        ease: "easeOut" as const,
+                      },
+                    }}
+                  />
+                ))}
+              </svg>
+            </>
+          )}
 
           {/* Subtitle */}
           <motion.p
@@ -129,8 +154,7 @@ export default function Hero() {
               maxWidth: "20rem",
             }}
           >
-            We're committed to building a better future for children, families
-            and communities through education, care and support.
+            {description}
           </motion.p>
 
           {/* CTA buttons */}

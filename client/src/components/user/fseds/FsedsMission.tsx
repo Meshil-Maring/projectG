@@ -1,6 +1,16 @@
 import { motion } from "framer-motion";
 import { Globe, BarChart3, GraduationCap, TrendingUp, Briefcase, Users } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./fseds.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_MISSION = {
+  eyebrow: "OUR MISSION",
+  headingLine1: "Empowering People.",
+  headingLine2: "Strengthening Livelihoods.",
+  headingLine3: "Transforming Communities.",
+  description:
+    "Our mission is to foster inclusive economic growth by providing resources, skills, and opportunities that enable individuals and communities to achieve lasting prosperity.",
+};
 
 const missionPillars = [
   { icon: BarChart3, label: "Economic Empowerment" },
@@ -18,6 +28,9 @@ const growthSteps = [
 ];
 
 export default function FsedsMission() {
+  const { getSectionData } = usePageSections();
+  const mission = { ...DEFAULT_MISSION, ...getSectionData("fseds-mission") };
+
   return (
     <section style={{ background: "#fafaf8", padding: "5rem 1.5rem" }}>
       <div
@@ -105,7 +118,7 @@ export default function FsedsMission() {
               marginBottom: "0.5rem",
             }}
           >
-            OUR MISSION
+            {mission.eyebrow}
           </span>
           <div
             style={{
@@ -125,11 +138,11 @@ export default function FsedsMission() {
               marginBottom: "1rem",
             }}
           >
-            Empowering People.
+            {mission.headingLine1}
             <br />
-            Strengthening Livelihoods.
+            {mission.headingLine2}
             <br />
-            Transforming Communities.
+            {mission.headingLine3}
           </h2>
           <p
             style={{
@@ -139,8 +152,7 @@ export default function FsedsMission() {
               marginBottom: "2rem",
             }}
           >
-            Our mission is to foster inclusive economic growth by providing resources, skills, and
-            opportunities that enable individuals and communities to achieve lasting prosperity.
+            {mission.description}
           </p>
           <div
             style={{

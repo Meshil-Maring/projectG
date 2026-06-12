@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./hrds.constants";
+import { usePageSections } from "../../../context/PageContext";
 
 const heroFeatures = [
   { icon: Users, title: "Empower Individuals", sub: "Building confidence and capacity" },
@@ -27,7 +28,19 @@ const skillItems = [
   { label: "Opportunity", Icon: Lightbulb },
 ];
 
+const DEFAULT_HERO = {
+  eyebrow: "Human Resources Developmental Society",
+  titleLine1: "Empower People.",
+  titleEmphasis1: "Enrich Potential.",
+  titleEmphasis2: "Build a Better Tomorrow.",
+  description:
+    "We are committed to developing human potential and building capacities to create a skilled, confident, and empowered community.",
+};
+
 export default function HrdsHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("hrds-hero") };
+
   return (
     <section
       style={{
@@ -115,7 +128,7 @@ export default function HrdsHero() {
                   maxWidth: "180px",
                 }}
               >
-                Human Resources Developmental Society
+                {hero.eyebrow}
               </span>
             </motion.div>
 
@@ -130,7 +143,7 @@ export default function HrdsHero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Empower People.
+              {hero.titleLine1}
             </motion.h1>
 
             <motion.p
@@ -145,7 +158,7 @@ export default function HrdsHero() {
                 lineHeight: 1.3,
               }}
             >
-              Enrich Potential.
+              {hero.titleEmphasis1}
             </motion.p>
 
             <motion.p
@@ -160,7 +173,7 @@ export default function HrdsHero() {
                 lineHeight: 1.3,
               }}
             >
-              Build a Better Tomorrow.
+              {hero.titleEmphasis2}
             </motion.p>
 
             <div
@@ -183,8 +196,7 @@ export default function HrdsHero() {
                 maxWidth: "420px",
               }}
             >
-              We are committed to developing human potential and building capacities to create a
-              skilled, confident, and empowered community.
+              {hero.description}
             </motion.p>
 
             <motion.div

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Heart, Users, Leaf, Star, ChevronRight, ArrowRight } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./whg.constants";
+import { usePageSections } from "../../../context/PageContext";
 
 const heroFeatures = [
   { icon: Heart, title: "Serve Selflessly", sub: "Kindness without conditions" },
@@ -10,7 +11,18 @@ const heroFeatures = [
   { icon: Leaf, title: "Create Lasting Change", sub: "Impact that endures" },
 ];
 
+const DEFAULT_HERO = {
+  eyebrow: "Work for Humanity Group",
+  titleLine1: "Work for Humanity,",
+  titleEmphasis: "Serve with Heart.",
+  description:
+    "We work for a world where kindness leads the way. We uplift lives, support communities, and create lasting change through service and compassion.",
+};
+
 export default function WhgHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("whg-hero") };
+
   return (
     <section
       style={{
@@ -94,7 +106,7 @@ export default function WhgHero() {
                   color: PRIMARY,
                 }}
               >
-                Work for Humanity Group
+                {hero.eyebrow}
               </span>
             </motion.div>
 
@@ -109,7 +121,7 @@ export default function WhgHero() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Work for Humanity,
+              {hero.titleLine1}
             </motion.h1>
 
             <motion.p
@@ -124,7 +136,7 @@ export default function WhgHero() {
                 lineHeight: 1.3,
               }}
             >
-              Serve with Heart.
+              {hero.titleEmphasis}
             </motion.p>
 
             <div
@@ -147,8 +159,7 @@ export default function WhgHero() {
                 maxWidth: "420px",
               }}
             >
-              We work for a world where kindness leads the way. We uplift lives, support
-              communities, and create lasting change through service and compassion.
+              {hero.description}
             </motion.p>
 
             <motion.div

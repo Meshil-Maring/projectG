@@ -2,6 +2,11 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Heart, Users, Scale, Globe, Trophy } from "lucide-react";
 import { PRIMARY, LIGHT_BG, fade } from "./whg.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_COMMUNITIES = {
+  heading: "Explore Our Other Communities",
+};
 
 const otherGroups = [
   { slug: "lac", abbr: "LAC", color: "#1a3270", bg: "#eef1fb", Icon: Scale },
@@ -18,6 +23,9 @@ const slugToPath: Record<string, string> = {
 };
 
 export default function WhgCommunities() {
+  const { getSectionData } = usePageSections();
+  const communities = { ...DEFAULT_COMMUNITIES, ...getSectionData("whg-communities") };
+
   return (
     <section style={{ background: "#f8fafc", padding: "3rem 1.5rem" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto", textAlign: "center" as const }}>
@@ -31,7 +39,7 @@ export default function WhgCommunities() {
             letterSpacing: "0.02em",
           }}
         >
-          Explore Our Other Communities
+          {communities.heading}
         </motion.h3>
 
         <motion.div

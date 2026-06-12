@@ -1,6 +1,15 @@
 import { motion } from "framer-motion";
 import { Users, GraduationCap, BookOpen, Briefcase, Star } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./hrds.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_MISSION = {
+  eyebrow: "OUR MISSION",
+  headingLine1: "Developing People.",
+  headingLine2: "Transforming Lives.",
+  description:
+    "We focus on nurturing talent, enhancing skills, and promoting personal and professional growth through education, training, mentorship, and opportunities.",
+};
 
 const missionPillars = [
   { icon: GraduationCap, label: "Skill Development" },
@@ -18,6 +27,9 @@ const growthSteps = [
 ];
 
 export default function HrdsMission() {
+  const { getSectionData } = usePageSections();
+  const mission = { ...DEFAULT_MISSION, ...getSectionData("hrds-mission") };
+
   return (
     <section style={{ background: "#fafaf8", padding: "5rem 1.5rem" }}>
       <div
@@ -110,7 +122,7 @@ export default function HrdsMission() {
               marginBottom: "0.5rem",
             }}
           >
-            OUR MISSION
+            {mission.eyebrow}
           </span>
           <div
             style={{
@@ -130,9 +142,9 @@ export default function HrdsMission() {
               marginBottom: "1rem",
             }}
           >
-            Developing People.
+            {mission.headingLine1}
             <br />
-            Transforming Lives.
+            {mission.headingLine2}
           </h2>
           <p
             style={{
@@ -142,8 +154,7 @@ export default function HrdsMission() {
               marginBottom: "2rem",
             }}
           >
-            We focus on nurturing talent, enhancing skills, and promoting personal and professional
-            growth through education, training, mentorship, and opportunities.
+            {mission.description}
           </p>
           <div
             style={{

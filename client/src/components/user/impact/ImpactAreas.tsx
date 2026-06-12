@@ -1,5 +1,13 @@
 import { motion } from "framer-motion";
 import { Leaf, BookOpen, HeartPulse, Utensils, UserRound, Rocket } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_AREAS = {
+  eyebrow: "Focus Areas",
+  heading: "Where We Create Change",
+  description:
+    "Our societies tackle the most pressing challenges communities face, delivering measurable outcomes across six key areas.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -68,6 +76,9 @@ const areas = [
 ];
 
 export default function ImpactAreas() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_AREAS, ...getSectionData("impact-areas") };
+
   return (
     <section className="py-20 px-6 bg-[#f8fafc]">
       <div className="max-w-6xl mx-auto">
@@ -79,7 +90,7 @@ export default function ImpactAreas() {
             viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-2"
           >
-            Focus Areas
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -89,7 +100,7 @@ export default function ImpactAreas() {
             custom={1}
             className="text-2xl xl:text-4xl font-extrabold text-[#1e293b] mb-3"
           >
-            Where We Create Change
+            {content.heading}
           </motion.h2>
           <motion.p
             variants={fadeUp}
@@ -99,8 +110,7 @@ export default function ImpactAreas() {
             custom={2}
             className="text-sm text-[#64748b] max-w-xl mx-auto"
           >
-            Our societies tackle the most pressing challenges communities face, delivering
-            measurable outcomes across six key areas.
+            {content.description}
           </motion.p>
         </div>
 

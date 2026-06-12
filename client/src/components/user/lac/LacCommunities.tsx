@@ -2,6 +2,11 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Scale, Users, Globe, Heart, Trophy } from "lucide-react";
 import { NAV_BLUE, fade } from "./lac.constants";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_COMMUNITIES = {
+  heading: "Explore Our Other Communities",
+};
 
 const otherGroups = [
   {
@@ -46,6 +51,9 @@ const slugToPath: Record<string, string> = {
 };
 
 export default function LacCommunities() {
+  const { getSectionData } = usePageSections();
+  const communities = { ...DEFAULT_COMMUNITIES, ...getSectionData("lac-communities") };
+
   return (
     <section style={{ background: "#f8fafc", padding: "3rem 1.5rem" }}>
       <div
@@ -61,7 +69,7 @@ export default function LacCommunities() {
             letterSpacing: "0.02em",
           }}
         >
-          Explore Our Other Communities
+          {communities.heading}
         </motion.h3>
 
         <motion.div

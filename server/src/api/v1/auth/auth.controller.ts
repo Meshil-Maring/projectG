@@ -12,4 +12,9 @@ export const authController = {
   me: asyncHandler(async (req: Request, res: Response) => {
     ok(res, req.user);
   }),
+
+  updateMe: asyncHandler(async (req: Request, res: Response) => {
+    const result = await authService.updateMe(req.user!.email, req.body);
+    ok(res, result);
+  }),
 };
