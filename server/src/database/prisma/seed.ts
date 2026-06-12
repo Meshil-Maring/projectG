@@ -738,6 +738,288 @@ async function main() {
     });
   }
 
+  const impactPage = await prisma.page.upsert({
+    where: { slug: 'impact' },
+    update: {},
+    create: { slug: 'impact', title: 'Impact' },
+  });
+
+  if ((await prisma.section.count({ where: { pageId: impactPage.id } })) === 0) {
+    await prisma.section.createMany({
+      data: [
+        {
+          pageId: impactPage.id,
+          type: 'impact-hero',
+          order: 0,
+          data: {
+            eyebrow: 'Project Generation',
+            headingLine1: 'Measuring Change,',
+            headingLine2: 'One Life at a Time',
+            description:
+              'Every number here represents a real person whose life has been touched. Explore the tangible difference our societies create every single day.',
+          },
+        },
+        {
+          pageId: impactPage.id,
+          type: 'impact-numbers',
+          order: 1,
+          data: {
+            eyebrow: 'By the Numbers',
+            heading: 'Our Impact in Numbers',
+          },
+        },
+        {
+          pageId: impactPage.id,
+          type: 'impact-areas',
+          order: 2,
+          data: {
+            eyebrow: 'Focus Areas',
+            heading: 'Where We Create Change',
+            description:
+              'Our societies tackle the most pressing challenges communities face, delivering measurable outcomes across six key areas.',
+          },
+        },
+        {
+          pageId: impactPage.id,
+          type: 'impact-timeline',
+          order: 3,
+          data: {
+            eyebrow: 'Our Journey',
+            heading: 'A Decade of Impact',
+          },
+        },
+        {
+          pageId: impactPage.id,
+          type: 'impact-testimonials',
+          order: 4,
+          data: {
+            eyebrow: 'Real Stories',
+            heading: 'Voices of Change',
+          },
+        },
+        {
+          pageId: impactPage.id,
+          type: 'impact-cta',
+          order: 5,
+          data: {
+            eyebrow: 'Be Part of the Change',
+            heading: 'Your Support Makes This Possible',
+            description:
+              "Every contribution — whether time, skills, or a donation — adds to the numbers you've seen here. Join us in writing the next chapter of this story.",
+          },
+        },
+      ],
+    });
+  }
+
+  const giPage = await prisma.page.upsert({
+    where: { slug: 'get-involved' },
+    update: {},
+    create: { slug: 'get-involved', title: 'Get Involved' },
+  });
+
+  if ((await prisma.section.count({ where: { pageId: giPage.id } })) === 0) {
+    await prisma.section.createMany({
+      data: [
+        {
+          pageId: giPage.id,
+          type: 'gi-hero',
+          order: 0,
+          data: {
+            eyebrow: 'Project Generation',
+            headingLine1: 'Get Involved &',
+            headingLine2: 'Make a Difference',
+            description:
+              'Whether you volunteer your time, donate, or simply spread the word — every action counts. Join us in empowering communities and transforming lives.',
+          },
+        },
+        {
+          pageId: giPage.id,
+          type: 'gi-ways',
+          order: 1,
+          data: {
+            eyebrow: 'How You Can Help',
+            heading: 'Ways to Make a Difference',
+            description:
+              'There are many ways to support our mission. Choose the path that fits you best and start creating real change today.',
+          },
+        },
+        {
+          pageId: giPage.id,
+          type: 'gi-volunteer',
+          order: 2,
+          data: {
+            eyebrow: 'Volunteer',
+            headingLine1: 'Be The Change',
+            headingLine2: 'You Wish to See',
+            description:
+              'Volunteering with Project Generation means becoming part of a movement that puts people first. No experience needed — just a heart ready to serve.',
+          },
+        },
+        {
+          pageId: giPage.id,
+          type: 'gi-donate',
+          order: 3,
+          data: {
+            eyebrow: 'Donate',
+            headingLine1: 'Your Generosity',
+            headingLine2: 'Transforms Lives',
+            description:
+              'Every contribution — big or small — goes towards education, health, and welfare programs that uplift the most vulnerable in our communities. Your gift creates real, lasting change.',
+          },
+        },
+        {
+          pageId: giPage.id,
+          type: 'gi-spread',
+          order: 4,
+          data: {
+            eyebrow: 'Spread the Word',
+            heading: 'Amplify Our Impact',
+            description:
+              "You don't need money or a lot of time. A share, a conversation, or a simple message can bring more people into our mission.",
+          },
+        },
+      ],
+    });
+  }
+
+  const contactPage = await prisma.page.upsert({
+    where: { slug: 'contact' },
+    update: {},
+    create: { slug: 'contact', title: 'Contact' },
+  });
+
+  if ((await prisma.section.count({ where: { pageId: contactPage.id } })) === 0) {
+    await prisma.section.createMany({
+      data: [
+        {
+          pageId: contactPage.id,
+          type: 'contact-hero',
+          order: 0,
+          data: {
+            eyebrow: 'Contact Us',
+            headingLine1: "We'd Love to",
+            headingLine2: 'Hear From',
+            headingLine3: 'You',
+            description:
+              'Have a question, want to collaborate, or just want to say hello? Reach out to us and our team will get back to you as soon as possible.',
+          },
+        },
+        {
+          pageId: contactPage.id,
+          type: 'contact-form',
+          order: 1,
+          data: {
+            eyebrow: 'Send a Message',
+            heading: "Let's Start a Conversation",
+            description: "Fill in the form below and we'll get back to you shortly.",
+          },
+        },
+      ],
+    });
+  }
+
+  const causesPage = await prisma.page.upsert({
+    where: { slug: 'causes' },
+    update: {},
+    create: { slug: 'causes', title: 'Causes' },
+  });
+
+  if ((await prisma.section.count({ where: { pageId: causesPage.id } })) === 0) {
+    await prisma.section.createMany({
+      data: [
+        {
+          pageId: causesPage.id,
+          type: 'causes-hero',
+          order: 0,
+          data: {
+            eyebrow: 'Active Campaigns',
+            heading: 'Causes That Need Your Support',
+            description:
+              'Every rupee you give goes directly to one of these causes. Browse our active campaigns and choose the change you want to be part of.',
+          },
+        },
+      ],
+    });
+  }
+
+  const donatePage = await prisma.page.upsert({
+    where: { slug: 'donate' },
+    update: {},
+    create: { slug: 'donate', title: 'Donate' },
+  });
+
+  if ((await prisma.section.count({ where: { pageId: donatePage.id } })) === 0) {
+    await prisma.section.createMany({
+      data: [
+        {
+          pageId: donatePage.id,
+          type: 'donate-hero',
+          order: 0,
+          data: {
+            badge: 'Make a Difference Today',
+            headingLine1: 'Your Generosity',
+            headingLine2: 'Changes Lives',
+            description:
+              'Every rupee you give goes directly towards education, healthcare, and community development programs that uplift the most vulnerable.',
+          },
+        },
+        {
+          pageId: donatePage.id,
+          type: 'donate-impact',
+          order: 1,
+          data: {
+            eyebrow: 'Your Impact',
+            heading: 'What Your Donation Achieves',
+          },
+        },
+        {
+          pageId: donatePage.id,
+          type: 'donate-form',
+          order: 2,
+          data: {
+            eyebrow: 'Donate',
+            heading: 'Choose Your Contribution',
+            description: 'Select an amount below or enter a custom value. Every rupee counts.',
+          },
+        },
+        {
+          pageId: donatePage.id,
+          type: 'donate-faq',
+          order: 3,
+          data: {
+            eyebrow: 'Questions',
+            heading: 'Frequently Asked Questions',
+          },
+        },
+      ],
+    });
+  }
+
+  const storiesPage = await prisma.page.upsert({
+    where: { slug: 'stories' },
+    update: {},
+    create: { slug: 'stories', title: 'Stories' },
+  });
+
+  if ((await prisma.section.count({ where: { pageId: storiesPage.id } })) === 0) {
+    await prisma.section.createMany({
+      data: [
+        {
+          pageId: storiesPage.id,
+          type: 'stories-hero',
+          order: 0,
+          data: {
+            eyebrow: 'Stories of Change',
+            heading: 'Real People. Real Impact.',
+            description:
+              'Every number in our impact report represents a person with a name, a story, and a future. Here are just a few of the lives that have been changed through your support.',
+          },
+        },
+      ],
+    });
+  }
+
   if ((await prisma.teamMember.count()) === 0) {
     await prisma.teamMember.createMany({
       data: [

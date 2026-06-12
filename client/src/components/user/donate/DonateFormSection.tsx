@@ -2,6 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Heart, ShieldCheck, Star, Eye } from "lucide-react";
 import DonateQRModal from "../home/DonateQRModal";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_FORM = {
+  eyebrow: "Donate",
+  heading: "Choose Your Contribution",
+  description: "Select an amount below or enter a custom value. Every rupee counts.",
+};
 
 const PRESET_AMOUNTS = [
   { value: 500,  label: "₹500",   description: "Feeds a child for a week" },
@@ -26,6 +33,8 @@ const fadeUp = {
 };
 
 export default function DonateFormSection() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_FORM, ...getSectionData("donate-form") };
   const [selected, setSelected] = useState<number | "other">(1000);
   const [otherValue, setOtherValue] = useState("");
   const [showQR, setShowQR] = useState(false);
@@ -45,7 +54,7 @@ export default function DonateFormSection() {
             viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-2"
           >
-            Donate
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -55,7 +64,7 @@ export default function DonateFormSection() {
             custom={1}
             className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
           >
-            Choose Your Contribution
+            {content.heading}
           </motion.h2>
           <div className="w-10 h-1 bg-[#1a3270] rounded mx-auto mb-4" />
           <motion.p
@@ -66,7 +75,7 @@ export default function DonateFormSection() {
             custom={2}
             className="text-sm text-[#64748b] leading-relaxed"
           >
-            Select an amount below or enter a custom value. Every rupee counts.
+            {content.description}
           </motion.p>
         </div>
 

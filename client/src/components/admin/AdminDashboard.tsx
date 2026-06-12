@@ -31,6 +31,9 @@ import {
   EyeOff,
   AlertCircle,
   FileText,
+  Home,
+  Bell,
+  Calendar,
 } from "lucide-react";
 import {
   useHomePageData,
@@ -50,6 +53,12 @@ import {
   type BoardMember,
   type TeamMember,
 } from "../../context/TeamContext";
+import {
+  useNoticeData,
+  formatNoticeDate,
+  type NoticeEntry,
+  type NoticeCategory,
+} from "../../context/NoticeContext";
 import { type Section } from "../../context/PageContext";
 import { api } from "../../lib/api";
 import Logo from "../../assets/image/logo.jpeg";
@@ -1843,11 +1852,262 @@ function TeamTab() {
   );
 }
 
+// ── Tab: Notifications (Notices & Announcements) ──────────────────────────────
+
+const NOTICE_CATEGORIES: NoticeCategory[] = ["Announcement", "Event", "Update", "Reminder"];
+
+const NOTICE_CATEGORY_COLORS: Record<NoticeCategory, { bg: string; text: string }> = {
+  Announcement: { bg: "#dbeafe", text: "#1d4ed8" },
+  Event: { bg: "#dcfce7", text: "#15803d" },
+  Update: { bg: "#fef9c3", text: "#a16207" },
+  Reminder: { bg: "#fce7f3", text: "#be185d" },
+};
+
+type NoticeFormData = Omit<NoticeEntry, "id">;
+const BLANK_NOTICE: NoticeFormData = {
+  title: "",
+  category: "Announcement",
+  date: "",
+  summary: "",
+  body: "",
+};
+
+function NoticeCategorySelect({
+  value,
+  onChange,
+}: {
+  value: NoticeCategory;
+  onChange: (v: NoticeCategory) => void;
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value as NoticeCategory)}
+      style={{
+        width: "100%",
+        padding: "0.55rem 0.75rem",
+        fontSize: "0.83rem",
+        border: "1.5px solid #e2e8f0",
+        borderRadius: "0.4rem",
+        color: "#1e293b",
+        backgroundColor: "#f8fafc",
+        outline: "none",
+        cursor: "pointer",
+      }}
+    >
+      {NOTICE_CATEGORIES.map((c) => (
+        <option key={c} value={c}>
+          {c}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function NotificationsTab() {
+  const { notices, loading, updateNotices } = useNoticeData();
+  const [items, setItems] = useState<NoticeEntry[]>(notices);
+  useEffect(() => setItems(notices), [notices]);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [form, setForm] = useState<NoticeFormData>(BLANK_NOTICE);
+  const [addingNew, setAddingNew] = useState(false);
+  const [newForm, setNewForm] = useState<NoticeFormData>(BLANK_NOTICE);
+
+  function startEdit(n: NoticeEntry) {
+    setEditingId(n.id);
+    setForm({ title: n.title, category: n.category, date: n.date, summary: n.summary, body: n.body });
+    setAddingNew(false);
+  }
+
+  function saveEdit() {
+    const updated = items.map((n) => (n.id === editingId ? { ...n, ...form } : n));
+    setItems(updated);
+    updateNotices(updated);
+    setEditingId(null);
+  }
+
+  function deleteNotice(id: number) {
+    const updated = items.filter((n) => n.id !== id);
+    setItems(updated);
+    updateNotices(updated);
+    if (editingId === id) setEditingId(null);
+  }
+
+  function moveUp(idx: number) {
+    if (idx === 0) return;
+    const arr = [...items];
+    [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+    setItems(arr);
+    updateNotices(arr);
+  }
+
+  function moveDown(idx: number) {
+    if (idx === items.length - 1) return;
+    const arr = [...items];
+    [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+    setItems(arr);
+    updateNotices(arr);
+  }
+
+  function addNotice() {
+    const entry: NoticeEntry = { ...newForm, id: nextId(items) };
+    const updated = [...items, entry];
+    setItems(updated);
+    updateNotices(updated);
+    setAddingNew(false);
+    setNewForm(BLANK_NOTICE);
+  }
+
+  return (
+    <div>
+      <SectionHeader
+        title="Notifications — Notices & Announcements"
+        subtitle="Manage the notices and announcements shown on the Notices page. Add, edit, reorder, or remove entries."
+      />
+
+      {loading && <p style={{ fontSize: "0.85rem", color: "#94a3b8" }}>Loading...</p>}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        {items.map((n, idx) => {
+          const cat = NOTICE_CATEGORY_COLORS[n.category];
+          return (
+            <div
+              key={n.id}
+              style={{
+                background: "#fff",
+                border: "1px solid #e2e8f0",
+                borderRadius: "0.75rem",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  padding: "0.75rem 1rem",
+                  borderBottom: editingId === n.id ? "1px solid #e2e8f0" : "none",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    backgroundColor: cat.bg,
+                    color: cat.text,
+                    padding: "0.2rem 0.6rem",
+                    borderRadius: "999px",
+                    flexShrink: 0,
+                  }}
+                >
+                  {n.category}
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p
+                    style={{
+                      fontSize: "0.83rem",
+                      fontWeight: 600,
+                      color: "#0f1e4a",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {n.title || "(Untitled)"}
+                  </p>
+                  <p style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
+                    <Calendar size={11} style={{ display: "inline", marginRight: "0.25rem", verticalAlign: "middle" }} />
+                    {n.date ? formatNoticeDate(n.date) : "(No date)"}
+                  </p>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                  <button onClick={() => moveUp(idx)} disabled={idx === 0} style={iconBtnStyle(idx === 0)}>
+                    <ChevronUp size={14} />
+                  </button>
+                  <button onClick={() => moveDown(idx)} disabled={idx === items.length - 1} style={iconBtnStyle(idx === items.length - 1)}>
+                    <ChevronDown size={14} />
+                  </button>
+                  <button onClick={() => (editingId === n.id ? setEditingId(null) : startEdit(n))} style={iconBtnStyle(false)}>
+                    {editingId === n.id ? <X size={14} /> : <Edit3 size={14} />}
+                  </button>
+                  <button onClick={() => deleteNotice(n.id)} style={{ ...iconBtnStyle(false), color: "#dc2626" }}>
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {editingId === n.id && (
+                <div style={{ padding: "1rem", background: "#f8fafc" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+                    <FieldGroup label="Title">
+                      <Input value={form.title} onChange={(v) => setForm((f) => ({ ...f, title: v }))} placeholder="Notice title" />
+                    </FieldGroup>
+                    <FieldGroup label="Date">
+                      <Input type="date" value={form.date} onChange={(v) => setForm((f) => ({ ...f, date: v }))} />
+                    </FieldGroup>
+                  </div>
+                  <FieldGroup label="Category">
+                    <NoticeCategorySelect value={form.category} onChange={(v) => setForm((f) => ({ ...f, category: v }))} />
+                  </FieldGroup>
+                  <FieldGroup label="Summary">
+                    <Textarea value={form.summary} onChange={(v) => setForm((f) => ({ ...f, summary: v }))} placeholder="Short summary shown in the list..." rows={2} />
+                  </FieldGroup>
+                  <FieldGroup label="Full Details">
+                    <Textarea value={form.body} onChange={(v) => setForm((f) => ({ ...f, body: v }))} placeholder="Full notice details shown when expanded..." rows={4} />
+                  </FieldGroup>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button onClick={saveEdit} style={primaryBtnStyle}><Check size={13} /> Save</button>
+                    <button onClick={() => setEditingId(null)} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {addingNew ? (
+          <div style={{ background: "#fff", border: "2px dashed #1a3270", borderRadius: "0.75rem", padding: "1.25rem" }}>
+            <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>New Notice</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+              <FieldGroup label="Title">
+                <Input value={newForm.title} onChange={(v) => setNewForm((f) => ({ ...f, title: v }))} placeholder="Notice title" />
+              </FieldGroup>
+              <FieldGroup label="Date">
+                <Input type="date" value={newForm.date} onChange={(v) => setNewForm((f) => ({ ...f, date: v }))} />
+              </FieldGroup>
+            </div>
+            <FieldGroup label="Category">
+              <NoticeCategorySelect value={newForm.category} onChange={(v) => setNewForm((f) => ({ ...f, category: v }))} />
+            </FieldGroup>
+            <FieldGroup label="Summary">
+              <Textarea value={newForm.summary} onChange={(v) => setNewForm((f) => ({ ...f, summary: v }))} placeholder="Short summary shown in the list..." rows={2} />
+            </FieldGroup>
+            <FieldGroup label="Full Details">
+              <Textarea value={newForm.body} onChange={(v) => setNewForm((f) => ({ ...f, body: v }))} placeholder="Full notice details shown when expanded..." rows={4} />
+            </FieldGroup>
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+              <button onClick={addNotice} style={primaryBtnStyle}><Plus size={13} /> Add Notice</button>
+              <button onClick={() => { setAddingNew(false); setNewForm(BLANK_NOTICE); }} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => { setAddingNew(true); setEditingId(null); }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", padding: "0.75rem", border: "2px dashed #cbd5e1", borderRadius: "0.75rem", background: "transparent", color: "#64748b", fontSize: "0.83rem", fontWeight: 600, cursor: "pointer", width: "100%" }}
+          >
+            <Plus size={16} /> Add Notice
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Tab definitions ───────────────────────────────────────────────────────────
 
-type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities" | "team" | "pages" | "settings";
+type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities" | "team";
 
-const TABS: { id: TabId; label: string; Icon: React.ElementType }[] = [
+const HOME_PAGE_TABS: { id: TabId; label: string; Icon: React.ElementType }[] = [
   { id: "hero",       label: "Hero Image",        Icon: Image },
   { id: "videos",     label: "Watch Our Story",    Icon: Video },
   { id: "gallery",    label: "Moments of Change",  Icon: LayoutGrid },
@@ -1855,9 +2115,13 @@ const TABS: { id: TabId; label: string; Icon: React.ElementType }[] = [
   { id: "stories",    label: "Stories of Change",  Icon: MessageSquare },
   { id: "activities", label: "Group Activities",   Icon: Users },
   { id: "team",       label: "Meet Our Team",      Icon: Users },
-  { id: "pages",      label: "Pages",              Icon: FileText },
-  { id: "settings",   label: "Account Settings",   Icon: Settings },
 ];
+
+type ActiveView =
+  | { kind: "home"; id: TabId }
+  | { kind: "page"; slug: string }
+  | { kind: "notifications" }
+  | { kind: "settings" };
 
 // ── Tab: Account Settings ─────────────────────────────────────────────────────
 
@@ -1890,6 +2154,12 @@ const PAGES: { slug: string; title: string }[] = [
   { slug: "fseds", title: "Foundation for Socio-Economic Development Society" },
   { slug: "lac", title: "Legal Aid Club" },
   { slug: "about-us", title: "About Us" },
+  { slug: "impact", title: "Impact" },
+  { slug: "get-involved", title: "Get Involved" },
+  { slug: "contact", title: "Contact" },
+  { slug: "causes", title: "Causes" },
+  { slug: "donate", title: "Donate" },
+  { slug: "stories", title: "Stories" },
 ];
 
 const PAGE_SECTION_LABELS: Record<string, string> = {
@@ -1927,14 +2197,32 @@ const PAGE_SECTION_LABELS: Record<string, string> = {
   "about-societies": "Societies Section",
   "about-values": "Values Section",
   "about-team": "Team Section",
+  "impact-hero": "Hero Section",
+  "impact-numbers": "Numbers Section",
+  "impact-areas": "Focus Areas Section",
+  "impact-timeline": "Timeline Section",
+  "impact-testimonials": "Testimonials Section",
+  "impact-cta": "Get Involved (CTA)",
+  "gi-hero": "Hero Section",
+  "gi-ways": "Ways to Help Section",
+  "gi-volunteer": "Volunteer Section",
+  "gi-donate": "Donate Section",
+  "gi-spread": "Spread the Word Section",
+  "contact-hero": "Hero Section",
+  "contact-form": "Contact Form Section",
+  "causes-hero": "Hero Section",
+  "donate-hero": "Hero Section",
+  "donate-impact": "Impact Section",
+  "donate-form": "Donation Form Section",
+  "donate-faq": "FAQ Section",
+  "stories-hero": "Hero Section",
 };
 
 function fieldLabel(key: string) {
   return key.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
 }
 
-function PagesTab() {
-  const [activeSlug, setActiveSlug] = useState(PAGES[0].slug);
+function PagesTab({ activeSlug }: { activeSlug: string }) {
   const [sections, setSections] = useState<Section[] | null>(null);
   const [edits, setEdits] = useState<Record<number, Record<string, string>>>({});
   const [loading, setLoading] = useState(true);
@@ -1966,32 +2254,6 @@ function PagesTab() {
 
   return (
     <div>
-      <SectionHeader
-        title="Pages"
-        subtitle="Edit the text content for each section of the public-facing pages."
-      />
-
-      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" as const, marginBottom: "1.5rem" }}>
-        {PAGES.map((p) => (
-          <button
-            key={p.slug}
-            onClick={() => setActiveSlug(p.slug)}
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "0.5rem",
-              border: "1px solid #e2e8f0",
-              background: activeSlug === p.slug ? "#0f1e4a" : "#fff",
-              color: activeSlug === p.slug ? "#fff" : "#374151",
-              fontSize: "0.8rem",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            {p.title}
-          </button>
-        ))}
-      </div>
-
       <SectionHeader
         title={`${activeTitle} Page`}
         subtitle={`Edit the text content for each section of the ${activeTitle} page.`}
@@ -2257,9 +2519,124 @@ function SettingsTab() {
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
 
+function NavGroupHeader({
+  active,
+  expanded,
+  onClick,
+  Icon,
+  label,
+  showChevron = true,
+}: {
+  active: boolean;
+  expanded: boolean;
+  onClick: () => void;
+  Icon: React.ElementType;
+  label: string;
+  showChevron?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.65rem",
+        width: "100%",
+        padding: "0.65rem 0.85rem",
+        borderRadius: "0.5rem",
+        border: "none",
+        background: active ? "rgba(255,255,255,0.12)" : "transparent",
+        color: active ? "#fff" : "rgba(255,255,255,0.55)",
+        fontSize: "0.8rem",
+        fontWeight: active ? 600 : 400,
+        cursor: "pointer",
+        textAlign: "left",
+        marginBottom: "0.15rem",
+        transition: "background 0.15s, color 0.15s",
+      }}
+    >
+      <Icon size={16} />
+      <span style={{ flex: 1 }}>{label}</span>
+      {showChevron && (expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+    </button>
+  );
+}
+
+function NavSubItem({
+  active,
+  onClick,
+  Icon,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  Icon?: React.ElementType;
+  label: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.6rem",
+        width: "100%",
+        padding: "0.55rem 0.85rem",
+        borderRadius: "0.5rem",
+        border: "none",
+        background: active ? "rgba(255,255,255,0.12)" : "transparent",
+        color: active ? "#fff" : "rgba(255,255,255,0.5)",
+        fontSize: "0.76rem",
+        fontWeight: active ? 600 : 400,
+        cursor: "pointer",
+        textAlign: "left",
+        marginBottom: "0.1rem",
+        transition: "background 0.15s, color 0.15s",
+      }}
+    >
+      {Icon && <Icon size={13} />}
+      <span
+        style={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {label}
+      </span>
+    </button>
+  );
+}
+
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<TabId>("hero");
+  const [activeView, setActiveView] = useState<ActiveView>({ kind: "home", id: "hero" });
+  const [expandedGroups, setExpandedGroups] = useState<{ home: boolean; pages: boolean }>({
+    home: true,
+    pages: false,
+  });
   const navigate = useNavigate();
+
+  function toggleGroup(group: "home" | "pages") {
+    setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
+  }
+
+  const currentLabel =
+    activeView.kind === "home"
+      ? HOME_PAGE_TABS.find((t) => t.id === activeView.id)?.label
+      : activeView.kind === "page"
+      ? PAGES.find((p) => p.slug === activeView.slug)?.title
+      : activeView.kind === "notifications"
+      ? "Notifications"
+      : "Account Settings";
+
+  const currentCategory =
+    activeView.kind === "home"
+      ? "Home Page"
+      : activeView.kind === "page"
+      ? "Pages"
+      : activeView.kind === "notifications"
+      ? "Notifications"
+      : "Settings";
 
   function logout() {
     localStorage.removeItem("pg_admin_token");
@@ -2343,33 +2720,69 @@ export default function AdminDashboard() {
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: "0.75rem 0.75rem" }}>
-          {TABS.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              onClick={() => setActiveTab(id)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.65rem",
-                width: "100%",
-                padding: "0.65rem 0.85rem",
-                borderRadius: "0.5rem",
-                border: "none",
-                background: activeTab === id ? "rgba(255,255,255,0.12)" : "transparent",
-                color: activeTab === id ? "#fff" : "rgba(255,255,255,0.55)",
-                fontSize: "0.8rem",
-                fontWeight: activeTab === id ? 600 : 400,
-                cursor: "pointer",
-                textAlign: "left",
-                marginBottom: "0.15rem",
-                transition: "background 0.15s, color 0.15s",
-              }}
-            >
-              <Icon size={16} />
-              {label}
-            </button>
-          ))}
+        <nav style={{ flex: 1, padding: "0.75rem 0.75rem", overflowY: "auto" }}>
+          {/* Home Page group */}
+          <NavGroupHeader
+            active={activeView.kind === "home"}
+            expanded={expandedGroups.home}
+            onClick={() => toggleGroup("home")}
+            Icon={Home}
+            label="Home Page"
+          />
+          {expandedGroups.home && (
+            <div style={{ paddingLeft: "1.1rem", marginBottom: "0.25rem" }}>
+              {HOME_PAGE_TABS.map(({ id, label, Icon }) => (
+                <NavSubItem
+                  key={id}
+                  active={activeView.kind === "home" && activeView.id === id}
+                  onClick={() => setActiveView({ kind: "home", id })}
+                  Icon={Icon}
+                  label={label}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Pages group */}
+          <NavGroupHeader
+            active={activeView.kind === "page"}
+            expanded={expandedGroups.pages}
+            onClick={() => toggleGroup("pages")}
+            Icon={FileText}
+            label="Pages"
+          />
+          {expandedGroups.pages && (
+            <div style={{ paddingLeft: "1.1rem", marginBottom: "0.25rem" }}>
+              {PAGES.map((p) => (
+                <NavSubItem
+                  key={p.slug}
+                  active={activeView.kind === "page" && activeView.slug === p.slug}
+                  onClick={() => setActiveView({ kind: "page", slug: p.slug })}
+                  label={p.title}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Notifications */}
+          <NavGroupHeader
+            active={activeView.kind === "notifications"}
+            expanded={false}
+            showChevron={false}
+            onClick={() => setActiveView({ kind: "notifications" })}
+            Icon={Bell}
+            label="Notifications"
+          />
+
+          {/* Account Settings */}
+          <NavGroupHeader
+            active={activeView.kind === "settings"}
+            expanded={false}
+            showChevron={false}
+            onClick={() => setActiveView({ kind: "settings" })}
+            Icon={Settings}
+            label="Account Settings"
+          />
         </nav>
 
         {/* Bottom actions */}
@@ -2422,10 +2835,10 @@ export default function AdminDashboard() {
         >
           <div>
             <p style={{ fontSize: "0.68rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Home Page
+              {currentCategory}
             </p>
             <h1 style={{ fontSize: "1rem", fontWeight: 700, color: "#0f1e4a" }}>
-              {TABS.find((t) => t.id === activeTab)?.label}
+              {currentLabel}
             </h1>
           </div>
           <a
@@ -2452,15 +2865,16 @@ export default function AdminDashboard() {
 
         {/* Tab content */}
         <div style={{ padding: "2rem" }}>
-          {activeTab === "hero" && <HeroTab />}
-          {activeTab === "videos" && <VideoTab />}
-          {activeTab === "gallery" && <GalleryTab />}
-          {activeTab === "impact" && <ImpactTab />}
-          {activeTab === "stories" && <StoriesTab />}
-          {activeTab === "activities" && <GroupActivitiesTab />}
-          {activeTab === "team" && <TeamTab />}
-          {activeTab === "pages" && <PagesTab />}
-          {activeTab === "settings" && <SettingsTab />}
+          {activeView.kind === "home" && activeView.id === "hero" && <HeroTab />}
+          {activeView.kind === "home" && activeView.id === "videos" && <VideoTab />}
+          {activeView.kind === "home" && activeView.id === "gallery" && <GalleryTab />}
+          {activeView.kind === "home" && activeView.id === "impact" && <ImpactTab />}
+          {activeView.kind === "home" && activeView.id === "stories" && <StoriesTab />}
+          {activeView.kind === "home" && activeView.id === "activities" && <GroupActivitiesTab />}
+          {activeView.kind === "home" && activeView.id === "team" && <TeamTab />}
+          {activeView.kind === "page" && <PagesTab activeSlug={activeView.slug} />}
+          {activeView.kind === "notifications" && <NotificationsTab />}
+          {activeView.kind === "settings" && <SettingsTab />}
         </div>
       </main>
     </div>

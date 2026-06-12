@@ -17,6 +17,8 @@ import {
   updateBoardMemberSchema,
   createTeamMemberSchema,
   updateTeamMemberSchema,
+  createNoticeSchema,
+  updateNoticeSchema,
 } from './content.validation.js';
 
 export const contentRoutes = Router();
@@ -84,5 +86,14 @@ contentRoutes.use(
     delegate: prisma.teamMember,
     createSchema: createTeamMemberSchema,
     updateSchema: updateTeamMemberSchema,
+  }),
+);
+
+contentRoutes.use(
+  '/notices',
+  createListResource({
+    delegate: prisma.notice,
+    createSchema: createNoticeSchema,
+    updateSchema: updateNoticeSchema,
   }),
 );

@@ -7,6 +7,7 @@ import { HomePageProvider } from './context/HomePageContext.tsx'
 import { GroupActivitiesProvider } from './context/GroupActivitiesContext.tsx'
 import { TeamProvider } from './context/TeamContext.tsx'
 import { AboutUsProvider } from './context/AboutUsContext.tsx'
+import { NoticeProvider } from './context/NoticeContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,7 +16,9 @@ createRoot(document.getElementById('root')!).render(
         <AboutUsProvider>
           <GroupActivitiesProvider>
             <TeamProvider>
-              <App />
+              <NoticeProvider>
+                <App />
+              </NoticeProvider>
             </TeamProvider>
           </GroupActivitiesProvider>
         </AboutUsProvider>

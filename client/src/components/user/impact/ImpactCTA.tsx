@@ -1,6 +1,14 @@
 import { motion } from "framer-motion";
 import { Heart, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_CTA = {
+  eyebrow: "Be Part of the Change",
+  heading: "Your Support Makes This Possible",
+  description:
+    "Every contribution — whether time, skills, or a donation — adds to the numbers you've seen here. Join us in writing the next chapter of this story.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -12,6 +20,9 @@ const fadeUp = {
 };
 
 export default function ImpactCTA() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_CTA, ...getSectionData("impact-cta") };
+
   return (
     <section
       className="py-20 px-6 relative overflow-hidden"
@@ -30,7 +41,7 @@ export default function ImpactCTA() {
           viewport={{ once: true }}
           className="text-xs font-bold uppercase tracking-widest text-white/60 mb-3"
         >
-          Be Part of the Change
+          {content.eyebrow}
         </motion.p>
         <motion.h2
           variants={fadeUp}
@@ -40,7 +51,7 @@ export default function ImpactCTA() {
           custom={1}
           className="text-3xl xl:text-4xl font-extrabold text-white leading-tight mb-4"
         >
-          Your Support Makes This Possible
+          {content.heading}
         </motion.h2>
         <motion.p
           variants={fadeUp}
@@ -50,8 +61,7 @@ export default function ImpactCTA() {
           custom={2}
           className="text-sm text-white/70 leading-relaxed mb-10 max-w-lg mx-auto"
         >
-          Every contribution — whether time, skills, or a donation — adds to the numbers
-          you've seen here. Join us in writing the next chapter of this story.
+          {content.description}
         </motion.p>
 
         <motion.div

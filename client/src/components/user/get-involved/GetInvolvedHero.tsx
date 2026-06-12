@@ -1,5 +1,14 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Heart } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  eyebrow: "Project Generation",
+  headingLine1: "Get Involved &",
+  headingLine2: "Make a Difference",
+  description:
+    "Whether you volunteer your time, donate, or simply spread the word — every action counts. Join us in empowering communities and transforming lives.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -11,6 +20,9 @@ const fadeUp = {
 };
 
 export default function GetInvolvedHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("gi-hero") };
+
   return (
     <section
       className="relative py-24 px-6 overflow-hidden"
@@ -44,7 +56,7 @@ export default function GetInvolvedHero() {
           className="text-xs font-bold uppercase tracking-widest text-white/70 mb-4 flex items-center justify-center gap-2"
         >
           <span className="inline-block w-6 h-0.5 bg-white/50" />
-          Project Generation
+          {hero.eyebrow}
           <span className="inline-block w-6 h-0.5 bg-white/50" />
         </motion.p>
 
@@ -55,7 +67,7 @@ export default function GetInvolvedHero() {
           custom={1}
           className="text-4xl xl:text-6xl font-extrabold text-white leading-tight mb-5"
         >
-          Get Involved &amp;<br />Make a Difference
+          {hero.headingLine1}<br />{hero.headingLine2}
         </motion.h1>
 
         <motion.p
@@ -65,8 +77,7 @@ export default function GetInvolvedHero() {
           custom={2}
           className="text-base text-white/75 leading-relaxed mb-10 max-w-xl mx-auto"
         >
-          Whether you volunteer your time, donate, or simply spread the word —
-          every action counts. Join us in empowering communities and transforming lives.
+          {hero.description}
         </motion.p>
 
         <motion.div

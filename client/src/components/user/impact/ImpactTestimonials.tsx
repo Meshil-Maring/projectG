@@ -47,6 +47,9 @@ const testimonials = [
 ];
 
 export default function ImpactTestimonials() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_TESTIMONIALS, ...getSectionData("impact-testimonials") };
+
   return (
     <section className="py-20 px-6 bg-[#f8fafc]">
       <div className="max-w-6xl mx-auto">
@@ -58,7 +61,7 @@ export default function ImpactTestimonials() {
             viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#0d9488] mb-2"
           >
-            Real Stories
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -68,7 +71,7 @@ export default function ImpactTestimonials() {
             custom={1}
             className="text-2xl xl:text-4xl font-extrabold text-[#1e293b]"
           >
-            Voices of Change
+            {content.heading}
           </motion.h2>
         </div>
 

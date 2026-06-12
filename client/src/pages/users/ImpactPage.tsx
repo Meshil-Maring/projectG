@@ -7,6 +7,7 @@ import ImpactAreas from "../../components/user/impact/ImpactAreas";
 import ImpactTimeline from "../../components/user/impact/ImpactTimeline";
 import ImpactTestimonials from "../../components/user/impact/ImpactTestimonials";
 import ImpactCTA from "../../components/user/impact/ImpactCTA";
+import { PageProvider } from "../../context/PageContext";
 
 const sections = [
   { id: "impact-hero", label: "Overview" },
@@ -19,7 +20,7 @@ const sections = [
 
 export default function ImpactPage() {
   return (
-    <>
+    <PageProvider slug="impact">
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="impact-hero"><ImpactHero /></div>
@@ -29,6 +30,6 @@ export default function ImpactPage() {
       <div id="impact-testimonials"><ImpactTestimonials /></div>
       <div id="impact-cta"><ImpactCTA /></div>
       <Footer />
-    </>
+    </PageProvider>
   );
 }

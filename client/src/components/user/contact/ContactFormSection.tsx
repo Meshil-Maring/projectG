@@ -2,6 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, User, Mail, MessageSquare, Tag } from "lucide-react";
 import { SpinnerIcon } from "../../../assets/icons";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_FORM = {
+  eyebrow: "Send a Message",
+  heading: "Let's Start a Conversation",
+  description: "Fill in the form below and we'll get back to you shortly.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -38,6 +45,8 @@ type FormState = {
 };
 
 export default function ContactFormSection() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_FORM, ...getSectionData("contact-form") };
   const [form, setForm] = useState<FormState>({ name: "", email: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -95,20 +104,20 @@ export default function ContactFormSection() {
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-3 flex items-center justify-center gap-2"
           >
             <span className="inline-block w-6 h-0.5 bg-[#1a3270]" />
-            Send a Message
+            {content.eyebrow}
             <span className="inline-block w-6 h-0.5 bg-[#1a3270]" />
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
             className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] mb-4"
           >
-            Let's Start a Conversation
+            {content.heading}
           </motion.h2>
           <motion.p
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2}
             className="text-sm text-[#64748b] max-w-md mx-auto"
           >
-            Fill in the form below and we'll get back to you shortly.
+            {content.description}
           </motion.p>
         </div>
 

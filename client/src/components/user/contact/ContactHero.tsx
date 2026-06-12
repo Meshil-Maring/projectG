@@ -1,5 +1,15 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  eyebrow: "Contact Us",
+  headingLine1: "We'd Love to",
+  headingLine2: "Hear From",
+  headingLine3: "You",
+  description:
+    "Have a question, want to collaborate, or just want to say hello? Reach out to us and our team will get back to you as soon as possible.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -17,6 +27,9 @@ const highlights = [
 ];
 
 export default function ContactHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("contact-hero") };
+
   return (
     <section className="py-16 px-6 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
@@ -31,7 +44,7 @@ export default function ContactHero() {
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-4 flex items-center gap-2"
           >
             <span className="inline-block w-8 h-0.5 bg-[#1a3270]" />
-            Contact Us
+            {hero.eyebrow}
           </motion.p>
 
           <motion.h1
@@ -41,7 +54,7 @@ export default function ContactHero() {
             custom={1}
             className="text-4xl xl:text-5xl font-extrabold text-[#1a1a4b] leading-tight mb-5"
           >
-            We'd Love to<br />Hear From<br />You
+            {hero.headingLine1}<br />{hero.headingLine2}<br />{hero.headingLine3}
           </motion.h1>
 
           <motion.p
@@ -51,8 +64,7 @@ export default function ContactHero() {
             custom={2}
             className="text-sm text-[#64748b] leading-relaxed mb-8"
           >
-            Have a question, want to collaborate, or just want to say hello?
-            Reach out to us and our team will get back to you as soon as possible.
+            {hero.description}
           </motion.p>
 
           <div className="flex flex-wrap gap-3">

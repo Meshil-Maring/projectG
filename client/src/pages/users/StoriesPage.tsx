@@ -5,14 +5,32 @@ import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
 import { stories } from "../../data/stories";
+import { PageProvider, usePageSections } from "../../context/PageContext";
 
 const sections = [
   { id: "stories-hero", label: "Overview" },
   { id: "stories-grid", label: "All Stories" },
 ];
 
+const DEFAULT_HERO = {
+  eyebrow: "Stories of Change",
+  heading: "Real People. Real Impact.",
+  description:
+    "Every number in our impact report represents a person with a name, a story, and a future. Here are just a few of the lives that have been changed through your support.",
+};
+
 export default function StoriesPage() {
+  return (
+    <PageProvider slug="stories">
+      <StoriesPageContent />
+    </PageProvider>
+  );
+}
+
+function StoriesPageContent() {
   const [selected, setSelected] = useState<(typeof stories)[number] | null>(null);
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("stories-hero") };
 
   return (
     <>
@@ -29,15 +47,13 @@ export default function StoriesPage() {
             <ArrowLeft size={15} /> Back to Home
           </Link>
           <p className="text-xs font-bold uppercase tracking-widest text-[color:var(--color-secondary)] mb-3">
-            Stories of Change
+            {hero.eyebrow}
           </p>
           <h1 className="text-4xl font-bold text-white mb-4">
-            Real People. Real Impact.
+            {hero.heading}
           </h1>
           <p className="text-white/70 max-w-xl text-sm leading-relaxed">
-            Every number in our impact report represents a person with a name, a
-            story, and a future. Here are just a few of the lives that have been
-            changed through your support.
+            {hero.description}
           </p>
         </div>
       </section>

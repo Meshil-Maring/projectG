@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
+import { useNoticeData, formatNoticeDate, type NoticeEntry, type NoticeCategory } from "../../context/NoticeContext";
 
 const sections = [
   { id: "notice-hero", label: "Overview" },
@@ -12,84 +13,21 @@ const sections = [
   { id: "notice-list", label: "Notices" },
 ];
 
-type Notice = {
-  id: number;
-  title: string;
-  category: "Announcement" | "Event" | "Update" | "Reminder";
-  date: string;
-  summary: string;
-  body: string;
-};
+type Notice = NoticeEntry;
 
-const categoryColors: Record<Notice["category"], { bg: string; text: string }> = {
+const categoryColors: Record<NoticeCategory, { bg: string; text: string }> = {
   Announcement: { bg: "#dbeafe", text: "#1d4ed8" },
   Event:        { bg: "#dcfce7", text: "#15803d" },
   Update:       { bg: "#fef9c3", text: "#a16207" },
   Reminder:     { bg: "#fce7f3", text: "#be185d" },
 };
 
-const notices: Notice[] = [
-  {
-    id: 1,
-    title: "Annual General Meeting – June 2026",
-    category: "Announcement",
-    date: "June 3, 2026",
-    summary:
-      "All members are invited to attend the Annual General Meeting scheduled for June 28, 2026.",
-    body: "The Annual General Meeting (AGM) will be held on Saturday, June 28, 2026 at 10:00 AM at the Project Generation Community Hall. The agenda includes reviewing the 2025 annual report, electing new board members, and setting goals for 2027. All registered members are encouraged to attend. RSVP by June 20 via the contact form on our website.",
-  },
-  {
-    id: 2,
-    title: "New Scholarship Applications Now Open",
-    category: "Update",
-    date: "May 28, 2026",
-    summary:
-      "Applications for the 2026–2027 scholarship cycle are now open. Deadline is July 15, 2026.",
-    body: "Project Generation is pleased to announce that scholarship applications for the 2026–2027 academic year are now open. Eligible applicants must be enrolled in an accredited institution, demonstrate financial need, and show active community involvement. Applications close on July 15, 2026. Download the application form from the Resources section or pick one up at our main office.",
-  },
-  {
-    id: 3,
-    title: "Community Clean-Up Drive – July 5",
-    category: "Event",
-    date: "May 22, 2026",
-    summary:
-      "Join us for our quarterly community clean-up drive on July 5, 2026 starting at 7:00 AM.",
-    body: "Our quarterly Community Clean-Up Drive returns on July 5, 2026 starting at 7:00 AM. Volunteers will be divided into teams and assigned to different barangays. Bring gloves and wear comfortable clothes. Breakfast snacks and water will be provided. This event is open to all members, supporters, and the general public. Meet at the Barangay Hall parking area.",
-  },
-  {
-    id: 4,
-    title: "Reminder: Membership Renewal Deadline",
-    category: "Reminder",
-    date: "May 15, 2026",
-    summary:
-      "Annual membership renewals are due by June 30, 2026. Renew early to avoid lapses in benefits.",
-    body: "This is a reminder that annual membership renewals are due on or before June 30, 2026. Members who fail to renew by this date will lose access to member-only resources, scholarship eligibility, and voting rights at the AGM. Renewal can be done online through the member portal or in person at our office during business hours (Monday–Friday, 9 AM–5 PM).",
-  },
-  {
-    id: 5,
-    title: "Leadership Training Workshop – Registration Open",
-    category: "Event",
-    date: "May 10, 2026",
-    summary:
-      "A two-day leadership training workshop is scheduled for July 12–13. Limited slots available.",
-    body: "Project Generation is conducting a two-day Leadership Training Workshop on July 12–13, 2026 at the Community Learning Center. The workshop covers communication, project management, and community organizing. It is open to youth members aged 18–30. Only 40 slots are available. Registration fee: ₱200 (includes meals and materials). Register through the website or contact our office.",
-  },
-  {
-    id: 6,
-    title: "Office Closure – National Holiday",
-    category: "Announcement",
-    date: "May 5, 2026",
-    summary:
-      "Our office will be closed on June 12, 2026 in observance of Independence Day.",
-    body: "Please be informed that the Project Generation office will be closed on Thursday, June 12, 2026 in observance of Philippine Independence Day. Regular operations will resume on June 13, 2026. For urgent concerns, please send an email to our official address and we will respond on the next business day.",
-  },
-];
-
 export default function NoticePage() {
+  const { notices } = useNoticeData();
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [activeCategory, setActiveCategory] = useState<Notice["category"] | "All">("All");
+  const [activeCategory, setActiveCategory] = useState<NoticeCategory | "All">("All");
 
-  const categories: Array<Notice["category"] | "All"> = [
+  const categories: Array<NoticeCategory | "All"> = [
     "All",
     "Announcement",
     "Event",
@@ -317,7 +255,7 @@ function NoticeCard({
           </p>
           <p style={{ fontSize: "0.78rem", color: "#94a3b8", fontFamily: "'Poppins', sans-serif" }}>
             <Calendar size={11} style={{ display: "inline", marginRight: "0.3rem", verticalAlign: "middle" }} />
-            {notice.date}
+            {formatNoticeDate(notice.date)}
           </p>
           {!isOpen && (
             <p

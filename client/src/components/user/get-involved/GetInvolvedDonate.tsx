@@ -2,6 +2,15 @@ import { motion } from "framer-motion";
 import { Heart, Zap, Shield, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import donateImg from "../../../assets/image/donate.png";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_DONATE = {
+  eyebrow: "Donate",
+  headingLine1: "Your Generosity",
+  headingLine2: "Transforms Lives",
+  description:
+    "Every contribution — big or small — goes towards education, health, and welfare programs that uplift the most vulnerable in our communities. Your gift creates real, lasting change.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -19,6 +28,9 @@ const pillars = [
 ];
 
 export default function GetInvolvedDonate() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_DONATE, ...getSectionData("gi-donate") };
+
   return (
     <section id="donate" className="py-20 px-6 bg-[#f8fafc] overflow-hidden">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-14">
@@ -33,7 +45,7 @@ export default function GetInvolvedDonate() {
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-3 flex items-center gap-2"
           >
             <span className="inline-block w-6 h-0.5 bg-[#1a3270]" />
-            Donate
+            {content.eyebrow}
           </motion.p>
 
           <motion.h2
@@ -44,7 +56,7 @@ export default function GetInvolvedDonate() {
             custom={1}
             className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-4"
           >
-            Your Generosity<br />Transforms Lives
+            {content.headingLine1}<br />{content.headingLine2}
           </motion.h2>
 
           <motion.p
@@ -55,9 +67,7 @@ export default function GetInvolvedDonate() {
             custom={2}
             className="text-sm text-[#64748b] leading-relaxed mb-8"
           >
-            Every contribution — big or small — goes towards education, health,
-            and welfare programs that uplift the most vulnerable in our communities.
-            Your gift creates real, lasting change.
+            {content.description}
           </motion.p>
 
           <div className="flex flex-col gap-4 mb-8">

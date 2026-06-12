@@ -1,7 +1,18 @@
 import { motion } from "framer-motion";
 import { Heart, ArrowDown } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_HERO = {
+  badge: "Make a Difference Today",
+  headingLine1: "Your Generosity",
+  headingLine2: "Changes Lives",
+  description:
+    "Every rupee you give goes directly towards education, healthcare, and community development programs that uplift the most vulnerable.",
+};
 
 export default function DonateHero() {
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("donate-hero") };
   function scrollToForm() {
     document.getElementById("donate-form")?.scrollIntoView({ behavior: "smooth" });
   }
@@ -68,7 +79,7 @@ export default function DonateHero() {
               letterSpacing: "0.05em",
             }}
           >
-            Make a Difference Today
+            {hero.badge}
           </span>
         </motion.div>
 
@@ -85,8 +96,8 @@ export default function DonateHero() {
             marginBottom: "1.25rem",
           }}
         >
-          Your Generosity<br />
-          <span style={{ color: "#f97316" }}>Changes Lives</span>
+          {hero.headingLine1}<br />
+          <span style={{ color: "#f97316" }}>{hero.headingLine2}</span>
         </motion.h1>
 
         <motion.p
@@ -102,8 +113,7 @@ export default function DonateHero() {
             margin: "0 auto 2.5rem",
           }}
         >
-          Every rupee you give goes directly towards education, healthcare,
-          and community development programs that uplift the most vulnerable.
+          {hero.description}
         </motion.p>
 
         <motion.button

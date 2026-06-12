@@ -5,6 +5,7 @@ import DonateHero from "../../components/user/donate/DonateHero";
 import DonateImpact from "../../components/user/donate/DonateImpact";
 import DonateFormSection from "../../components/user/donate/DonateFormSection";
 import DonateFAQ from "../../components/user/donate/DonateFAQ";
+import { PageProvider } from "../../context/PageContext";
 
 const sections = [
   { id: "donate-hero", label: "Overview" },
@@ -15,7 +16,7 @@ const sections = [
 
 export default function DonatePage() {
   return (
-    <>
+    <PageProvider slug="donate">
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="donate-hero"><DonateHero /></div>
@@ -23,6 +24,6 @@ export default function DonatePage() {
       <div id="donate-form"><DonateFormSection /></div>
       <div id="donate-faq"><DonateFAQ /></div>
       <Footer />
-    </>
+    </PageProvider>
   );
 }

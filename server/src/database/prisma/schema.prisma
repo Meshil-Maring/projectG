@@ -116,6 +116,18 @@ model TeamMember {
   @@map("team_members")
 }
 
+model Notice {
+  id       Int    @id @default(autoincrement())
+  title    String
+  category String
+  date     String
+  summary  String
+  body     String
+  order    Int    @default(0)
+
+  @@map("notices")
+}
+
 model Page {
   id        String    @id @default(cuid())
   slug      String    @unique

@@ -1,5 +1,11 @@
 import { motion } from "framer-motion";
 import { Utensils, BookOpen, Stethoscope, Home } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_IMPACT = {
+  eyebrow: "Your Impact",
+  heading: "What Your Donation Achieves",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -42,6 +48,9 @@ const impacts = [
 ];
 
 export default function DonateImpact() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_IMPACT, ...getSectionData("donate-impact") };
+
   return (
     <section className="py-16 px-6 bg-[#f8fafc]">
       <div className="max-w-5xl mx-auto">
@@ -53,7 +62,7 @@ export default function DonateImpact() {
             viewport={{ once: true }}
             className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-2"
           >
-            Your Impact
+            {content.eyebrow}
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -63,7 +72,7 @@ export default function DonateImpact() {
             custom={1}
             className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
           >
-            What Your Donation Achieves
+            {content.heading}
           </motion.h2>
           <div className="w-10 h-1 bg-[#1a3270] rounded mx-auto" />
         </div>

@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_FAQ = {
+  eyebrow: "Questions",
+  heading: "Frequently Asked Questions",
+};
 
 const faqs = [
   {
@@ -26,6 +32,8 @@ const faqs = [
 ];
 
 export default function DonateFAQ() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_FAQ, ...getSectionData("donate-faq") };
   const [open, setOpen] = useState<number | null>(0);
 
   return (
@@ -33,13 +41,13 @@ export default function DonateFAQ() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
           <p className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-2">
-            Questions
+            {content.eyebrow}
           </p>
           <h2
             className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Frequently Asked Questions
+            {content.heading}
           </h2>
           <div className="w-10 h-1 bg-[#1a3270] rounded mx-auto" />
         </div>

@@ -1,5 +1,13 @@
 import { motion } from "framer-motion";
 import { Share2, MessageCircle, Mail, Users } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_SPREAD = {
+  eyebrow: "Spread the Word",
+  heading: "Amplify Our Impact",
+  description:
+    "You don't need money or a lot of time. A share, a conversation, or a simple message can bring more people into our mission.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -42,6 +50,9 @@ const actions = [
 ];
 
 export default function GetInvolvedSpread() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_SPREAD, ...getSectionData("gi-spread") };
+
   return (
     <section id="spread" className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
@@ -55,7 +66,7 @@ export default function GetInvolvedSpread() {
             className="text-xs font-bold uppercase tracking-widest text-[#2563eb] mb-3 flex items-center justify-center gap-2"
           >
             <span className="inline-block w-6 h-0.5 bg-[#2563eb]" />
-            Spread the Word
+            {content.eyebrow}
             <span className="inline-block w-6 h-0.5 bg-[#2563eb]" />
           </motion.p>
           <motion.h2
@@ -66,7 +77,7 @@ export default function GetInvolvedSpread() {
             custom={1}
             className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight"
           >
-            Amplify Our Impact
+            {content.heading}
           </motion.h2>
           <motion.p
             variants={fadeUp}
@@ -76,8 +87,7 @@ export default function GetInvolvedSpread() {
             custom={2}
             className="text-sm text-[#64748b] mt-3 max-w-md mx-auto leading-relaxed"
           >
-            You don't need money or a lot of time. A share, a conversation, or a
-            simple message can bring more people into our mission.
+            {content.description}
           </motion.p>
         </div>
 

@@ -6,6 +6,7 @@ import GetInvolvedWays from "../../components/user/get-involved/GetInvolvedWays"
 import GetInvolvedVolunteer from "../../components/user/get-involved/GetInvolvedVolunteer";
 import GetInvolvedDonate from "../../components/user/get-involved/GetInvolvedDonate";
 import GetInvolvedSpread from "../../components/user/get-involved/GetInvolvedSpread";
+import { PageProvider } from "../../context/PageContext";
 
 const sections = [
   { id: "gi-hero", label: "Overview" },
@@ -17,7 +18,7 @@ const sections = [
 
 export default function GetInvolvedPage() {
   return (
-    <>
+    <PageProvider slug="get-involved">
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="gi-hero"><GetInvolvedHero /></div>
@@ -26,6 +27,6 @@ export default function GetInvolvedPage() {
       <div id="gi-donate"><GetInvolvedDonate /></div>
       <div id="gi-spread"><GetInvolvedSpread /></div>
       <Footer />
-    </>
+    </PageProvider>
   );
 }

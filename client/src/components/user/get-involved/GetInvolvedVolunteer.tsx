@@ -3,6 +3,15 @@ import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import handImg from "../../../assets/image/hand.png";
 import VolunteerModal from "../home/VolunteerModal";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_VOLUNTEER = {
+  eyebrow: "Volunteer",
+  headingLine1: "Be The Change",
+  headingLine2: "You Wish to See",
+  description:
+    "Volunteering with Project Generation means becoming part of a movement that puts people first. No experience needed — just a heart ready to serve.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -23,6 +32,8 @@ const benefits = [
 
 export default function GetInvolvedVolunteer() {
   const [showModal, setShowModal] = useState(false);
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_VOLUNTEER, ...getSectionData("gi-volunteer") };
 
   return (
     <>
@@ -55,7 +66,7 @@ export default function GetInvolvedVolunteer() {
               className="text-xs font-bold uppercase tracking-widest text-[#e63975] mb-3 flex items-center gap-2"
             >
               <span className="inline-block w-6 h-0.5 bg-[#e63975]" />
-              Volunteer
+              {content.eyebrow}
             </motion.p>
 
             <motion.h2
@@ -66,7 +77,7 @@ export default function GetInvolvedVolunteer() {
               custom={1}
               className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-4"
             >
-              Be The Change<br />You Wish to See
+              {content.headingLine1}<br />{content.headingLine2}
             </motion.h2>
 
             <motion.p
@@ -77,8 +88,7 @@ export default function GetInvolvedVolunteer() {
               custom={2}
               className="text-sm text-[#64748b] leading-relaxed mb-6 max-w-md"
             >
-              Volunteering with Project Generation means becoming part of a movement
-              that puts people first. No experience needed — just a heart ready to serve.
+              {content.description}
             </motion.p>
 
             <ul className="flex flex-col gap-2.5 mb-8">

@@ -5,15 +5,33 @@ import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
 import { causes, categories, type Cause } from "../../data/causes";
+import { PageProvider, usePageSections } from "../../context/PageContext";
 
 const sections = [
   { id: "causes-hero", label: "Overview" },
   { id: "causes-grid", label: "All Causes" },
 ];
 
+const DEFAULT_HERO = {
+  eyebrow: "Active Campaigns",
+  heading: "Causes That Need Your Support",
+  description:
+    "Every rupee you give goes directly to one of these causes. Browse our active campaigns and choose the change you want to be part of.",
+};
+
 export default function CausesPage() {
+  return (
+    <PageProvider slug="causes">
+      <CausesPageContent />
+    </PageProvider>
+  );
+}
+
+function CausesPageContent() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selected, setSelected] = useState<Cause | null>(null);
+  const { getSectionData } = usePageSections();
+  const hero = { ...DEFAULT_HERO, ...getSectionData("causes-hero") };
 
   const filtered =
     activeCategory === "All"
@@ -35,14 +53,13 @@ export default function CausesPage() {
             <ArrowLeft size={15} /> Back to Home
           </Link>
           <p className="text-xs font-bold uppercase tracking-widest text-[color:var(--color-secondary)] mb-3">
-            Active Campaigns
+            {hero.eyebrow}
           </p>
           <h1 className="text-4xl font-bold text-white mb-4">
-            Causes That Need Your Support
+            {hero.heading}
           </h1>
           <p className="text-white/70 max-w-xl text-sm leading-relaxed">
-            Every rupee you give goes directly to one of these causes. Browse
-            our active campaigns and choose the change you want to be part of.
+            {hero.description}
           </p>
 
           {/* Quick stats */}

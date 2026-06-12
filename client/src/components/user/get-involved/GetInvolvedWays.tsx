@@ -1,5 +1,13 @@
 import { motion } from "framer-motion";
 import { Heart, HandHelping, Share2, Handshake } from "lucide-react";
+import { usePageSections } from "../../../context/PageContext";
+
+const DEFAULT_WAYS = {
+  eyebrow: "How You Can Help",
+  heading: "Ways to Make a Difference",
+  description:
+    "There are many ways to support our mission. Choose the path that fits you best and start creating real change today.",
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -54,6 +62,9 @@ const ways = [
 ];
 
 export default function GetInvolvedWays() {
+  const { getSectionData } = usePageSections();
+  const content = { ...DEFAULT_WAYS, ...getSectionData("gi-ways") };
+
   return (
     <section className="py-20 px-6 bg-[#f8fafc]">
       <div className="max-w-6xl mx-auto">
@@ -68,7 +79,7 @@ export default function GetInvolvedWays() {
             className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-3 flex items-center justify-center gap-2"
           >
             <span className="inline-block w-6 h-0.5 bg-[#1a3270]" />
-            How You Can Help
+            {content.eyebrow}
             <span className="inline-block w-6 h-0.5 bg-[#1a3270]" />
           </motion.p>
           <motion.h2
@@ -79,7 +90,7 @@ export default function GetInvolvedWays() {
             custom={1}
             className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight"
           >
-            Ways to Make a Difference
+            {content.heading}
           </motion.h2>
           <motion.p
             variants={fadeUp}
@@ -89,8 +100,7 @@ export default function GetInvolvedWays() {
             custom={2}
             className="text-sm text-[#64748b] mt-3 max-w-lg mx-auto leading-relaxed"
           >
-            There are many ways to support our mission. Choose the path that fits
-            you best and start creating real change today.
+            {content.description}
           </motion.p>
         </div>
 

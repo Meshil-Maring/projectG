@@ -13,6 +13,8 @@ const ICON_KEYS = [
 
 const GROUP_KEYS = ['whg', 'hrds', 'cwg', 'fseds', 'lac'] as const;
 
+const NOTICE_CATEGORIES = ['Announcement', 'Event', 'Update', 'Reminder'] as const;
+
 export const settingsSchema = z.object({
   heroImageUrl: z.string().optional(),
   heroTitle: z.string().optional(),
@@ -86,6 +88,16 @@ export const createTeamMemberSchema = z.object({
   order: z.number().int().optional(),
 });
 export const updateTeamMemberSchema = createTeamMemberSchema.partial();
+
+export const createNoticeSchema = z.object({
+  title: z.string().min(1),
+  category: z.enum(NOTICE_CATEGORIES),
+  date: z.string().min(1),
+  summary: z.string().min(1),
+  body: z.string().min(1),
+  order: z.number().int().optional(),
+});
+export const updateNoticeSchema = createNoticeSchema.partial();
 
 export const activitiesQuerySchema = z.object({
   group: z.enum(GROUP_KEYS).optional(),
