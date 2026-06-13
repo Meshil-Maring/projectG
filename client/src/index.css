@@ -23,8 +23,11 @@ html {
   /* ── Section Accent Colors ── */
   --color-purple:         #7c3aed;   /* donation / CTA section */
   --color-purple-light:   #a78bfa;
+  --color-purple-dark:    #6d28d9;
   --color-teal:           #0d9488;   /* impact numbers section */
   --color-teal-light:     #2dd4bf;
+  --color-volunteer:      #e63975;   /* volunteer / get-involved accent */
+  --color-volunteer-light:#fce7ef;
 
   /* ── Neutrals ── */
   --color-white:          #ffffff;
@@ -81,5 +84,16 @@ html {
     font-family: "Inter", "Segoe UI", system-ui, sans-serif;
     color: #475569;
     background-color: #ffffff;
+  }
+
+  /* Program pages set their wrapper to --font-sans for body copy;
+     headings still use the heading font (Poppins). */
+  .cause-page h1,
+  .cause-page h2,
+  .cause-page h3,
+  .cause-page h4,
+  .cause-page h5,
+  .cause-page h6 {
+    font-family: var(--font-heading);
   }
 }

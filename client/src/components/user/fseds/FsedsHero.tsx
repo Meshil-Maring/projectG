@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-  Globe,
   TrendingUp,
   Briefcase,
   Users,
@@ -42,7 +41,7 @@ export default function FsedsHero() {
     <section
       style={{
         background: "#ffffff",
-        paddingTop: "5.5rem",
+        paddingTop: "1.75rem",
         position: "relative",
         overflow: "hidden",
       }}
@@ -70,7 +69,7 @@ export default function FsedsHero() {
             gap: "0.4rem",
             fontSize: "0.78rem",
             color: "#64748b",
-            marginBottom: "2.5rem",
+            marginBottom: "1.5rem",
           }}
         >
           <Link to="/" style={{ color: "#64748b", textDecoration: "none" }}>
@@ -95,79 +94,47 @@ export default function FsedsHero() {
         >
           {/* Left */}
           <div>
-            <motion.div
-              {...fade(0.05)}
-              style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}
-            >
-              <div
+            <h1 style={{ marginBottom: "0.5rem" }}>
+              <motion.span
+                {...fade(0.1)}
                 style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "12px",
-                  background: `linear-gradient(135deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: `0 4px 20px rgba(109,40,217,0.3)`,
-                  flexShrink: 0,
+                  display: "block",
+                  fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.01em",
                 }}
               >
-                <Globe size={30} color="#ffffff" strokeWidth={1.5} />
-              </div>
-              <span
+                {hero.titleLine1}
+              </motion.span>
+              <motion.span
+                {...fade(0.12)}
                 style={{
-                  fontSize: "0.7rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase" as const,
+                  display: "block",
+                  fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+                  fontWeight: 800,
                   color: PRIMARY,
-                  lineHeight: 1.4,
-                  maxWidth: "200px",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.01em",
                 }}
               >
-                {hero.eyebrow}
-              </span>
-            </motion.div>
-
-            <motion.h1
-              {...fade(0.1)}
-              style={{
-                fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
-                fontWeight: 800,
-                color: "#0f172a",
-                lineHeight: 1.1,
-                marginBottom: 0,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {hero.titleLine1}
-            </motion.h1>
-            <motion.h1
-              {...fade(0.12)}
-              style={{
-                fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
-                fontWeight: 800,
-                color: PRIMARY,
-                lineHeight: 1.1,
-                marginBottom: 0,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {hero.titleLine2}
-            </motion.h1>
-            <motion.h1
-              {...fade(0.14)}
-              style={{
-                fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
-                fontWeight: 800,
-                color: "#0f172a",
-                lineHeight: 1.1,
-                marginBottom: "0.5rem",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {hero.titleLine3}
-            </motion.h1>
+                {hero.titleLine2}
+              </motion.span>
+              <motion.span
+                {...fade(0.14)}
+                style={{
+                  display: "block",
+                  fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {hero.titleLine3}
+              </motion.span>
+            </h1>
 
             <motion.p
               {...fade(0.16)}

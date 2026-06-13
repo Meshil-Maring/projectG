@@ -45,7 +45,7 @@ export default function HrdsHero() {
     <section
       style={{
         background: "#ffffff",
-        paddingTop: "5.5rem",
+        paddingTop: "1.75rem",
         position: "relative",
         overflow: "hidden",
       }}
@@ -73,7 +73,7 @@ export default function HrdsHero() {
             gap: "0.4rem",
             fontSize: "0.78rem",
             color: "#64748b",
-            marginBottom: "2.5rem",
+            marginBottom: "1.5rem",
           }}
         >
           <Link to="/" style={{ color: "#64748b", textDecoration: "none" }}>
@@ -98,40 +98,6 @@ export default function HrdsHero() {
         >
           {/* Left */}
           <div>
-            <motion.div
-              {...fade(0.05)}
-              style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}
-            >
-              <div
-                style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "12px",
-                  background: `linear-gradient(135deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: `0 4px 20px rgba(21,128,61,0.3)`,
-                  flexShrink: 0,
-                }}
-              >
-                <Users size={30} color="#ffffff" strokeWidth={1.5} />
-              </div>
-              <span
-                style={{
-                  fontSize: "0.7rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase" as const,
-                  color: PRIMARY,
-                  lineHeight: 1.4,
-                  maxWidth: "180px",
-                }}
-              >
-                {hero.eyebrow}
-              </span>
-            </motion.div>
-
             <motion.h1
               {...fade(0.1)}
               style={{

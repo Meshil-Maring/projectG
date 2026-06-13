@@ -25,9 +25,10 @@ export default function LacImpact() {
     <section style={{ background: "#faf9f5", padding: "5rem 1.5rem" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         <div
+          className="lac-impact-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 3fr",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 3fr)",
             gap: "3rem",
             alignItems: "center",
           }}
@@ -52,7 +53,7 @@ export default function LacImpact() {
             {...fade(0.1)}
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(140px, 100%), 1fr))",
               gap: "0.5rem",
             }}
           >
@@ -111,6 +112,15 @@ export default function LacImpact() {
           </motion.div>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .lac-impact-grid {
+            grid-template-columns: 1fr !important;
+            text-align: center;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -249,7 +249,7 @@ export default function AboutStory() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-3"
+            className="text-3xl xl:text-4xl font-extrabold text-heading leading-tight mb-3"
           >
             {story.heading}
           </motion.h2>
@@ -286,7 +286,7 @@ export default function AboutStory() {
                   <p className="text-[10px] text-muted uppercase font-semibold tracking-wide">
                     {label}
                   </p>
-                  <p className="text-sm font-bold text-[#1a1a4b]">{value}</p>
+                  <p className="text-sm font-bold text-heading">{value}</p>
                 </div>
               </div>
             ))}

@@ -107,15 +107,15 @@ export default function Mission() {
   const navigate = useNavigate();
 
   return (
-    <section className="py-16 px-8 bg-white">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row gap-10">
+    <section className="py-20 px-6 bg-white">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
         {/* ── Our Mission ── */}
         <motion.div
           variants={slideLeft}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="flex-1 flex flex-col lg:flex-row gap-6 bg-white rounded-2xl border border-[#e2e8f0] overflow-hidden p-6"
+          className="flex-1 flex flex-col lg:flex-row gap-6 bg-white rounded-2xl border border-border overflow-hidden p-6"
         >
           {/* Family image */}
           <motion.div
@@ -141,7 +141,7 @@ export default function Mission() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 custom={0}
-                className="text-sm font-semibold uppercase tracking-widest text-[#f97316] mb-2"
+                className="text-sm font-semibold uppercase tracking-widest text-secondary mb-2"
               >
                 Our Mission
               </motion.p>
@@ -151,7 +151,7 @@ export default function Mission() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 custom={1}
-                className="text-2xl xl:text-3xl font-bold text-[#1e293b] leading-snug mb-3"
+                className="text-3xl xl:text-4xl font-bold text-heading leading-snug mb-3"
               >
                 Empowering Lives,
                 <br />
@@ -182,10 +182,10 @@ export default function Mission() {
                   whileHover={{ scale: 1.1, y: -3 }}
                   className="flex flex-col items-center gap-2 w-16 text-center cursor-default"
                 >
-                  <div className="w-12 h-12 rounded-full bg-[#f97316] flex items-center justify-center shadow-sm">
+                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center shadow-sm">
                     <Icon size={20} className="text-white" />
                   </div>
-                  <span className="text-xs text-[#475569] font-medium leading-tight whitespace-pre-line">
+                  <span className="text-xs text-body font-medium leading-tight whitespace-pre-line">
                     {label}
                   </span>
                 </motion.div>
@@ -230,7 +230,7 @@ export default function Mission() {
                   ? scrollToSection(sectionId)
                   : handleShare(setCopied)
               }
-              className="flex items-center gap-4 bg-white border border-[#e2e8f0] rounded-xl px-4 py-3 shadow-sm cursor-pointer text-left w-full"
+              className="flex items-center gap-4 bg-white border border-border rounded-xl px-4 py-3 shadow-sm cursor-pointer text-left w-full"
             >
               <div
                 className={`w-10 h-10 rounded-full ${iconBg} flex items-center justify-center shrink-0`}
@@ -239,13 +239,13 @@ export default function Mission() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-heading text-sm">{title}</p>
-                <p className="text-xs text-[#475569] leading-snug">
+                <p className="text-xs text-body leading-snug">
                   {title === "Share" && copied ? "Link copied!" : desc}
                 </p>
               </div>
               <ChevronRight
                 size={16}
-                className="text-[#94a3b8] flex-shrink-0"
+                className="text-muted shrink-0"
               />
             </motion.button>
           ))}

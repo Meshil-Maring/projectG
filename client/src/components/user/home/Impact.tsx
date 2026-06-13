@@ -38,7 +38,7 @@ export default function Impact() {
   const stats = data.stats;
 
   return (
-    <section className="py-16 px-8 bg-white">
+    <section className="py-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10">
         {/* Earth illustration */}
         <motion.div
@@ -73,7 +73,7 @@ export default function Impact() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-2xl xl:text-3xl font-bold text-heading leading-snug mb-10"
+            className="text-3xl xl:text-4xl font-bold text-heading leading-snug mb-10"
           >
             Numbers That Show The Change We Create
           </motion.h2>
@@ -90,7 +90,7 @@ export default function Impact() {
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" as const }}
                   whileHover={{ y: -4, scale: 1.04 }}
-                  className="flex flex-col items-center gap-3 bg-[#f0fdf9] border border-[#ccfbf1] rounded-2xl py-6 px-4 text-center"
+                  className="flex flex-col items-center gap-3 bg-teal/5 border border-teal/20 rounded-2xl py-6 px-4 text-center"
                 >
                   <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center">
                     <Icon size={22} className="text-teal" />

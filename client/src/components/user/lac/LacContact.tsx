@@ -11,9 +11,9 @@ const DEFAULT_CONTACT = {
 };
 
 const contactDetails = [
-  { Icon: Phone, text: "+91 98765 43210" },
-  { Icon: Mail, text: "legalaid@helpinghands.org" },
-  { Icon: MapPin, text: "123, Helping Hands Center, New Delhi – 110001" },
+  { Icon: Phone, text: "+91 87983 03158" },
+  { Icon: Mail, text: "projectgmanipur@gmail.com" },
+  { Icon: MapPin, text: "Sagolband Ingudam Leikai, Manipur, India - 795001" },
 ];
 
 const contactFeatures = [
@@ -63,11 +63,12 @@ export default function LacContact() {
       />
 
       <div
+        className="lac-contact-grid"
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
           gap: "4rem",
           alignItems: "center",
           position: "relative",
@@ -137,7 +138,10 @@ export default function LacContact() {
             ))}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
+          <div
+            className="lac-contact-features"
+            style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "0.85rem" }}
+          >
             {contactFeatures.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
@@ -208,6 +212,7 @@ export default function LacContact() {
               size={64}
               color="rgba(255,255,255,0.3)"
               strokeWidth={1}
+              aria-hidden="true"
               style={{ marginBottom: "1.5rem", position: "relative" }}
             />
             <blockquote
@@ -257,6 +262,20 @@ export default function LacContact() {
           </div>
         </motion.div>
       </div>
+
+      <style>{`
+        @media (max-width: 860px) {
+          .lac-contact-grid {
+            grid-template-columns: 1fr !important;
+            gap: 2.5rem !important;
+          }
+        }
+        @media (max-width: 420px) {
+          .lac-contact-features {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

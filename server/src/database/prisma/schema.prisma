@@ -150,3 +150,16 @@ model Section {
   @@index([pageId, order])
   @@map("sections")
 }
+
+model Donation {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  section   String
+  amount    Int
+  message   String?
+  createdAt DateTime @default(now())
+
+  @@map("donations")
+}

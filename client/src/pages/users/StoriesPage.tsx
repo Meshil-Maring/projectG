@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, MapPin, Calendar, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "../../shared/components/Navbar";
@@ -97,6 +97,7 @@ function StoryCard({
         <img
           src={story.image}
           alt={story.name}
+          loading="lazy"
           className="w-12 h-12 rounded-full object-cover ring-2 ring-[color:var(--color-border)] shrink-0"
         />
         <div>
@@ -147,12 +148,26 @@ function StoryModal({
   story: (typeof stories)[number];
   onClose: () => void;
 }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="story-modal-name"
         className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full p-7"
         onClick={(e) => e.stopPropagation()}
       >
@@ -171,7 +186,7 @@ function StoryModal({
             className="w-16 h-16 rounded-full object-cover ring-2 ring-[color:var(--color-border)]"
           />
           <div>
-            <p className="font-bold text-[color:var(--color-heading)]">{story.name}</p>
+            <p id="story-modal-name" className="font-bold text-heading">{story.name}</p>
             <p className="text-xs text-[color:var(--color-muted)]">{story.role}</p>
             <div className="flex items-center gap-3 mt-1">
               <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">

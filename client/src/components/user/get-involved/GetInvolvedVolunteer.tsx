@@ -75,7 +75,7 @@ export default function GetInvolvedVolunteer() {
               whileInView="visible"
               viewport={{ once: true }}
               custom={1}
-              className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-4"
+              className="text-3xl xl:text-4xl font-extrabold text-heading leading-tight mb-4"
             >
               {content.headingLine1}<br />{content.headingLine2}
             </motion.h2>

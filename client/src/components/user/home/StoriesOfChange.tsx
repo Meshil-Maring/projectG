@@ -160,6 +160,7 @@ function StoryCard({ image, quote, name, role }: StoryCardProps) {
         <img
           src={image}
           alt={name}
+          loading="lazy"
           className="w-14 h-14 rounded-full object-cover ring-2 ring-(--color-border)"
         />
       </div>
@@ -167,7 +168,7 @@ function StoryCard({ image, quote, name, role }: StoryCardProps) {
       {/* Content */}
       <div className="flex flex-col gap-2 min-w-0">
         <span
-          className="text-4xl leading-none font-serif text-(--color-primary-light) select-none -mt-1"
+          className="text-4xl leading-none font-script text-(--color-primary-light) select-none -mt-1"
           aria-hidden
         >
           &ldquo;

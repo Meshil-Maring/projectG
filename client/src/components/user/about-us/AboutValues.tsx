@@ -55,7 +55,7 @@ export default function AboutValues() {
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
-            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-8"
+            className="text-2xl xl:text-3xl font-extrabold text-heading mb-8"
           >
             {content.valuesHeading}
           </motion.h2>
@@ -70,7 +70,7 @@ export default function AboutValues() {
                 <div className={`w-14 h-14 rounded-full ${bg} flex items-center justify-center mb-3 shadow-sm`}>
                   <Icon size={22} className={color} strokeWidth={1.8} />
                 </div>
-                <h3 className="text-sm font-bold text-[#1a1a4b] mb-1">{label}</h3>
+                <h3 className="text-sm font-bold text-heading mb-1">{label}</h3>
                 <p className="text-xs text-[#64748b] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
@@ -87,7 +87,7 @@ export default function AboutValues() {
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
-            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-8"
+            className="text-2xl xl:text-3xl font-extrabold text-heading mb-8"
           >
             {content.approachHeading}
           </motion.h2>
@@ -103,7 +103,7 @@ export default function AboutValues() {
                   <Icon size={18} className="text-[#1a3270]" strokeWidth={1.8} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-[#1a1a4b] mb-1">{title}</h3>
+                  <h3 className="text-sm font-bold text-heading mb-1">{title}</h3>
                   <p className="text-xs text-[#64748b] leading-relaxed">{desc}</p>
                 </div>
               </motion.div>

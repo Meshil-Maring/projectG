@@ -207,6 +207,8 @@ function NoticeCard({
       {/* Header row */}
       <button
         onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={`notice-panel-${notice.id}`}
         style={{
           width: "100%",
           display: "flex",
@@ -283,6 +285,8 @@ function NoticeCard({
         {isOpen && (
           <motion.div
             key="body"
+            id={`notice-panel-${notice.id}`}
+            role="region"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}

@@ -24,6 +24,7 @@ export default function LacCTA() {
       }}
     >
       <div
+        className="lac-cta-decor"
         style={{
           position: "absolute",
           left: "5%",
@@ -35,6 +36,7 @@ export default function LacCTA() {
         <Scale size={120} color={NAV_BLUE} strokeWidth={1} />
       </div>
       <div
+        className="lac-cta-decor"
         style={{
           position: "absolute",
           right: "5%",
@@ -122,6 +124,14 @@ export default function LacCTA() {
           </a>
         </div>
       </motion.div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .lac-cta-decor {
+            display: none !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

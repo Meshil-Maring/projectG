@@ -75,7 +75,7 @@ export default function GetInvolvedSpread() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight"
+            className="text-3xl xl:text-4xl font-extrabold text-heading leading-tight"
           >
             {content.heading}
           </motion.h2>
@@ -108,7 +108,7 @@ export default function GetInvolvedSpread() {
               >
                 <Icon size={20} style={{ color }} strokeWidth={1.8} />
               </div>
-              <h3 className="text-sm font-bold text-[#1a1a4b]">{title}</h3>
+              <h3 className="text-sm font-bold text-heading">{title}</h3>
               <p className="text-xs text-[#64748b] leading-relaxed">{description}</p>
             </motion.div>
           ))}

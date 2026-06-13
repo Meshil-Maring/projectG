@@ -2,13 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTeamData } from "../../../context/TeamContext";
 import { usePageSections } from "../../../context/PageContext";
-import {
-  FacebookIcon,
-  LinkedinIcon,
-  TwitterIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "../../../assets/icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "../../../assets/icons";
 
 const DEFAULT_TEAM = {
   heading: "Meet Our Team",
@@ -32,22 +26,6 @@ const slideVariants = {
 };
 
 const CARDS_PER_PAGE = 6;
-
-function SocialIcons() {
-  return (
-    <div className="flex items-center gap-2">
-      {[FacebookIcon, LinkedinIcon, TwitterIcon].map((Icon, idx) => (
-        <span
-          key={idx}
-          title="Coming soon"
-          className="w-7 h-7 rounded-full bg-[#f0f4ff] flex items-center justify-center text-primary opacity-40 cursor-not-allowed"
-        >
-          <Icon width={12} height={12} />
-        </span>
-      ))}
-    </div>
-  );
-}
 
 export default function AboutTeam() {
   const { data } = useTeamData();
@@ -84,7 +62,7 @@ export default function AboutTeam() {
         <div className="flex flex-col items-center mb-14">
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
+            className="text-2xl xl:text-3xl font-extrabold text-heading mb-3"
           >
             {content.heading}
           </motion.h2>
@@ -132,9 +110,8 @@ export default function AboutTeam() {
                     {initials}
                   </div>
 
-                  <h3 className="text-sm font-extrabold text-[#1a1a4b] leading-snug mb-1">{name}</h3>
-                  <p className="text-[11px] text-primary font-semibold mb-4">{role}</p>
-                  <SocialIcons />
+                  <h3 className="text-sm font-extrabold text-heading leading-snug mb-1">{name}</h3>
+                  <p className="text-[11px] text-primary font-semibold">{role}</p>
                 </motion.div>
               );
             })}
@@ -177,9 +154,8 @@ export default function AboutTeam() {
                       >
                         {initials}
                       </div>
-                      <h3 className="text-sm font-bold text-[#1a1a4b] leading-tight mb-0.5">{name}</h3>
-                      <p className="text-[11px] text-[#64748b] mb-3">{role}</p>
-                      <SocialIcons />
+                      <h3 className="text-sm font-bold text-heading leading-tight mb-0.5">{name}</h3>
+                      <p className="text-[11px] text-[#64748b]">{role}</p>
                     </div>
                   );
                 })}

@@ -53,7 +53,7 @@ export default function AboutHero() {
             initial="hidden"
             animate="visible"
             custom={1}
-            className="text-4xl xl:text-5xl font-extrabold text-[#1a1a4b] leading-tight mb-5"
+            className="text-4xl xl:text-5xl font-extrabold text-heading leading-tight mb-5"
           >
             {hero.headingLine1}<br />{hero.headingLine2}<br />{hero.headingLine3}
           </motion.h1>

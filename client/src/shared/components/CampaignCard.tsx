@@ -36,14 +36,17 @@ export default function CampaignCard({
       className="bg-white rounded-2xl shadow-(--shadow-card) overflow-hidden w-64 shrink-0"
     >
       {/* ── Image ── */}
-      <div className="relative overflow-hidden">
-        <motion.img
-          whileHover={{ scale: 1.06 }}
-          transition={{ duration: 0.4, ease: "easeOut" as const }}
-          src={image}
-          alt={imageAlt}
-          className="w-full h-40 object-cover"
-        />
+      <div className="relative">
+        <div className="overflow-hidden">
+          <motion.img
+            whileHover={{ scale: 1.06 }}
+            transition={{ duration: 0.4, ease: "easeOut" as const }}
+            src={image}
+            alt={imageAlt}
+            loading="lazy"
+            className="w-full h-40 object-cover"
+          />
+        </div>
         <span
           className="absolute bottom-0 left-4 translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
           style={{ backgroundColor: categoryColor }}

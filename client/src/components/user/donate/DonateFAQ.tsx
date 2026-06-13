@@ -44,7 +44,7 @@ export default function DonateFAQ() {
             {content.eyebrow}
           </p>
           <h2
-            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
+            className="text-2xl xl:text-3xl font-extrabold text-heading mb-3"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
             {content.heading}
@@ -60,9 +60,11 @@ export default function DonateFAQ() {
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
+                aria-expanded={open === i}
+                aria-controls={`donate-faq-panel-${i}`}
                 className="w-full flex items-center justify-between px-6 py-4 text-left cursor-pointer"
               >
-                <span className="text-sm font-semibold text-[#1a1a4b] pr-4">
+                <span className="text-sm font-semibold text-heading pr-4">
                   {q}
                 </span>
                 <motion.span
@@ -77,6 +79,8 @@ export default function DonateFAQ() {
               <AnimatePresence initial={false}>
                 {open === i && (
                   <motion.div
+                    id={`donate-faq-panel-${i}`}
+                    role="region"
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}

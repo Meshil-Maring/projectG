@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Users, MapPin, Target, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../shared/components/Navbar";
@@ -151,6 +151,7 @@ function CauseCard({
         <img
           src={cause.image}
           alt={cause.imageAlt}
+          loading="lazy"
           className="w-full h-full object-cover"
         />
         <span
@@ -236,12 +237,26 @@ function CauseModal({
   const formatted = new Intl.NumberFormat("en-IN").format(cause.amountRaised);
   const goalFormatted = new Intl.NumberFormat("en-IN").format(cause.goal);
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cause-modal-title"
         className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -269,7 +284,7 @@ function CauseModal({
 
         {/* Content */}
         <div className="p-6 flex flex-col gap-4">
-          <h2 className="text-xl font-bold text-[color:var(--color-heading)]">
+          <h2 id="cause-modal-title" className="text-xl font-bold text-heading">
             {cause.title}
           </h2>
 

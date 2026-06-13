@@ -22,7 +22,7 @@ export default function AboutStats() {
   return (
     <section className="py-16 px-6 bg-[#f8fafc] border-y border-[#e2e8f0]">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
           {stats.map(({ icon: Icon, value, label, bg, color }, i) => (
             <motion.div
               key={value}
@@ -31,13 +31,16 @@ export default function AboutStats() {
               whileInView="visible"
               viewport={{ once: true }}
               custom={i}
-              className="flex items-center gap-4 bg-white rounded-2xl px-5 py-5 shadow-sm border border-[#e2e8f0]"
+              whileHover={{ y: -4 }}
+              className={`flex flex-col items-center text-center gap-3 bg-white rounded-2xl px-5 py-7 shadow-sm border border-[#e2e8f0] transition-shadow hover:shadow-md ${
+                i === stats.length - 1 ? "col-span-2 sm:col-span-1" : ""
+              }`}
             >
-              <div className={`w-12 h-12 rounded-full ${bg} flex items-center justify-center shrink-0`}>
-                <Icon size={22} className={color} strokeWidth={1.8} />
+              <div className={`w-14 h-14 rounded-full ${bg} flex items-center justify-center shrink-0`}>
+                <Icon size={24} className={color} strokeWidth={1.8} />
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-[#1a1a4b] leading-none mb-0.5">{value}</p>
+                <p className="text-3xl font-extrabold text-heading leading-none mb-1">{value}</p>
                 <p className="text-xs text-[#64748b] font-medium leading-tight">{label}</p>
               </div>
             </motion.div>

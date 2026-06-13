@@ -170,9 +170,10 @@ export default function LacWhatWeDo() {
 
         {/* ─── Main two-column layout ─── */}
         <div
+          className="lac-whatwedo-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1.6fr",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.6fr)",
             gap: "2rem",
             alignItems: "start",
           }}
@@ -367,7 +368,7 @@ export default function LacWhatWeDo() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))",
                     gap: "0.6rem",
                   }}
                 >
@@ -398,9 +399,10 @@ export default function LacWhatWeDo() {
 
             {/* Small service cards grid */}
             <div
+              className="lac-whatwedo-cards"
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
                 gap: "1.25rem",
               }}
             >
@@ -453,6 +455,19 @@ export default function LacWhatWeDo() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 860px) {
+          .lac-whatwedo-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 520px) {
+          .lac-whatwedo-cards {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

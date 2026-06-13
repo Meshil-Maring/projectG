@@ -17,7 +17,7 @@ export default function AboutCTA() {
     <section
       className="relative py-24 px-6 overflow-hidden"
       style={{
-        background: "linear-gradient(135deg, #1a3270 0%, #2563eb 100%)",
+        background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)",
       }}
     >
       {/* Hands background image */}
@@ -112,15 +112,15 @@ export default function AboutCTA() {
         >
           <Link
             to="/get-involved"
-            className="inline-flex items-center gap-2 border-2 border-white text-white font-semibold text-sm px-8 py-3 rounded-full hover:bg-white hover:text-[#1a3270] transition-colors duration-200"
+            className="inline-flex items-center gap-2 border-2 border-white text-white font-semibold text-sm px-8 py-3 rounded-full hover:bg-white hover:text-primary transition-colors duration-200"
           >
             Join Us <ArrowRight size={15} />
           </Link>
           <Link
             to="/donate"
-            className="inline-flex items-center gap-2 bg-white text-[#1a3270] font-semibold text-sm px-8 py-3 rounded-full hover:bg-blue-50 transition-colors duration-200 shadow-md"
+            className="inline-flex items-center gap-2 bg-white text-primary font-semibold text-sm px-8 py-3 rounded-full hover:bg-blue-50 transition-colors duration-200 shadow-md"
           >
-            Donate Now <Heart size={14} fill="#1a3270" strokeWidth={0} />
+            Donate Now <Heart size={14} fill="var(--color-primary)" strokeWidth={0} />
           </Link>
         </motion.div>
       </div>

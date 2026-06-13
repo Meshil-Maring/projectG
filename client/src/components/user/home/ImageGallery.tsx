@@ -85,18 +85,19 @@ export default function ImageGallery() {
           </div>
 
           {/* Gallery grid */}
-          <div className="grid grid-cols-3 grid-rows-2 gap-4 h-120">
+          <div className="grid grid-cols-2 sm:grid-cols-3 sm:grid-rows-2 gap-3 sm:gap-4 sm:h-100 lg:h-120">
             <motion.button
               initial={{ opacity: 0, scale: 0.93 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
               onClick={() => openLightbox(0)}
-              className="row-span-2 overflow-hidden rounded-2xl focus:outline-none group"
+              className="col-span-2 sm:col-span-1 sm:row-span-2 aspect-video sm:aspect-auto overflow-hidden rounded-2xl focus:outline-none group"
             >
               <img
                 src={large.src}
                 alt={large.alt}
+                loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </motion.button>
@@ -108,11 +109,12 @@ export default function ImageGallery() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: 0.1 + i * 0.08, duration: 0.5, ease: "easeOut" as const }}
                 onClick={() => openLightbox(i + 1)}
-                className="overflow-hidden rounded-2xl focus:outline-none group"
+                className="aspect-square sm:aspect-auto overflow-hidden rounded-2xl focus:outline-none group"
               >
                 <img
                   src={photo.src}
                   alt={photo.alt}
+                  loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </motion.button>
@@ -170,6 +172,7 @@ export default function ImageGallery() {
                   <img
                     src={photo.src}
                     alt={photo.alt}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-400"
                   />
                   {/* Hover overlay with title */}
@@ -192,7 +195,7 @@ export default function ImageGallery() {
           onClick={showGrid ? closeLightbox : closeAll}
         >
           <div
-            className="relative flex flex-col items-center w-full max-w-5xl px-16"
+            className="relative flex flex-col items-center w-full max-w-5xl px-4 sm:px-16"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top bar */}

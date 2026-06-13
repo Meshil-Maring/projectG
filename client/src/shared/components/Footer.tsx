@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/image/logo.jpeg";
@@ -10,6 +11,7 @@ import {
   MailIcon,
   MapPinIcon,
   HeartIcon,
+  ChevronRightIcon,
 } from "../../assets/icons";
 
 const quickLinks = [
@@ -46,7 +48,7 @@ export default function Footer() {
   return (
     <footer
       style={{
-        backgroundColor: "#0f2057",
+        backgroundColor: "var(--color-primary-dark)",
         color: "#ffffff",
         fontFamily: "'Poppins', sans-serif",
         position: "relative",
@@ -106,7 +108,7 @@ export default function Footer() {
               style={{
                 fontSize: "0.8rem",
                 lineHeight: 1.7,
-                color: "rgba(255,255,255,0.65)",
+                color: "rgba(255,255,255,0.78)",
                 marginBottom: "1.5rem",
                 maxWidth: "240px",
               }}
@@ -167,18 +169,7 @@ export default function Footer() {
           <FooterColumn title="Our Groups" links={ourGroups} />
 
           {/* ── Contact Us ── */}
-          <div>
-            <h4
-              style={{
-                fontSize: "0.88rem",
-                fontWeight: 600,
-                color: "#ffffff",
-                marginBottom: "1rem",
-                letterSpacing: "0.01em",
-              }}
-            >
-              Contact Us
-            </h4>
+          <FooterSection title="Contact Us">
             <div
               style={{
                 display: "flex",
@@ -196,7 +187,7 @@ export default function Footer() {
                 text="Sagolband Ingudam Leikai, Manipur, India - 795001"
               />
             </div>
-          </div>
+          </FooterSection>
         </div>
       </div>
 
@@ -217,7 +208,7 @@ export default function Footer() {
         <p
           style={{
             fontSize: "0.75rem",
-            color: "rgba(255,255,255,0.5)",
+            color: "rgba(255,255,255,0.7)",
             margin: 0,
           }}
         >
@@ -227,7 +218,7 @@ export default function Footer() {
           href="mailto:projectgmanipur@gmail.com"
           style={{
             fontSize: "0.75rem",
-            color: "rgba(255,255,255,0.5)",
+            color: "rgba(255,255,255,0.7)",
             textDecoration: "none",
           }}
         >
@@ -250,6 +241,18 @@ export default function Footer() {
           .footer-grid {
             grid-template-columns: 1fr !important;
           }
+          .footer-section-toggle {
+            cursor: pointer;
+          }
+          .footer-toggle-icon {
+            display: inline-block !important;
+          }
+          .footer-section-content {
+            display: none;
+          }
+          .footer-section-content.open {
+            display: block;
+          }
         }
       `}</style>
     </footer>
@@ -264,18 +267,7 @@ function FooterColumn({
   links: { label: string; href: string }[];
 }) {
   return (
-    <div>
-      <h4
-        style={{
-          fontSize: "0.88rem",
-          fontWeight: 600,
-          color: "#ffffff",
-          marginBottom: "1rem",
-          letterSpacing: "0.01em",
-        }}
-      >
-        {title}
-      </h4>
+    <FooterSection title={title}>
       <ul
         style={{
           listStyle: "none",
@@ -293,7 +285,7 @@ function FooterColumn({
                 to={link.href}
                 style={{
                   fontSize: "0.8rem",
-                  color: "rgba(255,255,255,0.6)",
+                  color: "rgba(255,255,255,0.78)",
                   textDecoration: "none",
                   display: "inline-block",
                   transition: "color 0.2s",
@@ -302,7 +294,7 @@ function FooterColumn({
                   (e.currentTarget.style.color = "#ffffff")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "rgba(255,255,255,0.6)")
+                  (e.currentTarget.style.color = "rgba(255,255,255,0.78)")
                 }
               >
                 {link.label}
@@ -311,6 +303,57 @@ function FooterColumn({
           </li>
         ))}
       </ul>
+    </FooterSection>
+  );
+}
+
+function FooterSection({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="footer-section-toggle"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+          background: "none",
+          border: "none",
+          padding: 0,
+          marginBottom: "1rem",
+          fontFamily: "inherit",
+          fontSize: "0.88rem",
+          fontWeight: 600,
+          color: "#ffffff",
+          letterSpacing: "0.01em",
+          textAlign: "left",
+        }}
+      >
+        {title}
+        <ChevronRightIcon
+          className="footer-toggle-icon"
+          width={14}
+          height={14}
+          style={{
+            display: "none",
+            transform: open ? "rotate(90deg)" : "rotate(0deg)",
+            transition: "transform 0.2s",
+            flexShrink: 0,
+          }}
+        />
+      </button>
+      <div className={`footer-section-content${open ? " open" : ""}`}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -320,7 +363,7 @@ function ContactItem({ icon, text }: { icon: React.ReactNode; text: string }) {
     <div style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem" }}>
       <span
         style={{
-          color: "rgba(255,255,255,0.6)",
+          color: "rgba(255,255,255,0.78)",
           flexShrink: 0,
           marginTop: "1px",
         }}
@@ -330,7 +373,7 @@ function ContactItem({ icon, text }: { icon: React.ReactNode; text: string }) {
       <span
         style={{
           fontSize: "0.78rem",
-          color: "rgba(255,255,255,0.65)",
+          color: "rgba(255,255,255,0.78)",
           lineHeight: 1.5,
         }}
       >

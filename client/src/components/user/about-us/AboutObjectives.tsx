@@ -81,7 +81,7 @@ export default function AboutObjectives() {
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
-            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
+            className="text-2xl xl:text-3xl font-extrabold text-heading mb-3"
           >
             {content.heading}
           </motion.h2>

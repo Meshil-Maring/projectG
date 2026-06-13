@@ -1,13 +1,22 @@
-import { Heart } from "lucide-react";
+import { Heart, ShieldCheck, Lock, BadgeCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import donateImg from "../../../assets/image/donate.png";
 
+const trustSignals = [
+  { icon: ShieldCheck, label: "100% Secure Payments" },
+  { icon: BadgeCheck, label: "Registered NGO" },
+  { icon: Lock, label: "Tax-Deductible (80G)" },
+];
+
 export default function Donate() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-linear-to-br from-purple-light/10 via-white to-purple/5">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        <div
+          className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 rounded-3xl border border-purple-light/30 bg-white px-6 sm:px-10 py-12 lg:py-14"
+          style={{ boxShadow: "var(--shadow-donate)" }}
+        >
 
           {/* Image */}
           <motion.div
@@ -69,12 +78,31 @@ export default function Donate() {
               >
                 <Link
                   to="/donate"
-                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-base hover:bg-purple-700 transition-colors duration-200 shadow-lg"
+                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-purple text-white font-semibold text-base hover:bg-purple-dark transition-colors duration-200 shadow-lg"
                 >
                   Donate Now
                   <Heart size={18} className="fill-white" />
                 </Link>
               </motion.div>
+            </motion.div>
+
+            {/* Trust signals */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut" as const, delay: 0.42 }}
+              className="flex flex-wrap gap-x-6 gap-y-2 mt-6"
+            >
+              {trustSignals.map(({ icon: Icon, label }) => (
+                <span
+                  key={label}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-muted"
+                >
+                  <Icon size={15} className="text-purple" />
+                  {label}
+                </span>
+              ))}
             </motion.div>
           </div>
 

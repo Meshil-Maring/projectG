@@ -111,7 +111,7 @@ export default function VolunteerModal({ onClose }: Props) {
           {submitted ? (
             <div className="flex flex-col items-center text-center py-6 gap-4">
               <CheckCircle2 size={56} className="text-[#e63975]" strokeWidth={1.5} />
-              <h3 className="text-2xl font-extrabold text-[#1a1a4b]">You're In!</h3>
+              <h3 className="text-2xl font-extrabold text-heading">You're In!</h3>
               <p className="text-sm text-[#64748b] leading-relaxed max-w-xs">
                 Thank you, <strong>{form.name}</strong>! We've received your request and our team
                 will reach out to you soon.
@@ -128,7 +128,7 @@ export default function VolunteerModal({ onClose }: Props) {
               <p className="text-xs font-bold uppercase tracking-widest text-[#e63975] mb-1">
                 Join Our Mission
               </p>
-              <h3 className="text-2xl font-extrabold text-[#1a1a4b] mb-1">Volunteer Sign-Up</h3>
+              <h3 className="text-2xl font-extrabold text-heading mb-1">Volunteer Sign-Up</h3>
               <p className="text-sm text-[#64748b] mb-6">
                 Fill in your details and we'll get back to you shortly.
               </p>
@@ -136,7 +136,7 @@ export default function VolunteerModal({ onClose }: Props) {
               <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
                 {/* Name */}
                 <div>
-                  <label htmlFor="volunteer-name" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-name" className="block text-xs font-semibold text-heading mb-1">
                     Full Name <span className="text-[#e63975]">*</span>
                   </label>
                   <input
@@ -158,7 +158,7 @@ export default function VolunteerModal({ onClose }: Props) {
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="volunteer-email" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-email" className="block text-xs font-semibold text-heading mb-1">
                     Email <span className="text-[#e63975]">*</span>
                   </label>
                   <input
@@ -180,7 +180,7 @@ export default function VolunteerModal({ onClose }: Props) {
 
                 {/* Phone */}
                 <div>
-                  <label htmlFor="volunteer-phone" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-phone" className="block text-xs font-semibold text-heading mb-1">
                     Phone <span className="text-gray-400 font-normal">(optional)</span>
                   </label>
                   <input
@@ -195,7 +195,7 @@ export default function VolunteerModal({ onClose }: Props) {
 
                 {/* Areas of interest */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#1a1a4b] mb-2">
+                  <label className="block text-xs font-semibold text-heading mb-2">
                     Area of Interest <span className="text-[#e63975]">*</span>
                   </label>
                   <div className="grid grid-cols-2 gap-2">
@@ -224,7 +224,7 @@ export default function VolunteerModal({ onClose }: Props) {
 
                 {/* Message */}
                 <div>
-                  <label htmlFor="volunteer-message" className="block text-xs font-semibold text-[#1a1a4b] mb-1">
+                  <label htmlFor="volunteer-message" className="block text-xs font-semibold text-heading mb-1">
                     Why do you want to volunteer?{" "}
                     <span className="text-gray-400 font-normal">(optional)</span>
                   </label>

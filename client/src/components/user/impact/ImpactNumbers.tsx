@@ -72,7 +72,7 @@ export default function ImpactNumbers() {
   const content = { ...DEFAULT_NUMBERS, ...getSectionData("impact-numbers") };
 
   return (
-    <section className="py-20 px-6 bg-white">
+    <section className="py-20 px-6 bg-surface">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <motion.p
@@ -80,7 +80,7 @@ export default function ImpactNumbers() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-xs font-bold uppercase tracking-widest text-[#0d9488] mb-2"
+            className="text-xs font-bold uppercase tracking-widest text-teal mb-2"
           >
             {content.eyebrow}
           </motion.p>
@@ -90,7 +90,7 @@ export default function ImpactNumbers() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-2xl xl:text-4xl font-extrabold text-[#1e293b] mb-4"
+            className="text-2xl xl:text-4xl font-extrabold text-heading mb-4"
           >
             {content.heading}
           </motion.h2>
@@ -100,7 +100,7 @@ export default function ImpactNumbers() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={2}
-            className="w-12 h-1 bg-[#0d9488] rounded mx-auto"
+            className="w-12 h-1 bg-teal rounded mx-auto"
           />
         </div>
 
@@ -113,7 +113,8 @@ export default function ImpactNumbers() {
               whileInView="visible"
               viewport={{ once: true, margin: "-30px" }}
               custom={i * 0.4}
-              className="bg-[#f8fafc] rounded-2xl border border-[#e2e8f0] p-7 flex flex-col gap-4"
+              whileHover={{ y: -4 }}
+              className="bg-white rounded-2xl border border-border shadow-card hover:shadow-lg transition-shadow p-7 flex flex-col gap-4"
             >
               <div
                 className="w-14 h-14 rounded-xl flex items-center justify-center"
@@ -123,13 +124,13 @@ export default function ImpactNumbers() {
               </div>
               <div>
                 <p
-                  className="text-3xl font-extrabold text-[#1e293b] leading-none mb-1"
+                  className="text-2xl sm:text-3xl font-extrabold text-heading leading-none mb-1 tabular-nums"
                   style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
                   {value}
                 </p>
-                <p className="text-sm font-semibold text-[#1e293b] mb-0.5">{label}</p>
-                <p className="text-xs text-[#64748b]">{sub}</p>
+                <p className="text-sm font-semibold text-heading mb-0.5">{label}</p>
+                <p className="text-xs text-body">{sub}</p>
               </div>
             </motion.div>
           ))}

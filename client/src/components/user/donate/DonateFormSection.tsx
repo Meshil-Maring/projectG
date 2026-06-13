@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, ShieldCheck, Star, Eye } from "lucide-react";
+import { Heart, ShieldCheck, Star, Eye, Loader2 } from "lucide-react";
 import DonateQRModal from "../home/DonateQRModal";
 import { usePageSections } from "../../../context/PageContext";
+import { api } from "../../../lib/api";
 
 const DEFAULT_FORM = {
   eyebrow: "Donate",
@@ -15,6 +16,15 @@ const PRESET_AMOUNTS = [
   { value: 1000, label: "₹1,000", description: "Provides school supplies" },
   { value: 2500, label: "₹2,500", description: "Supports medical care" },
   { value: 5000, label: "₹5,000", description: "Empowers a family" },
+];
+
+const CAUSE_OPTIONS = [
+  { value: "general", label: "Where Most Needed" },
+  { value: "lac", label: "Legal Aid Club" },
+  { value: "whg", label: "Work for Humanity Group" },
+  { value: "fseds", label: "Foundation for Socio-Economic Development Society" },
+  { value: "hrds", label: "Human Resources Developmental Society" },
+  { value: "cwg", label: "Competitive World Group" },
 ];
 
 const trustBadges = [
@@ -38,9 +48,39 @@ export default function DonateFormSection() {
   const [selected, setSelected] = useState<number | "other">(1000);
   const [otherValue, setOtherValue] = useState("");
   const [showQR, setShowQR] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [cause, setCause] = useState(CAUSE_OPTIONS[0].value);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [receiptSent, setReceiptSent] = useState(false);
 
   const resolvedAmount =
     selected === "other" ? Number(otherValue) || 0 : selected;
+
+  const canSubmit = resolvedAmount > 0 && name.trim() !== "" && email.trim() !== "";
+
+  async function handleDonate() {
+    if (!canSubmit) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      await api.post("/donations", {
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        section: cause,
+        amount: resolvedAmount,
+      });
+      setReceiptSent(true);
+      setShowQR(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <section id="donate-form" className="py-20 px-6 bg-white">
@@ -62,7 +102,7 @@ export default function DonateFormSection() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-2xl xl:text-3xl font-extrabold text-[#1a1a4b] mb-3"
+            className="text-2xl xl:text-3xl font-extrabold text-heading mb-3"
           >
             {content.heading}
           </motion.h2>
@@ -103,7 +143,7 @@ export default function DonateFormSection() {
               >
                 <span
                   className={`text-lg font-extrabold mb-0.5 ${
-                    selected === value ? "text-[#1a3270]" : "text-[#1a1a4b]"
+                    selected === value ? "text-[#1a3270]" : "text-heading"
                   }`}
                   style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
@@ -141,29 +181,82 @@ export default function DonateFormSection() {
             </button>
           )}
 
+          {/* Donor details */}
+          <div className="flex flex-col gap-3 mb-7">
+            <input
+              type="text"
+              placeholder="Your name"
+              aria-label="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="px-4 py-3.5 rounded-2xl border-2 border-[#e2e8f0] text-sm text-heading outline-none focus:border-[#93b5f0] placeholder:text-[#94a3b8]"
+            />
+            <input
+              type="email"
+              placeholder="Email address"
+              aria-label="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="px-4 py-3.5 rounded-2xl border-2 border-[#e2e8f0] text-sm text-heading outline-none focus:border-[#93b5f0] placeholder:text-[#94a3b8]"
+            />
+            <input
+              type="tel"
+              placeholder="Phone number (optional)"
+              aria-label="Phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="px-4 py-3.5 rounded-2xl border-2 border-[#e2e8f0] text-sm text-heading outline-none focus:border-[#93b5f0] placeholder:text-[#94a3b8]"
+            />
+            <select
+              aria-label="Donation cause"
+              value={cause}
+              onChange={(e) => setCause(e.target.value)}
+              className="px-4 py-3.5 rounded-2xl border-2 border-[#e2e8f0] text-sm text-heading outline-none focus:border-[#93b5f0] bg-white"
+            >
+              {CAUSE_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Donate button */}
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => resolvedAmount > 0 && setShowQR(true)}
-            disabled={resolvedAmount <= 0}
+            onClick={handleDonate}
+            disabled={!canSubmit || submitting}
             className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl font-bold text-base text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             style={{
               background:
-                resolvedAmount > 0
+                canSubmit
                   ? "linear-gradient(135deg, #1a3270, #2563eb)"
                   : "#94a3b8",
               boxShadow:
-                resolvedAmount > 0
+                canSubmit
                   ? "0 8px 24px rgba(26,50,112,0.28)"
                   : "none",
             }}
           >
-            {resolvedAmount > 0
-              ? `Donate ₹${resolvedAmount.toLocaleString("en-IN")}`
-              : "Select an amount"}
-            <Heart size={17} fill="white" strokeWidth={0} />
+            {submitting ? (
+              <Loader2 size={17} className="animate-spin" />
+            ) : resolvedAmount > 0 ? (
+              `Donate ₹${resolvedAmount.toLocaleString("en-IN")}`
+            ) : (
+              "Select an amount"
+            )}
+            {!submitting && <Heart size={17} fill="white" strokeWidth={0} />}
           </motion.button>
+
+          {error && (
+            <p className="text-center text-sm text-red-500 mt-3">{error}</p>
+          )}
+          {receiptSent && (
+            <p className="text-center text-sm text-[#1a3270] mt-3">
+              A donation receipt has been sent to {email}.
+            </p>
+          )}
 
           {/* Trust row */}
           <div className="flex items-center justify-center gap-5 mt-5">

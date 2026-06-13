@@ -21,7 +21,7 @@ const sections = [
 export default function WhgPage() {
   return (
     <PageProvider slug="whg">
-      <div style={{ fontFamily: "'Poppins', sans-serif", overflowX: "hidden" }}>
+      <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
         <Navbar />
         <SectionNavigator sections={sections} />
         <div id="whg-hero"><WhgHero /></div>

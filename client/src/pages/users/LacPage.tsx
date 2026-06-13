@@ -25,7 +25,7 @@ const sections = [
 export default function LacPage() {
   return (
     <PageProvider slug="lac">
-      <div style={{ fontFamily: "'Poppins', sans-serif", overflowX: "hidden" }}>
+      <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
         <Navbar />
         <SectionNavigator sections={sections} />
         <div id="lac-hero"><LacHero /></div>

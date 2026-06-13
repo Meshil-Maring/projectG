@@ -123,7 +123,7 @@ export default function AboutSocieties() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-4"
+            className="text-3xl xl:text-4xl font-extrabold text-heading leading-tight mb-4"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
             {content.heading}
@@ -187,7 +187,7 @@ export default function AboutSocieties() {
 
                   {/* Society name */}
                   <h3
-                    className="text-base font-extrabold text-[#1a1a4b] leading-snug mb-5"
+                    className="text-base font-extrabold text-heading leading-snug mb-5"
                     style={{ fontFamily: "'Poppins', sans-serif" }}
                   >
                     {name}

@@ -92,14 +92,15 @@ export default function ContactFormSection() {
     width: "100%",
     padding: "0.75rem 1rem",
     fontSize: "0.875rem",
-    border: "1.5px solid #e2e8f0",
     borderRadius: "0.6rem",
     outline: "none",
     color: "#1e293b",
     backgroundColor: "#f8fafc",
-    transition: "border-color 0.2s, box-shadow 0.2s",
     fontFamily: "'Poppins', sans-serif",
   };
+
+  const fieldClass = (hasError?: boolean) =>
+    `border-[1.5px] ${hasError ? "border-red-500" : "border-[#e2e8f0]"} focus:border-[#1a3270] focus:ring-3 focus:ring-[#1a3270]/10 focus:outline-none transition-colors duration-200`;
 
   return (
     <section className="py-16 px-6 bg-[#f8fafc]">
@@ -117,7 +118,7 @@ export default function ContactFormSection() {
           </motion.p>
           <motion.h2
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
-            className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] mb-4"
+            className="text-3xl xl:text-4xl font-extrabold text-heading mb-4"
           >
             {content.heading}
           </motion.h2>
@@ -150,7 +151,7 @@ export default function ContactFormSection() {
                   <Icon size={18} color="#1a3270" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#1a1a4b] mb-1">{title}</p>
+                  <p className="text-sm font-bold text-heading mb-1">{title}</p>
                   {lines.map((line) => (
                     <p key={line} className="text-xs text-[#64748b]">{line}</p>
                   ))}
@@ -174,7 +175,7 @@ export default function ContactFormSection() {
                 <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
                   <CheckCircle size={34} className="text-green-500" />
                 </div>
-                <h3 className="text-xl font-bold text-[#1a1a4b]">Message Sent!</h3>
+                <h3 className="text-xl font-bold text-heading">Message Sent!</h3>
                 <p className="text-sm text-[#64748b] max-w-xs">
                   Thank you for reaching out. We'll get back to you within 24 hours.
                 </p>
@@ -204,9 +205,8 @@ export default function ContactFormSection() {
                         value={form.name}
                         onChange={handleChange}
                         aria-invalid={!!errors.name}
-                        style={{ ...inputBase, paddingLeft: "2.25rem", borderColor: errors.name ? "#ef4444" : "#e2e8f0" }}
-                        onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
-                        onBlur={(e) => { e.target.style.borderColor = errors.name ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
+                        style={{ ...inputBase, paddingLeft: "2.25rem" }}
+                        className={fieldClass(!!errors.name)}
                       />
                     </div>
                     {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
@@ -227,9 +227,8 @@ export default function ContactFormSection() {
                         value={form.email}
                         onChange={handleChange}
                         aria-invalid={!!errors.email}
-                        style={{ ...inputBase, paddingLeft: "2.25rem", borderColor: errors.email ? "#ef4444" : "#e2e8f0" }}
-                        onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
-                        onBlur={(e) => { e.target.style.borderColor = errors.email ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
+                        style={{ ...inputBase, paddingLeft: "2.25rem" }}
+                        className={fieldClass(!!errors.email)}
                       />
                     </div>
                     {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
@@ -247,9 +246,8 @@ export default function ContactFormSection() {
                     value={form.subject}
                     onChange={handleChange}
                     aria-invalid={!!errors.subject}
-                    style={{ ...inputBase, borderColor: errors.subject ? "#ef4444" : "#e2e8f0" }}
-                    onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
-                    onBlur={(e) => { e.target.style.borderColor = errors.subject ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
+                    style={inputBase}
+                    className={fieldClass(!!errors.subject)}
                   >
                     <option value="">Select a subject…</option>
                     <option value="General Inquiry">General Inquiry</option>
@@ -275,9 +273,8 @@ export default function ContactFormSection() {
                     value={form.message}
                     onChange={handleChange}
                     aria-invalid={!!errors.message}
-                    style={{ ...inputBase, resize: "vertical", borderColor: errors.message ? "#ef4444" : "#e2e8f0" }}
-                    onFocus={(e) => { e.target.style.borderColor = "#1a3270"; e.target.style.boxShadow = "0 0 0 3px rgba(26,50,112,0.08)"; }}
-                    onBlur={(e) => { e.target.style.borderColor = errors.message ? "#ef4444" : "#e2e8f0"; e.target.style.boxShadow = "none"; }}
+                    style={{ ...inputBase, resize: "vertical" }}
+                    className={fieldClass(!!errors.message)}
                   />
                   {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message}</p>}
                 </div>

@@ -14,13 +14,7 @@ export default function NewsletterSubscribe() {
   }
 
   return (
-    <section
-      style={{
-        background: "linear-gradient(135deg, #eef0fb 0%, #dde1f7 100%)",
-        fontFamily: "'Poppins', sans-serif",
-        padding: "3rem 1.5rem",
-      }}
-    >
+    <section className="bg-linear-to-br from-primary/5 to-primary/10 py-12 px-6">
       <div
         style={{
           maxWidth: "1100px",
@@ -54,17 +48,10 @@ export default function NewsletterSubscribe() {
           transition={{ duration: 0.6, delay: 0.1 }}
           style={{ flex: "1 1 200px", minWidth: "180px" }}
         >
-          <h3
-            style={{
-              fontSize: "1.15rem",
-              fontWeight: 700,
-              color: "#1a1a4b",
-              marginBottom: "0.4rem",
-            }}
-          >
+          <h3 className="text-lg font-bold text-heading mb-1">
             Stay Connected
           </h3>
-          <p style={{ fontSize: "0.82rem", color: "#4a5080", lineHeight: 1.65, margin: 0 }}>
+          <p className="text-sm text-body leading-relaxed m-0">
             Subscribe to our newsletter and get the latest updates on our programs and impact stories.
           </p>
         </motion.div>
@@ -78,14 +65,14 @@ export default function NewsletterSubscribe() {
           style={{ flex: "1 1 320px", minWidth: "260px" }}
         >
           {submitted ? (
-            <p style={{ fontSize: "0.9rem", fontWeight: 600, color: "#3a47c5" }}>
+            <p className="text-sm font-semibold text-primary">
               Thank you for subscribing!
             </p>
           ) : (
             <>
               <form
                 onSubmit={handleSubmit}
-                style={{ display: "flex", gap: "0", borderRadius: "6px", overflow: "hidden", boxShadow: "0 2px 12px rgba(58,71,197,0.1)" }}
+                className="newsletter-form flex gap-0 rounded-md overflow-hidden shadow-sm"
               >
                 <input
                   type="email"
@@ -94,41 +81,33 @@ export default function NewsletterSubscribe() {
                   placeholder="Enter your email address"
                   aria-label="Email address"
                   required
-                  style={{
-                    flex: 1,
-                    padding: "0.75rem 1rem",
-                    fontSize: "0.82rem",
-                    border: "1.5px solid #d0d4f0",
-                    borderRight: "none",
-                    borderRadius: "6px 0 0 6px",
-                    outline: "none",
-                    color: "#1a1a4b",
-                    backgroundColor: "#ffffff",
-                    fontFamily: "'Poppins', sans-serif",
-                  }}
+                  className="newsletter-input flex-1 min-w-0 px-4 py-3 text-sm border border-border border-r-0 rounded-l-md outline-none text-heading bg-white focus-visible:ring-2 focus-visible:ring-primary-light"
                 />
                 <motion.button
                   type="submit"
-                  whileHover={{ backgroundColor: "#2d3bae" }}
+                  className="newsletter-button px-5 py-3 bg-primary text-white font-semibold text-sm border-none rounded-r-md cursor-pointer transition-colors duration-200 whitespace-nowrap shrink-0"
+                  whileHover={{ backgroundColor: "var(--color-primary-dark)" }}
                   whileTap={{ scale: 0.97 }}
-                  style={{
-                    padding: "0.75rem 1.4rem",
-                    backgroundColor: "#3a47c5",
-                    color: "#ffffff",
-                    fontWeight: 600,
-                    fontSize: "0.82rem",
-                    border: "none",
-                    borderRadius: "0 6px 6px 0",
-                    cursor: "pointer",
-                    fontFamily: "'Poppins', sans-serif",
-                    transition: "background-color 0.2s",
-                    whiteSpace: "nowrap",
-                  }}
                 >
                   Subscribe
                 </motion.button>
               </form>
-              <p style={{ fontSize: "0.72rem", color: "#8890b8", marginTop: "0.45rem", marginLeft: "0.1rem" }}>
+              <style>{`
+                @media (max-width: 480px) {
+                  .newsletter-form {
+                    flex-direction: column;
+                  }
+                  .newsletter-input {
+                    border-right: 1.5px solid var(--color-border) !important;
+                    border-radius: 6px 6px 0 0 !important;
+                  }
+                  .newsletter-button {
+                    border-radius: 0 0 6px 6px !important;
+                    width: 100%;
+                  }
+                }
+              `}</style>
+              <p className="text-xs text-muted mt-2 ml-0.5">
                 No spam. Unsubscribe anytime.
               </p>
             </>

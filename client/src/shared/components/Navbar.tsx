@@ -465,8 +465,8 @@ export default function Navbar() {
             }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
+            className="hidden sm:inline-flex"
             style={{
-              display: "inline-flex",
               alignItems: "center",
               gap: "0.45rem",
               backgroundColor: "#1a3270",
@@ -482,6 +482,32 @@ export default function Navbar() {
           >
             Donate Now
             <Heart size={14} fill="white" strokeWidth={0} />
+          </motion.a>
+
+          <motion.a
+            href="/donate"
+            onClick={(e) => {
+              e.preventDefault();
+              setMenuOpen(false);
+              navigate("/donate");
+            }}
+            whileTap={{ scale: 0.92 }}
+            className="sm:hidden"
+            aria-label="Donate Now"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#1a3270",
+              color: "#ffffff",
+              width: "36px",
+              height: "36px",
+              borderRadius: "0.4rem",
+              textDecoration: "none",
+              boxShadow: "0 4px 14px 0 rgba(26,50,112,0.28)",
+            }}
+          >
+            <Heart size={16} fill="white" strokeWidth={0} />
           </motion.a>
 
           <button

@@ -54,7 +54,7 @@ export default function GetInvolvedDonate() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight mb-4"
+            className="text-3xl xl:text-4xl font-extrabold text-heading leading-tight mb-4"
           >
             {content.headingLine1}<br />{content.headingLine2}
           </motion.h2>
@@ -85,7 +85,7 @@ export default function GetInvolvedDonate() {
                   <Icon size={16} className="text-[#1a3270]" strokeWidth={2} />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#1a1a4b]">{label}</p>
+                  <p className="text-sm font-semibold text-heading">{label}</p>
                   <p className="text-xs text-[#64748b]">{desc}</p>
                 </div>
               </motion.div>

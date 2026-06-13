@@ -30,7 +30,7 @@ export default function Groups() {
               fontWeight: 700,
               letterSpacing: "0.14em",
               textTransform: "uppercase" as const,
-              color: "#f97316",
+              color: "var(--color-secondary)",
               marginBottom: "0.75rem",
             }}
           >
@@ -41,7 +41,7 @@ export default function Groups() {
               fontFamily: "'Poppins', sans-serif",
               fontSize: "clamp(1.75rem, 4vw, 2.4rem)",
               fontWeight: 700,
-              color: "#0f172a",
+              color: "var(--color-heading)",
               marginBottom: "1rem",
               lineHeight: 1.2,
             }}
@@ -51,7 +51,7 @@ export default function Groups() {
           <p
             style={{
               fontSize: "0.97rem",
-              color: "#64748b",
+              color: "var(--color-body)",
               maxWidth: "500px",
               margin: "0 auto",
               lineHeight: 1.75,
@@ -165,7 +165,7 @@ export default function Groups() {
                           fontFamily: "'Poppins', sans-serif",
                           fontSize: "0.93rem",
                           fontWeight: 700,
-                          color: "#0f172a",
+                          color: "var(--color-heading)",
                           lineHeight: 1.45,
                           flex: 1,
                           marginBottom: "1.25rem",

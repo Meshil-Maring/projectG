@@ -32,3 +32,23 @@ export async function sendContactEmail({ subject, html, replyTo }: SendMailOptio
     throw new Error('Failed to send email. Please try again later.');
   }
 }
+
+interface SendDonationReceiptOptions {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+export async function sendDonationReceiptEmail({ to, subject, html }: SendDonationReceiptOptions): Promise<void> {
+  try {
+    await transporter.sendMail({
+      from: env.EMAIL_FROM,
+      to,
+      subject,
+      html,
+    });
+  } catch (err) {
+    logger.error({ err }, 'Failed to send donation receipt email');
+    throw new Error('Failed to send receipt email. Please try again later.');
+  }
+}

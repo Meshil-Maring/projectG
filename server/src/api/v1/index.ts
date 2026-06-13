@@ -5,6 +5,7 @@ import { contentRoutes } from './content/content.routes.js';
 import { pagesRoutes } from './pages/pages.routes.js';
 import { sectionsRoutes } from './pages/sections.routes.js';
 import { contactRoutes } from './contact/contact.routes.js';
+import { donationRoutes } from './donations/donation.routes.js';
 
 export const v1Routes = Router();
 
@@ -14,3 +15,4 @@ v1Routes.use('/content', contentRoutes);
 v1Routes.use('/pages', pagesRoutes);
 v1Routes.use('/sections', sectionsRoutes);
 v1Routes.use('/contact', contactRoutes);
+v1Routes.use('/donations', donationRoutes);

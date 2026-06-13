@@ -88,7 +88,7 @@ export default function GetInvolvedWays() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-3xl xl:text-4xl font-extrabold text-[#1a1a4b] leading-tight"
+            className="text-3xl xl:text-4xl font-extrabold text-heading leading-tight"
           >
             {content.heading}
           </motion.h2>
@@ -123,7 +123,7 @@ export default function GetInvolvedWays() {
                 <Icon size={22} style={{ color }} strokeWidth={1.8} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-[#1a1a4b] mb-1">{title}</h3>
+                <h3 className="text-base font-bold text-heading mb-1">{title}</h3>
                 <p className="text-sm text-[#64748b] leading-relaxed">{description}</p>
               </div>
               <a

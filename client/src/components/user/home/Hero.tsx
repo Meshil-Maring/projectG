@@ -1,4 +1,4 @@
-import { Users } from "lucide-react";
+import { Heart, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "../../../assets/image/herosection_small.png";
 import { INK_PATHS } from "./heroInkPaths";
@@ -211,6 +211,30 @@ export default function Hero() {
               >
                 <Users size={15} />
                 Get Involved
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate("/donate")}
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontWeight: 600,
+                  fontSize: "clamp(0.78rem, 0.9vw, 0.875rem)",
+                  backgroundColor: "var(--color-purple)",
+                  color: "#ffffff",
+                  padding: "0.6rem 1.4rem",
+                  borderRadius: "0.375rem",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                  boxShadow: "var(--shadow-donate)",
+                }}
+              >
+                <Heart size={15} className="fill-white" />
+                Donate Now
               </motion.button>
             </div>
           </motion.div>
