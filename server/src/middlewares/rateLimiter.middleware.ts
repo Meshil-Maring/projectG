@@ -14,3 +14,11 @@ export const authLimiter = rateLimit({
   legacyHeaders: false,
   message: { success: false, error: { message: 'Too many login attempts, try again later' } },
 });
+
+export const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { success: false, error: { message: 'Too many submissions, please try again later' } },
+});

@@ -2,6 +2,7 @@ import { Router, type Request } from 'express';
 import { prisma } from '../../../config/database.js';
 import { settingsRoutes } from './settings.routes.js';
 import { createListResource } from './listResource.js';
+import { imageRoutes } from './images/image.routes.js';
 import {
   createVideoSchema,
   updateVideoSchema,
@@ -24,6 +25,7 @@ import {
 export const contentRoutes = Router();
 
 contentRoutes.use('/settings', settingsRoutes);
+contentRoutes.use('/images', imageRoutes);
 
 contentRoutes.use(
   '/videos',
@@ -40,6 +42,7 @@ contentRoutes.use(
     delegate: prisma.galleryPhoto,
     createSchema: createPhotoSchema,
     updateSchema: updatePhotoSchema,
+    imageField: 'src',
   }),
 );
 

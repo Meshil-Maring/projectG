@@ -61,6 +61,7 @@ import {
 } from "../../context/NoticeContext";
 import { type Section } from "../../context/PageContext";
 import { api } from "../../lib/api";
+import { ImageUploadField } from "./shared/ImageUploadField";
 import Logo from "../../assets/image/logo.jpeg";
 
 // ── Icon map ──────────────────────────────────────────────────────────────────
@@ -270,56 +271,9 @@ function HeroTab() {
           maxWidth: "640px",
         }}
       >
-        {/* Preview */}
-        <div
-          style={{
-            width: "100%",
-            height: "200px",
-            borderRadius: "0.5rem",
-            overflow: "hidden",
-            background: "#f1f5f9",
-            marginBottom: "1.25rem",
-            position: "relative",
-          }}
-        >
-          {url ? (
-            <img
-              src={url}
-              alt="Hero preview"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              onError={(e) =>
-                ((e.target as HTMLImageElement).style.display = "none")
-              }
-            />
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                color: "#94a3b8",
-                gap: "0.5rem",
-              }}
-            >
-              <Image size={32} />
-              <span style={{ fontSize: "0.78rem" }}>
-                Using default hero image
-              </span>
-            </div>
-          )}
-        </div>
-
-        <FieldGroup label="Image URL">
-          <Input
-            value={url}
-            onChange={setUrl}
-            placeholder="https://example.com/hero-image.jpg"
-          />
-        </FieldGroup>
+        <ImageUploadField specKey="hero" label="Hero Image" value={url} onChange={setUrl} previewHeight={200} />
         <p style={{ fontSize: "0.72rem", color: "#94a3b8", marginBottom: "1rem" }}>
-          Leave blank to use the default hero image. Recommended size: 1920×1080px.
+          Leave blank to use the default hero image.
         </p>
 
         <FieldGroup label="Title">
@@ -899,9 +853,7 @@ function GalleryTab() {
             {/* Edit form */}
             {editingId === p.id && (
               <div style={{ padding: "1rem", background: "#f8fafc" }}>
-                <FieldGroup label="Image URL">
-                  <Input value={form.src} onChange={(val) => setForm((f) => ({ ...f, src: val }))} placeholder="https://images.unsplash.com/..." />
-                </FieldGroup>
+                <ImageUploadField specKey="gallery" label="Photo" value={form.src} onChange={(val) => setForm((f) => ({ ...f, src: val }))} />
                 <FieldGroup label="Title / Alt Text">
                   <Input value={form.alt} onChange={(val) => setForm((f) => ({ ...f, alt: val }))} placeholder="e.g. Children Planting Trees" />
                 </FieldGroup>
@@ -920,9 +872,7 @@ function GalleryTab() {
         {addingNew ? (
           <div style={{ background: "#fff", border: "2px dashed #1a3270", borderRadius: "0.75rem", padding: "1.25rem" }}>
             <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>New Photo</p>
-            <FieldGroup label="Image URL">
-              <Input value={newForm.src} onChange={(val) => setNewForm((f) => ({ ...f, src: val }))} placeholder="https://images.unsplash.com/..." />
-            </FieldGroup>
+            <ImageUploadField specKey="gallery" label="Photo" value={newForm.src} onChange={(val) => setNewForm((f) => ({ ...f, src: val }))} />
             <FieldGroup label="Title / Alt Text">
               <Input value={newForm.alt} onChange={(val) => setNewForm((f) => ({ ...f, alt: val }))} placeholder="e.g. Children Planting Trees" />
             </FieldGroup>

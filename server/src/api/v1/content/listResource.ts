@@ -7,10 +7,12 @@ import { authenticate } from '../../../middlewares/auth.middleware.js';
 import { requireRole } from '../../../middlewares/rbac.middleware.js';
 import { ROLES } from '../../../common/constants/roles.js';
 import { NotFoundError } from '../../../common/errors/AppError.js';
+import { deleteByPath, getPathFromPublicUrl } from '../../../common/services/storage.service.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface Delegate {
   findMany: (args?: any) => Promise<any[]>;
+  findUnique: (args: any) => Promise<any>;
   count: (args?: any) => Promise<number>;
   create: (args: any) => Promise<any>;
   update: (args: any) => Promise<any>;
@@ -24,9 +26,10 @@ export function createListResource(opts: {
   createSchema: ZodType;
   updateSchema: ZodType;
   buildWhere?: (req: Request) => Record<string, unknown> | undefined;
+  imageField?: string;
 }) {
   const router = Router();
-  const { delegate, createSchema, updateSchema, buildWhere } = opts;
+  const { delegate, createSchema, updateSchema, buildWhere, imageField } = opts;
 
   router.get(
     '/',
@@ -70,12 +73,25 @@ export function createListResource(opts: {
     validate({ body: updateSchema }),
     asyncHandler(async (req: Request, res: Response) => {
       const id = Number(req.params.id);
+
+      const previous =
+        imageField && req.body[imageField] !== undefined
+          ? await delegate.findUnique({ where: { id } })
+          : null;
+
+      let item;
       try {
-        const item = await delegate.update({ where: { id }, data: req.body });
-        ok(res, item);
+        item = await delegate.update({ where: { id }, data: req.body });
       } catch {
         throw new NotFoundError('Item not found');
       }
+
+      if (imageField && previous && previous[imageField] !== req.body[imageField]) {
+        const oldPath = getPathFromPublicUrl(previous[imageField]);
+        if (oldPath) await deleteByPath(oldPath);
+      }
+
+      ok(res, item);
     }),
   );
 
@@ -83,12 +99,19 @@ export function createListResource(opts: {
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
       const id = Number(req.params.id);
+      let item;
       try {
-        const item = await delegate.delete({ where: { id } });
-        ok(res, item);
+        item = await delegate.delete({ where: { id } });
       } catch {
         throw new NotFoundError('Item not found');
       }
+
+      if (imageField) {
+        const oldPath = getPathFromPublicUrl(item[imageField]);
+        if (oldPath) await deleteByPath(oldPath);
+      }
+
+      ok(res, item);
     }),
   );
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, Heart, BookOpen, Users, Handshake } from "lucide-react";
+import { api } from "../../../lib/api";
 
 const interests = [
   { icon: Heart, label: "Make Impact" },
@@ -26,6 +27,8 @@ const emptyForm: FormData = { name: "", email: "", phone: "", areas: [], message
 export default function VolunteerModal({ onClose }: Props) {
   const [form, setForm] = useState<FormData>(emptyForm);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
 
   useEffect(() => {
@@ -59,10 +62,19 @@ export default function VolunteerModal({ onClose }: Props) {
     return Object.keys(next).length === 0;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
-    setSubmitted(true);
+    setLoading(true);
+    setSubmitError("");
+    try {
+      await api.post("/contact/volunteer", form);
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -226,11 +238,14 @@ export default function VolunteerModal({ onClose }: Props) {
                   />
                 </div>
 
+                {submitError && <p className="text-xs text-red-500 text-center">{submitError}</p>}
+
                 <button
                   type="submit"
-                  className="mt-1 bg-[#e63975] hover:bg-[#c72d60] text-white text-sm font-semibold px-6 py-3 rounded-full transition-colors duration-200"
+                  disabled={loading}
+                  className="mt-1 bg-[#e63975] hover:bg-[#c72d60] disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold px-6 py-3 rounded-full transition-colors duration-200"
                 >
-                  Join Us Today →
+                  {loading ? "Submitting…" : "Join Us Today →"}
                 </button>
               </form>
             </>

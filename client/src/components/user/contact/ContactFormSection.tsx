@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Send, CheckCircle, User, Mail, MessageSquare, Tag } from "lucide-react";
 import { SpinnerIcon } from "../../../assets/icons";
 import { usePageSections } from "../../../context/PageContext";
+import { api } from "../../../lib/api";
 
 const DEFAULT_FORM = {
   eyebrow: "Send a Message",
@@ -51,6 +52,7 @@ export default function ContactFormSection() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<FormState>>({});
+  const [submitError, setSubmitError] = useState("");
 
   function validate(): boolean {
     const next: Partial<FormState> = {};
@@ -75,9 +77,15 @@ export default function ContactFormSection() {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    setSubmitted(true);
+    setSubmitError("");
+    try {
+      await api.post("/contact/message", form);
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const inputBase: React.CSSProperties = {
@@ -273,6 +281,10 @@ export default function ContactFormSection() {
                   />
                   {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message}</p>}
                 </div>
+
+                {submitError && (
+                  <p className="text-xs text-red-500 text-center mb-3">{submitError}</p>
+                )}
 
                 {/* Submit */}
                 <motion.button

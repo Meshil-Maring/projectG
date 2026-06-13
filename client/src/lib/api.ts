@@ -1,3 +1,5 @@
+import type { ImageSpecKey } from './imageSpecs';
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 class ApiError extends Error {
@@ -71,3 +73,41 @@ export const api = {
     request<T>(path, { method: "PATCH", body: body !== undefined ? JSON.stringify(body) : undefined }),
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };
+
+export interface UploadedImage {
+  url: string;
+  path: string;
+}
+
+/** Uploads an image file for the given section. `replace` is the URL of the image being replaced, if any. */
+export async function uploadImageFile(
+  file: File,
+  key: ImageSpecKey,
+  replace?: string,
+): Promise<UploadedImage> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("key", key);
+  if (replace) formData.append("replace", replace);
+
+  const token = localStorage.getItem("pg_admin_token");
+  const res = await fetch(`${API_URL}/content/images/upload`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    body: formData,
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) {
+    throw new ApiError(json?.error?.message ?? "Upload failed", res.status);
+  }
+  return json.data as UploadedImage;
+}
+
+/** Validates and stores a copy of the image found at `url` for the given section. */
+export function uploadImageFromUrl(
+  url: string,
+  key: ImageSpecKey,
+  replace?: string,
+): Promise<UploadedImage> {
+  return api.post<UploadedImage>("/content/images/from-url", { url, key, replace });
+}

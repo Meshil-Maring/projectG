@@ -8,6 +8,17 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(16, 'JWT_SECRET must be at least 16 characters'),
   JWT_EXPIRES_IN: z.string().default('1d'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(16, 'SUPABASE_SERVICE_ROLE_KEY must be at least 16 characters'),
+  SUPABASE_STORAGE_BUCKET: z.string().default('site-images'),
+
+  // Email (SMTP)
+  SMTP_HOST: z.string().min(1),
+  SMTP_PORT: z.coerce.number().int().positive().default(587),
+  SMTP_USER: z.string().min(1),
+  SMTP_PASS: z.string().min(1),
+  EMAIL_FROM: z.string().min(1),
+  CONTACT_EMAIL_TO: z.string().min(1),
 });
 
 const parsed = envSchema.safeParse(process.env);
