@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Trophy, Users, ArrowRight, Clock, Flame } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./cwg.constants";
 import { usePageSections } from "../../../context/PageContext";
+import CauseActionTiles from "../cause/CauseActionTiles";
 
 const ctaActions = [
   { icon: Clock, label: "Train With Us" },
@@ -154,42 +155,7 @@ export default function CwgCTA() {
         </motion.div>
 
         {/* Right – 4 action tiles */}
-        <motion.div
-          {...fade(0.2)}
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}
-        >
-          {ctaActions.map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              style={{
-                background: "#ffffff",
-                borderRadius: "0.875rem",
-                padding: "1.1rem 0.75rem",
-                textAlign: "center" as const,
-                boxShadow: "0 2px 8px rgba(15,118,110,0.07)",
-                border: "1px solid #ccf0ed",
-              }}
-            >
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: LIGHT_BG,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 0.5rem",
-                }}
-              >
-                <Icon size={18} color={PRIMARY} strokeWidth={1.6} />
-              </div>
-              <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#0f172a", lineHeight: 1.3 }}>
-                {label}
-              </div>
-            </div>
-          ))}
-        </motion.div>
+        <CauseActionTiles actions={ctaActions} primary={PRIMARY} lightBg={LIGHT_BG} borderColor="#ccf0ed" shadowRgb="15,118,110" />
       </div>
     </section>
   );

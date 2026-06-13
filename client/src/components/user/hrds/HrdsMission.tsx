@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Users, GraduationCap, BookOpen, Briefcase, Star } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./hrds.constants";
 import { usePageSections } from "../../../context/PageContext";
+import CauseMissionPillars from "../cause/CauseMissionPillars";
+import CauseGrowthSteps from "../cause/CauseGrowthSteps";
 
 const DEFAULT_MISSION = {
   eyebrow: "OUR MISSION",
@@ -156,92 +158,11 @@ export default function HrdsMission() {
           >
             {mission.description}
           </p>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-              gap: "0.85rem",
-            }}
-          >
-            {missionPillars.map(({ icon: Icon, label }) => (
-              <div
-                key={label}
-                style={{
-                  display: "flex",
-                  flexDirection: "column" as const,
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  background: "#fff",
-                  borderRadius: "0.875rem",
-                  padding: "1rem 0.5rem",
-                  boxShadow: "0 2px 8px rgba(21,128,61,0.06)",
-                  border: "1px solid #d1fae5",
-                  textAlign: "center" as const,
-                }}
-              >
-                <div
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    borderRadius: "50%",
-                    background: LIGHT_BG,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Icon size={16} color={PRIMARY} strokeWidth={1.6} />
-                </div>
-                <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#0f172a", lineHeight: 1.3 }}>
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
+          <CauseMissionPillars pillars={missionPillars} primary={PRIMARY} lightBg={LIGHT_BG} borderColor="#d1fae5" shadowRgb="21,128,61" />
         </motion.div>
 
         {/* Right – growth steps */}
-        <motion.div {...fade(0.2)}>
-          <div
-            style={{
-              borderRadius: "1.5rem",
-              background: LIGHT_BG,
-              border: `1px solid rgba(21,128,61,0.12)`,
-              padding: "2.5rem",
-              minHeight: "300px",
-              display: "flex",
-              flexDirection: "column" as const,
-              justifyContent: "center",
-              gap: "1.25rem",
-            }}
-          >
-            {growthSteps.map(({ label, sub }, i) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-                <div
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    borderRadius: "50%",
-                    background: PRIMARY,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    fontSize: "0.72rem",
-                    fontWeight: 800,
-                    color: "#fff",
-                  }}
-                >
-                  {i + 1}
-                </div>
-                <div>
-                  <div style={{ fontSize: "0.9rem", fontWeight: 700, color: PRIMARY }}>{label}</div>
-                  <div style={{ fontSize: "0.73rem", color: "#64748b" }}>{sub}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        <CauseGrowthSteps steps={growthSteps} primary={PRIMARY} lightBg={LIGHT_BG} shadowRgb="21,128,61" />
       </div>
     </section>
   );

@@ -1,12 +1,10 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import {
   Trophy,
   Star,
   TrendingUp,
   Users,
   ArrowRight,
-  ChevronRight,
   Brain,
   Target,
   Zap,
@@ -15,6 +13,8 @@ import {
 } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./cwg.constants";
 import { usePageSections } from "../../../context/PageContext";
+import CauseBreadcrumb from "../cause/CauseBreadcrumb";
+import CauseFeatureStrip from "../cause/CauseFeatureStrip";
 
 const DEFAULT_HERO = {
   eyebrow: "Competitive World Group",
@@ -64,23 +64,7 @@ export default function CwgHero() {
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1.5rem" }}>
         {/* Breadcrumb */}
-        <motion.div
-          {...fade(0)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.4rem",
-            fontSize: "0.78rem",
-            color: "#64748b",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <Link to="/" style={{ color: "#64748b", textDecoration: "none" }}>Home</Link>
-          <ChevronRight size={13} />
-          <span>Our Communities</span>
-          <ChevronRight size={13} />
-          <span style={{ color: PRIMARY, fontWeight: 600 }}>Competitive World Group</span>
-        </motion.div>
+        <CauseBreadcrumb currentLabel="Competitive World Group" primary={PRIMARY} />
 
         <div
           style={{
@@ -305,40 +289,7 @@ export default function CwgHero() {
         </div>
 
         {/* Features strip */}
-        <motion.div
-          {...fade(0.3)}
-          style={{
-            borderTop: "1px solid #e2e8f0",
-            paddingTop: "2rem",
-            paddingBottom: "2.5rem",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-            gap: "1rem",
-          }}
-        >
-          {heroFeatures.map(({ icon: Icon, title, sub }) => (
-            <div key={title} style={{ display: "flex", alignItems: "flex-start", gap: "0.65rem" }}>
-              <div
-                style={{
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "10px",
-                  background: LIGHT_BG,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <Icon size={18} color={PRIMARY} strokeWidth={1.6} />
-              </div>
-              <div>
-                <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f172a" }}>{title}</div>
-                <div style={{ fontSize: "0.72rem", color: "#94a3b8", lineHeight: 1.4 }}>{sub}</div>
-              </div>
-            </div>
-          ))}
-        </motion.div>
+        <CauseFeatureStrip features={heroFeatures} primary={PRIMARY} lightBg={LIGHT_BG} />
       </div>
     </section>
   );

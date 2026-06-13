@@ -8,11 +8,11 @@ import {
   Brain,
   Star,
   TrendingUp,
-  Camera,
 } from "lucide-react";
 import { PRIMARY, LIGHT_BG, fade } from "./cwg.constants";
 import { useGroupActivities } from "../../../context/GroupActivitiesContext";
 import { usePageSections } from "../../../context/PageContext";
+import CauseActivitiesGallery from "../cause/CauseActivitiesGallery";
 
 const DEFAULT_ACTIVITIES = {
   doEyebrow: "What We Do",
@@ -124,33 +124,15 @@ export default function CwgActivities() {
         </motion.div>
 
         {/* Activities Gallery */}
-        {activities.length > 0 && (
-          <motion.div {...fade(0.25)}>
-            <span style={sectionLabel}>{content.galleryEyebrow}</span>
-            <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
-            <h2 style={{ ...sectionTitle, marginBottom: "2rem" }}>{content.galleryHeading}</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-              {activities.map(({ id, title, desc, imageUrl }, i) => (
-                <motion.div key={id} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", overflow: "hidden", boxShadow: "0 2px 12px rgba(15,118,110,0.07)", border: "1px solid #d1faf5" }}>
-                  <div style={{ position: "relative" as const, paddingTop: "62%", background: LIGHT_BG }}>
-                    {imageUrl ? (
-                      <img src={imageUrl} alt={title} style={{ position: "absolute" as const, inset: 0, width: "100%", height: "100%", objectFit: "cover" as const }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                    ) : (
-                      <div style={{ position: "absolute" as const, inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" as const, gap: "0.5rem" }}>
-                        <Camera size={36} color={PRIMARY} strokeWidth={1.4} style={{ opacity: 0.3 }} />
-                        <span style={{ fontSize: "0.68rem", color: PRIMARY, opacity: 0.4, letterSpacing: "0.05em" }}>Add Photo</span>
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ padding: "1rem 1.25rem 1.25rem" }}>
-                    <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.4rem" }}>{title}</div>
-                    <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.65 }}>{desc}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        <CauseActivitiesGallery
+          activities={activities}
+          primary={PRIMARY}
+          lightBg={LIGHT_BG}
+          borderColor="#d1faf5"
+          shadowRgb="15,118,110"
+          eyebrow={content.galleryEyebrow}
+          heading={content.galleryHeading}
+        />
 
       </div>
     </section>

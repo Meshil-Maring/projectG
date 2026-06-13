@@ -8,11 +8,11 @@ import {
   Star,
   Lightbulb,
   UserCheck,
-  Camera,
 } from "lucide-react";
 import { PRIMARY, LIGHT_BG, fade } from "./hrds.constants";
 import { useGroupActivities } from "../../../context/GroupActivitiesContext";
 import { usePageSections } from "../../../context/PageContext";
+import CauseActivitiesGallery from "../cause/CauseActivitiesGallery";
 
 const DEFAULT_ACTIVITIES = {
   doEyebrow: "WHAT WE DO",
@@ -125,37 +125,15 @@ export default function HrdsActivities() {
         </div>
 
         {/* Activities Gallery */}
-        {activities.length > 0 && (
-          <motion.div {...fade(0.25)}>
-            <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: PRIMARY, display: "block", marginBottom: "0.5rem" }}>
-              {content.galleryEyebrow}
-            </span>
-            <div style={{ width: "40px", height: "3px", background: PRIMARY, borderRadius: "2px", marginBottom: "1rem" }} />
-            <h2 style={{ fontSize: "clamp(1.3rem, 2.5vw, 1.75rem)", fontWeight: 800, color: "#0f172a", marginBottom: "2rem", lineHeight: 1.2 }}>
-              {content.galleryHeading}
-            </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-              {activities.map(({ id, title, desc, imageUrl }, i) => (
-                <motion.div key={id} {...fade(i * 0.07)} style={{ background: "#ffffff", borderRadius: "1rem", overflow: "hidden", boxShadow: "0 2px 12px rgba(21,128,61,0.07)", border: "1px solid #d1fae5" }}>
-                  <div style={{ position: "relative" as const, paddingTop: "62%", background: LIGHT_BG }}>
-                    {imageUrl ? (
-                      <img src={imageUrl} alt={title} style={{ position: "absolute" as const, inset: 0, width: "100%", height: "100%", objectFit: "cover" as const }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                    ) : (
-                      <div style={{ position: "absolute" as const, inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" as const, gap: "0.5rem" }}>
-                        <Camera size={36} color={PRIMARY} strokeWidth={1.4} style={{ opacity: 0.3 }} />
-                        <span style={{ fontSize: "0.68rem", color: PRIMARY, opacity: 0.4, letterSpacing: "0.05em" }}>Add Photo</span>
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ padding: "1rem 1.25rem 1.25rem" }}>
-                    <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.4rem" }}>{title}</div>
-                    <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.65 }}>{desc}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        <CauseActivitiesGallery
+          activities={activities}
+          primary={PRIMARY}
+          lightBg={LIGHT_BG}
+          borderColor="#d1fae5"
+          shadowRgb="21,128,61"
+          eyebrow={content.galleryEyebrow}
+          heading={content.galleryHeading}
+        />
 
       </div>
     </section>
