@@ -8,9 +8,9 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(16, 'JWT_SECRET must be at least 16 characters'),
   JWT_EXPIRES_IN: z.string().default('1d'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
-  SUPABASE_URL: z.string().url(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(16, 'SUPABASE_SERVICE_ROLE_KEY must be at least 16 characters'),
-  SUPABASE_STORAGE_BUCKET: z.string().default('site-images'),
+  GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string().email(),
+  GOOGLE_PRIVATE_KEY: z.string().min(1),
+  GOOGLE_DRIVE_FOLDER_ID: z.string().min(1),
 
   // Email (SMTP)
   SMTP_HOST: z.string().min(1),

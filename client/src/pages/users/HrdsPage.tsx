@@ -12,7 +12,7 @@ import { PageProvider } from "../../context/PageContext";
 const sections = [
   { id: "hrds-hero", label: "Overview" },
   { id: "hrds-mission", label: "Mission" },
-  { id: "hrds-activities", label: "Activities" },
+  { id: "hrds-activities", label: "Activities", scrollId: "hrds-activities-gallery" },
   { id: "hrds-cta", label: "Get Involved" },
   { id: "hrds-stats", label: "Stats" },
   { id: "hrds-communities", label: "Communities" },

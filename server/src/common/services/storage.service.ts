@@ -1,58 +1,66 @@
-import { supabase } from '../../config/supabase.js';
+import { google } from 'googleapis';
+import { Readable } from 'stream';
 import { env } from '../../config/env.js';
 import { logger } from '../../config/logger.js';
 
-const BUCKET = env.SUPABASE_STORAGE_BUCKET;
+const auth = new google.auth.GoogleAuth({
+  credentials: {
+    client_email: env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    private_key: env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  },
+  scopes: ['https://www.googleapis.com/auth/drive'],
+});
 
-/**
- * Ensures the storage bucket exists (created as public so getPublicUrl works
- * without signed URLs). Safe to call repeatedly on startup.
- */
-export async function ensureBucket(): Promise<void> {
-  const { data: buckets, error: listError } = await supabase.storage.listBuckets();
-  if (listError) {
-    logger.error({ err: listError }, 'Failed to list Supabase storage buckets');
-    return;
-  }
-
-  if (buckets?.some((b) => b.name === BUCKET)) return;
-
-  const { error: createError } = await supabase.storage.createBucket(BUCKET, { public: true });
-  if (createError) {
-    logger.error({ err: createError }, `Failed to create Supabase storage bucket "${BUCKET}"`);
-    return;
-  }
-
-  logger.info(`Created Supabase storage bucket "${BUCKET}"`);
-}
+const drive = google.drive({ version: 'v3', auth });
 
 export async function uploadBuffer(path: string, buffer: Buffer, contentType: string): Promise<string> {
-  const { error } = await supabase.storage.from(BUCKET).upload(path, buffer, {
-    contentType,
-    upsert: true,
+  const stream = Readable.from(buffer);
+
+  const res = await drive.files.create({
+    requestBody: {
+      name: path,
+      parents: [env.GOOGLE_DRIVE_FOLDER_ID],
+    },
+    media: {
+      mimeType: contentType,
+      body: stream,
+    },
+    fields: 'id',
   });
-  if (error) {
-    throw new Error(`Failed to upload image to storage: ${error.message}`);
-  }
 
-  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-  return data.publicUrl;
+  const fileId = res.data.id!;
+
+  await drive.permissions.create({
+    fileId,
+    requestBody: {
+      role: 'reader',
+      type: 'anyone',
+    },
+  });
+
+  return `https://drive.google.com/uc?export=view&id=${fileId}`;
 }
 
-export async function deleteByPath(path: string): Promise<void> {
-  const { error } = await supabase.storage.from(BUCKET).remove([path]);
-  if (error) {
-    logger.error({ err: error, path }, 'Failed to delete image from storage');
+export async function deleteByPath(fileId: string): Promise<void> {
+  try {
+    await drive.files.delete({ fileId });
+  } catch (err) {
+    logger.error({ err, fileId }, 'Failed to delete file from Google Drive');
   }
 }
 
-/**
- * Returns the storage path for a public URL belonging to this bucket, or
- * null if the URL points elsewhere (external image, default placeholder, etc.).
- */
 export function getPathFromPublicUrl(url: string | null | undefined): string | null {
   if (!url) return null;
-  const prefix = `${env.SUPABASE_URL}/storage/v1/object/public/${BUCKET}/`;
-  if (!url.startsWith(prefix)) return null;
-  return url.slice(prefix.length);
+  try {
+    const u = new URL(url);
+    if (u.hostname === 'drive.google.com') {
+      return u.searchParams.get('id');
+    }
+  } catch {
+    // invalid URL
+  }
+  return null;
 }
+
+// No-op — no bucket concept in Google Drive
+export async function ensureBucket(): Promise<void> {}

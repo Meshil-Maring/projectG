@@ -8,13 +8,13 @@ export type ActivityEntry = {
   imageUrl: string;
 };
 
-export type GroupKey = "whg" | "hrds" | "cwg" | "fseds" | "lac";
+export type GroupKey = "whg" | "hrds" | "cwg" | "fseds" | "lac" | "whg-blood-donation";
 
 export type GroupActivitiesData = Record<GroupKey, ActivityEntry[]>;
 
 type ActivityRecord = ActivityEntry & { group: GroupKey };
 
-const GROUPS: GroupKey[] = ["whg", "hrds", "cwg", "fseds", "lac"];
+const GROUPS: GroupKey[] = ["whg", "hrds", "cwg", "fseds", "lac", "whg-blood-donation"];
 
 const EMPTY_DATA: GroupActivitiesData = {
   whg: [],
@@ -22,6 +22,7 @@ const EMPTY_DATA: GroupActivitiesData = {
   cwg: [],
   fseds: [],
   lac: [],
+  "whg-blood-donation": [],
 };
 
 type GroupActivitiesContextType = {

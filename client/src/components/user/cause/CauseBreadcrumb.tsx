@@ -25,7 +25,9 @@ export default function CauseBreadcrumb({ currentLabel, primary }: Props) {
         Home
       </Link>
       <ChevronRight size={13} />
-      <span>Our Communities</span>
+      <Link to="/#groups" style={{ color: "#64748b", textDecoration: "none" }}>
+        Our Communities
+      </Link>
       <ChevronRight size={13} />
       <span style={{ color: primary, fontWeight: 600 }}>{currentLabel}</span>
     </motion.div>

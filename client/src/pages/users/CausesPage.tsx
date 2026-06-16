@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Users, MapPin, Target, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Users, MapPin, Target, X, Heart, IndianRupee } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
@@ -17,6 +18,15 @@ const DEFAULT_HERO = {
   heading: "Causes That Need Your Support",
   description:
     "Every rupee you give goes directly to one of these causes. Browse our active campaigns and choose the change you want to be part of.",
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.55, ease: "easeOut" as const },
+  }),
 };
 
 export default function CausesPage() {
@@ -44,29 +54,64 @@ function CausesPageContent() {
       <SectionNavigator sections={sections} />
 
       {/* Hero */}
-      <section id="causes-hero" className="bg-[color:var(--color-primary)] py-16">
-        <div className="max-w-7xl mx-auto px-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white mb-6 transition-colors"
-          >
-            <ArrowLeft size={15} /> Back to Home
-          </Link>
-          <p className="text-xs font-bold uppercase tracking-widest text-[color:var(--color-secondary)] mb-3">
-            {hero.eyebrow}
-          </p>
-          <h1 className="text-4xl font-bold text-white mb-4">
-            {hero.heading}
-          </h1>
-          <p className="text-white/70 max-w-xl text-sm leading-relaxed">
-            {hero.description}
-          </p>
+      <section id="causes-hero" className="relative overflow-hidden">
+        <div
+          className="relative"
+          style={{ background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)" }}
+        >
+          {/* Decorative circles */}
+          <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
+          <div className="absolute -bottom-28 -left-16 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
+          <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
 
-          {/* Quick stats */}
-          <div className="flex flex-wrap gap-8 mt-10">
+          <div className="relative z-10 max-w-7xl mx-auto px-6 pt-16 pb-28 sm:pt-20 sm:pb-32">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white mb-8 transition-colors"
+            >
+              <ArrowLeft size={15} /> Back to Home
+            </Link>
+
+            <motion.p
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={0}
+              className="text-xs font-bold uppercase tracking-widest text-white/80 mb-4 flex items-center gap-2"
+            >
+              <span className="inline-block w-6 h-0.5 bg-white/60" />
+              {hero.eyebrow}
+            </motion.p>
+
+            <motion.h1
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={1}
+              className="text-4xl sm:text-5xl font-extrabold text-white leading-tight mb-5 max-w-2xl"
+            >
+              {hero.heading}
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={2}
+              className="text-sm sm:text-base text-white/75 leading-relaxed max-w-xl"
+            >
+              {hero.description}
+            </motion.p>
+          </div>
+        </div>
+
+        {/* Floating stat cards */}
+        <div className="relative z-10 max-w-5xl mx-auto px-6 -mt-14 sm:-mt-16 pb-16 sm:pb-20">
+          <div className="grid sm:grid-cols-3 gap-5">
             {[
-              { label: "Active Causes", value: causes.length },
+              { icon: Heart, label: "Active Causes", value: String(causes.length) },
               {
+                icon: IndianRupee,
                 label: "Total Raised",
                 value:
                   "₹" +
@@ -75,23 +120,36 @@ function CausesPageContent() {
                   ),
               },
               {
+                icon: Users,
                 label: "Beneficiaries",
                 value: new Intl.NumberFormat("en-IN").format(
                   causes.reduce((s, c) => s + c.beneficiaries, 0)
                 ),
               },
-            ].map(({ label, value }) => (
-              <div key={label}>
-                <p className="text-2xl font-bold text-white">{value}</p>
-                <p className="text-xs text-white/60 mt-0.5">{label}</p>
-              </div>
+            ].map(({ icon: Icon, label, value }, i) => (
+              <motion.div
+                key={label}
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                custom={i + 3}
+                className="bg-white rounded-2xl shadow-(--shadow-card) border border-(--color-border) p-6 flex items-center gap-4"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Icon size={20} className="text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-heading">{value}</p>
+                  <p className="text-xs text-muted mt-0.5">{label}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Filter + Grid */}
-      <section id="causes-grid" className="py-12 bg-[color:var(--color-surface)] min-h-[60vh]">
+      <section id="causes-grid" className="pt-4 pb-12 bg-surface min-h-[60vh]">
         <div className="max-w-7xl mx-auto px-6">
           {/* Category filters */}
           <div className="flex flex-wrap gap-2 mb-8">

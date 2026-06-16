@@ -38,10 +38,10 @@ const ourGroups = [
 // Social profile URLs — leave empty until the real profile exists; empty
 // entries are not rendered so the footer never ships dead links.
 const socialLinks: { name: string; icon: React.ReactNode; url: string }[] = [
-  { name: "Facebook", icon: <FacebookIcon />, url: "" },
-  { name: "Instagram", icon: <InstagramIcon />, url: "" },
+  { name: "Facebook", icon: <FacebookIcon />, url: "https://www.facebook.com/share/17kjpAxLpJ/?mibextid=wwXIfr" },
+  { name: "Instagram", icon: <InstagramIcon />, url: "https://www.instagram.com/project_g_manipur/" },
   { name: "Twitter", icon: <TwitterIcon />, url: "" },
-  { name: "YouTube", icon: <YoutubeIcon />, url: "" },
+  { name: "YouTube", icon: <YoutubeIcon />, url: "https://youtube.com/@projectgmanipur?si=_dMs0XzLLMtPd90n" },
 ];
 
 export default function Footer() {
@@ -100,7 +100,7 @@ export default function Footer() {
               <img className="w-12 rounded-full" src={Logo} alt="Project Generation logo" />
               <aside>
                 <p className="font-black">Project Generation</p>
-                <p className="text-[12px]">Learn sharp and Transform</p>
+                <p className="text-[12px]">Learn Serve & Transform</p>
               </aside>
             </div>
 

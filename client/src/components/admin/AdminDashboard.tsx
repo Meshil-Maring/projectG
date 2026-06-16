@@ -1250,11 +1250,12 @@ function StoriesTab() {
 // ── Tab: Group Activities ─────────────────────────────────────────────────────
 
 const GROUP_META: { key: GroupKey; label: string; color: string; bg: string; border: string }[] = [
-  { key: "whg",   label: "WHG",   color: "#c2410c", bg: "#fff8f4", border: "#fde8da" },
-  { key: "hrds",  label: "HRDS",  color: "#15803d", bg: "#f0fdf4", border: "#d1fae5" },
-  { key: "cwg",   label: "CWG",   color: "#0f766e", bg: "#f0fdfa", border: "#d1faf5" },
-  { key: "fseds", label: "FSEDS", color: "#6d28d9", bg: "#faf5ff", border: "#e4d9ff" },
-  { key: "lac",   label: "LAC",   color: "#1a3270", bg: "#f0f4ff", border: "#e8edf8" },
+  { key: "whg",                  label: "WHG",            color: "#c2410c", bg: "#fff8f4", border: "#fde8da" },
+  { key: "hrds",                 label: "HRDS",           color: "#15803d", bg: "#f0fdf4", border: "#d1fae5" },
+  { key: "cwg",                  label: "CWG",            color: "#0f766e", bg: "#f0fdfa", border: "#d1faf5" },
+  { key: "fseds",                label: "FSEDS",          color: "#6d28d9", bg: "#faf5ff", border: "#e4d9ff" },
+  { key: "lac",                  label: "LAC",            color: "#1a3270", bg: "#f0f4ff", border: "#e8edf8" },
+  { key: "whg-blood-donation",   label: "Blood Donation", color: "#b91c1c", bg: "#fef2f2", border: "#fecaca" },
 ];
 
 type ActivityFormData = Omit<ActivityEntry, "id">;

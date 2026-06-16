@@ -20,10 +20,10 @@ const fadeUp = {
   }),
 };
 
-const highlights = [
-  { icon: Mail, label: "Quick Response" },
-  { icon: Phone, label: "Always Available" },
-  { icon: MapPin, label: "Based in Nepal" },
+const contactPoints = [
+  { icon: Mail, label: "Email Us", value: "projectgmanipur@gmail.com" },
+  { icon: Phone, label: "Call Us", value: "+91 87983 03158" },
+  { icon: MapPin, label: "Visit Us", value: "Sagolband Ingudam Leikai, Manipur, India - 795001" },
 ];
 
 export default function ContactHero() {
@@ -31,20 +31,28 @@ export default function ContactHero() {
   const hero = { ...DEFAULT_HERO, ...getSectionData("contact-hero") };
 
   return (
-    <section className="py-16 px-6 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+    <section className="relative overflow-hidden">
+      {/* Gradient banner */}
+      <div
+        className="relative"
+        style={{ background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)" }}
+      >
+        {/* Decorative circles */}
+        <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
+        <div className="absolute -bottom-28 -left-16 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
+        <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
 
-        {/* Left — text */}
-        <div className="flex-1 max-w-lg">
+        <div className="relative z-10 max-w-3xl mx-auto px-6 pt-20 pb-32 sm:pt-24 sm:pb-36 text-center">
           <motion.p
             variants={fadeUp}
             initial="hidden"
             animate="visible"
             custom={0}
-            className="text-xs font-bold uppercase tracking-widest text-[#1a3270] mb-4 flex items-center gap-2"
+            className="text-xs font-bold uppercase tracking-widest text-white/80 mb-4 flex items-center justify-center gap-2"
           >
-            <span className="inline-block w-8 h-0.5 bg-[#1a3270]" />
+            <span className="inline-block w-6 h-0.5 bg-white/60" />
             {hero.eyebrow}
+            <span className="inline-block w-6 h-0.5 bg-white/60" />
           </motion.p>
 
           <motion.h1
@@ -52,9 +60,11 @@ export default function ContactHero() {
             initial="hidden"
             animate="visible"
             custom={1}
-            className="text-4xl xl:text-5xl font-extrabold text-heading leading-tight mb-5"
+            className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-white leading-tight mb-5"
           >
-            {hero.headingLine1}<br />{hero.headingLine2}<br />{hero.headingLine3}
+            {hero.headingLine1} {hero.headingLine2}
+            <br />
+            {hero.headingLine3}
           </motion.h1>
 
           <motion.p
@@ -62,88 +72,35 @@ export default function ContactHero() {
             initial="hidden"
             animate="visible"
             custom={2}
-            className="text-sm text-[#64748b] leading-relaxed mb-8"
+            className="text-sm sm:text-base text-white/75 leading-relaxed max-w-xl mx-auto"
           >
             {hero.description}
           </motion.p>
-
-          <div className="flex flex-wrap gap-3">
-            {highlights.map(({ icon: Icon, label }, i) => (
-              <motion.div
-                key={label}
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                custom={i + 3}
-                className="flex items-center gap-2.5 bg-[#f0f4ff] border border-[#d0ddf7] rounded-full px-4 py-2.5"
-              >
-                <div className="w-7 h-7 rounded-full bg-[#1a3270] flex items-center justify-center shrink-0">
-                  <Icon size={13} className="text-white" />
-                </div>
-                <span className="text-xs font-semibold text-[#1a3270]">{label}</span>
-              </motion.div>
-            ))}
-          </div>
         </div>
+      </div>
 
-        {/* Right — decorative illustration */}
-        <motion.div
-          className="flex-1 relative flex items-center justify-center"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" as const, delay: 0.2 }}
-        >
-          {/* Leaf decoration */}
-          <svg
-            className="absolute -top-8 right-0 w-28 h-44 opacity-75 pointer-events-none z-10"
-            viewBox="0 0 110 170"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M55 8 C75 25, 105 58, 88 118 C72 158, 18 155, 8 112 C-2 68, 25 18, 55 8Z" fill="#b8d4f0" opacity="0.45" />
-            <path d="M62 4 C82 22, 110 55, 94 115 C78 155, 24 152, 14 109" stroke="#5a9fd4" strokeWidth="1.2" fill="none" opacity="0.6" />
-            <line x1="55" y1="8" x2="46" y2="130" stroke="#5a9fd4" strokeWidth="1" opacity="0.5" />
-            <line x1="49" y1="45" x2="25" y2="62" stroke="#5a9fd4" strokeWidth="0.9" opacity="0.45" />
-            <line x1="50" y1="68" x2="74" y2="82" stroke="#5a9fd4" strokeWidth="0.9" opacity="0.45" />
-            <line x1="48" y1="92" x2="26" y2="108" stroke="#5a9fd4" strokeWidth="0.9" opacity="0.45" />
-          </svg>
-
-          {/* Decorative card */}
-          <div
-            className="relative z-10 w-full max-w-md rounded-3xl overflow-hidden shadow-xl"
-            style={{ background: "linear-gradient(135deg, #1a3270 0%, #2563eb 100%)" }}
-          >
-            <div className="p-10 text-white">
-              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mb-6">
-                <Mail size={26} className="text-white" />
+      {/* Floating contact cards */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 -mt-14 sm:-mt-16 pb-16 sm:pb-20">
+        <div className="grid sm:grid-cols-3 gap-5">
+          {contactPoints.map(({ icon: Icon, label, value }, i) => (
+            <motion.div
+              key={label}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={i + 3}
+              className="bg-white rounded-2xl shadow-card border border-border p-6 flex items-center gap-4"
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <Icon size={20} className="text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Get in Touch</h3>
-              <p className="text-white/70 text-sm leading-relaxed mb-8">
-                Our team is ready to answer your questions and welcome you to the Project Generation family.
-              </p>
-
-              <div className="space-y-4">
-                {[
-                  { icon: Mail, text: "projectgeneration@gmail.com" },
-                  { icon: Phone, text: "+977 9800000000" },
-                  { icon: MapPin, text: "Kathmandu, Nepal" },
-                ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                      <Icon size={15} className="text-white" />
-                    </div>
-                    <span className="text-sm text-white/85">{text}</span>
-                  </div>
-                ))}
+              <div>
+                <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-1">{label}</p>
+                <p className="text-sm font-bold text-heading">{value}</p>
               </div>
-            </div>
-
-            {/* Bottom decoration */}
-            <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-white/5 translate-x-10 translate-y-10" />
-            <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-white/5 translate-x-6 -translate-y-6" />
-          </div>
-        </motion.div>
-
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

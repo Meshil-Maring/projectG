@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Heart, Menu, X, ChevronDown, TrendingUp, BookOpen, Users, Sparkles } from "lucide-react";
+import { Menu, X, ChevronDown, TrendingUp, BookOpen, Users, Sparkles, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/image/logo.jpeg";
@@ -107,7 +107,7 @@ export default function Navbar() {
             >
               Project Generation
             </div>
-            <p className="text-[12px]">Learn sharp and Transform</p>
+            <p className="text-[12px]">Learn Serve & Transform</p>
           </div>
         </Link>
 
@@ -454,62 +454,30 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* ── Donate button + mobile toggle ── */}
+        {/* ── Donate button & Mobile toggle ── */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
-          <motion.a
-            href="/donate"
-            onClick={(e) => {
-              e.preventDefault();
-              setMenuOpen(false);
-              navigate("/donate");
-            }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            className="hidden sm:inline-flex"
+          <Link
+            to="/donate"
+            className="hidden md:inline-flex"
             style={{
               alignItems: "center",
-              gap: "0.45rem",
-              backgroundColor: "#1a3270",
-              color: "#ffffff",
-              fontWeight: 600,
+              gap: "0.4rem",
+              padding: "0.5rem 1.1rem",
               fontSize: "0.82rem",
-              padding: "0.55rem 1.2rem",
-              borderRadius: "0.4rem",
-              textDecoration: "none",
-              boxShadow: "0 4px 14px 0 rgba(26,50,112,0.28)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Donate Now
-            <Heart size={14} fill="white" strokeWidth={0} />
-          </motion.a>
-
-          <motion.a
-            href="/donate"
-            onClick={(e) => {
-              e.preventDefault();
-              setMenuOpen(false);
-              navigate("/donate");
-            }}
-            whileTap={{ scale: 0.92 }}
-            className="sm:hidden"
-            aria-label="Donate Now"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#1a3270",
+              fontWeight: 600,
               color: "#ffffff",
-              width: "36px",
-              height: "36px",
-              borderRadius: "0.4rem",
+              backgroundColor: "#1a3270",
+              borderRadius: "9999px",
               textDecoration: "none",
-              boxShadow: "0 4px 14px 0 rgba(26,50,112,0.28)",
+              whiteSpace: "nowrap",
+              transition: "background-color 0.2s",
             }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#13265a")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#1a3270")}
           >
-            <Heart size={16} fill="white" strokeWidth={0} />
-          </motion.a>
-
+            <Heart size={14} fill="#ffffff" />
+            Donate
+          </Link>
           <button
             onClick={() => setMenuOpen((v) => !v)}
             className="md:hidden"
@@ -747,6 +715,28 @@ export default function Navbar() {
                   </a>
                 );
               })}
+
+              <Link
+                to="/donate"
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.4rem",
+                  marginTop: "0.85rem",
+                  padding: "0.65rem 1rem",
+                  fontSize: "0.88rem",
+                  fontWeight: 600,
+                  color: "#ffffff",
+                  backgroundColor: "#1a3270",
+                  borderRadius: "9999px",
+                  textDecoration: "none",
+                }}
+              >
+                <Heart size={15} fill="#ffffff" />
+                Donate
+              </Link>
             </div>
           </motion.nav>
         )}

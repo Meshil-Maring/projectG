@@ -4,6 +4,7 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 interface Section {
   id: string;
   label: string;
+  scrollId?: string;
 }
 
 interface SectionNavigatorProps {
@@ -43,7 +44,8 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
   if (isMobile) return null;
 
   const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
+    const section = sections.find((s) => s.id === id);
+    const el = document.getElementById(section?.scrollId ?? id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 

@@ -125,15 +125,17 @@ export default function HrdsActivities() {
         </div>
 
         {/* Activities Gallery */}
-        <CauseActivitiesGallery
-          activities={activities}
-          primary={PRIMARY}
-          lightBg={LIGHT_BG}
-          borderColor="#d1fae5"
-          shadowRgb="21,128,61"
-          eyebrow={content.galleryEyebrow}
-          heading={content.galleryHeading}
-        />
+        <div id="hrds-activities-gallery">
+          <CauseActivitiesGallery
+            activities={activities}
+            primary={PRIMARY}
+            lightBg={LIGHT_BG}
+            borderColor="#d1fae5"
+            shadowRgb="21,128,61"
+            eyebrow={content.galleryEyebrow}
+            heading={content.galleryHeading}
+          />
+        </div>
 
       </div>
     </section>
