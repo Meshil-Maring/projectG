@@ -34,6 +34,8 @@ import {
   Home,
   Bell,
   Calendar,
+  Camera,
+  Images,
 } from "lucide-react";
 import {
   useHomePageData,
@@ -62,6 +64,8 @@ import {
 import { type Section } from "../../context/PageContext";
 import { api } from "../../lib/api";
 import { ImageUploadField } from "./shared/ImageUploadField";
+import { RawPhotosTab } from "./RawPhotosTab";
+import { WhgGalleryTab } from "./WhgGalleryTab";
 import Logo from "../../assets/image/logo.jpeg";
 
 // ── Icon map ──────────────────────────────────────────────────────────────────
@@ -2072,6 +2076,8 @@ type ActiveView =
   | { kind: "home"; id: TabId }
   | { kind: "page"; slug: string }
   | { kind: "notifications" }
+  | { kind: "rawPhotos" }
+  | { kind: "whgGallery" }
   | { kind: "settings" };
 
 // ── Tab: Account Settings ─────────────────────────────────────────────────────
@@ -2578,6 +2584,10 @@ export default function AdminDashboard() {
       ? PAGES.find((p) => p.slug === activeView.slug)?.title
       : activeView.kind === "notifications"
       ? "Notifications"
+      : activeView.kind === "rawPhotos"
+      ? "Raw Photos"
+      : activeView.kind === "whgGallery"
+      ? "WHG Gallery"
       : "Account Settings";
 
   const currentCategory =
@@ -2587,6 +2597,8 @@ export default function AdminDashboard() {
       ? "Pages"
       : activeView.kind === "notifications"
       ? "Notifications"
+      : activeView.kind === "rawPhotos" || activeView.kind === "whgGallery"
+      ? "Media"
       : "Settings";
 
   function logout() {
@@ -2725,6 +2737,26 @@ export default function AdminDashboard() {
             label="Notifications"
           />
 
+          {/* Raw Photos */}
+          <NavGroupHeader
+            active={activeView.kind === "rawPhotos"}
+            expanded={false}
+            showChevron={false}
+            onClick={() => setActiveView({ kind: "rawPhotos" })}
+            Icon={Camera}
+            label="Raw Photos"
+          />
+
+          {/* WHG Gallery */}
+          <NavGroupHeader
+            active={activeView.kind === "whgGallery"}
+            expanded={false}
+            showChevron={false}
+            onClick={() => setActiveView({ kind: "whgGallery" })}
+            Icon={Images}
+            label="WHG Gallery"
+          />
+
           {/* Account Settings */}
           <NavGroupHeader
             active={activeView.kind === "settings"}
@@ -2825,6 +2857,8 @@ export default function AdminDashboard() {
           {activeView.kind === "home" && activeView.id === "team" && <TeamTab />}
           {activeView.kind === "page" && <PagesTab activeSlug={activeView.slug} />}
           {activeView.kind === "notifications" && <NotificationsTab />}
+          {activeView.kind === "rawPhotos" && <RawPhotosTab />}
+          {activeView.kind === "whgGallery" && <WhgGalleryTab />}
           {activeView.kind === "settings" && <SettingsTab />}
         </div>
       </main>

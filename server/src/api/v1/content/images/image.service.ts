@@ -32,12 +32,6 @@ export function validateImageBuffer(buffer: Buffer, spec: ImageSpec): void {
   if (!mime || !ALLOWED_MIME_TYPES.includes(mime as (typeof ALLOWED_MIME_TYPES)[number])) {
     throw new ValidationError('Unsupported image format. Please use JPG, PNG or WebP.');
   }
-
-  if (dimensions.width !== spec.width || dimensions.height !== spec.height) {
-    throw new ValidationError(
-      `Image must be exactly ${spec.width}x${spec.height}px (received ${dimensions.width}x${dimensions.height}px).`,
-    );
-  }
 }
 
 export async function fetchImageBuffer(url: string): Promise<{ buffer: Buffer; contentType: string }> {

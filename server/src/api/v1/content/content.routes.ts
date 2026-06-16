@@ -1,8 +1,10 @@
-import { Router, type Request } from 'express';
+import { Router } from 'express';
 import { prisma } from '../../../config/database.js';
 import { settingsRoutes } from './settings.routes.js';
 import { createListResource } from './listResource.js';
 import { imageRoutes } from './images/image.routes.js';
+import { rawPhotoRoutes } from './raw-photos/raw-photo.routes.js';
+import { whgGalleryRoutes } from './whg-gallery/whg-gallery.routes.js';
 import {
   createVideoSchema,
   updateVideoSchema,
@@ -26,6 +28,8 @@ export const contentRoutes = Router();
 
 contentRoutes.use('/settings', settingsRoutes);
 contentRoutes.use('/images', imageRoutes);
+contentRoutes.use('/raw-photos', rawPhotoRoutes);
+contentRoutes.use('/whg-gallery', whgGalleryRoutes);
 
 contentRoutes.use(
   '/videos',

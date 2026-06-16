@@ -20,5 +20,5 @@ export const IMAGE_SPECS = {
 export type ImageSpecKey = keyof typeof IMAGE_SPECS;
 
 export function formatSpec(spec: ImageSpec): string {
-  return `Requires exactly ${spec.width}×${spec.height}px, max ${spec.maxSizeMB}MB, JPG/PNG/WebP`;
+  return `Recommended ${spec.width}×${spec.height}px · max ${spec.maxSizeMB}MB · JPG/PNG/WebP`;
 }

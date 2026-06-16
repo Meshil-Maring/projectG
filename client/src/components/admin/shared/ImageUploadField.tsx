@@ -20,44 +20,19 @@ export function ImageUploadField({ value, onChange, specKey, label, previewHeigh
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (fileInputRef.current) fileInputRef.current.value = "";
 
     setStatus({ type: "loading" });
-    const objectUrl = URL.createObjectURL(file);
-    const img = new Image();
-
-    img.onload = async () => {
-      URL.revokeObjectURL(objectUrl);
-
-      if (img.naturalWidth !== spec.width || img.naturalHeight !== spec.height) {
-        setStatus({
-          type: "error",
-          message: `Image must be exactly ${spec.width}x${spec.height}px (this image is ${img.naturalWidth}x${img.naturalHeight}px).`,
-        });
-        if (fileInputRef.current) fileInputRef.current.value = "";
-        return;
-      }
-
-      try {
-        const result = await uploadImageFile(file, specKey, value || undefined);
-        onChange(result.url);
-        setStatus({ type: "success", message: "Image uploaded successfully." });
-      } catch (err) {
-        setStatus({ type: "error", message: err instanceof Error ? err.message : "Upload failed." });
-      } finally {
-        if (fileInputRef.current) fileInputRef.current.value = "";
-      }
-    };
-
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      setStatus({ type: "error", message: "Could not read this file as an image." });
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    };
-
-    img.src = objectUrl;
+    try {
+      const result = await uploadImageFile(file, specKey, value || undefined);
+      onChange(result.url);
+      setStatus({ type: "success", message: "Image uploaded successfully." });
+    } catch (err) {
+      setStatus({ type: "error", message: err instanceof Error ? err.message : "Upload failed." });
+    }
   }
 
   async function handleUrlSubmit() {
@@ -153,14 +128,40 @@ export function ImageUploadField({ value, onChange, specKey, label, previewHeigh
       </div>
 
       {mode === "upload" ? (
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={ALLOWED_ACCEPT}
-          disabled={loading}
-          onChange={handleFileChange}
-          style={{ fontSize: "0.8rem" }}
-        />
+        <>
+          {/* Hidden native file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ALLOWED_ACCEPT}
+            disabled={loading}
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+          {/* Styled button that triggers the picker */}
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.4rem",
+              padding: "0.55rem 1rem",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              color: loading ? "#94a3b8" : "#1a3270",
+              backgroundColor: "#f8fafc",
+              border: "1.5px solid",
+              borderColor: loading ? "#e2e8f0" : "#cbd5e1",
+              borderRadius: "0.4rem",
+              cursor: loading ? "default" : "pointer",
+            }}
+          >
+            {loading ? <Loader2 size={13} className="animate-spin" /> : <Upload size={13} />}
+            {loading ? "Uploading…" : "Choose file"}
+          </button>
+        </>
       ) : (
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <input
@@ -218,7 +219,7 @@ export function ImageUploadField({ value, onChange, specKey, label, previewHeigh
           {status.type === "loading" && <Loader2 size={14} className="animate-spin" />}
           {status.type === "error" && <AlertCircle size={14} />}
           {status.type === "success" && <CheckCircle2 size={14} />}
-          <span>{status.type === "loading" ? "Uploading..." : status.message}</span>
+          <span>{status.type === "loading" ? "Uploading…" : status.message}</span>
         </div>
       )}
     </div>

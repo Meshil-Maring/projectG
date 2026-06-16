@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 enum Role {
@@ -162,4 +163,40 @@ model Donation {
   createdAt DateTime @default(now())
 
   @@map("donations")
+}
+
+model RawPhoto {
+  id         Int      @id @default(autoincrement())
+  section    String
+  url        String
+  filename   String
+  caption    String   @default("")
+  uploadedAt DateTime @default(now())
+
+  @@index([section])
+  @@map("raw_photos")
+}
+
+model WhgGroup {
+  id        Int        @id @default(autoincrement())
+  name      String
+  keyPrefix String
+  order     Int        @default(0)
+  createdAt DateTime   @default(now())
+  images    WhgImage[]
+
+  @@map("whg_groups")
+}
+
+model WhgImage {
+  id          String   @id @default(cuid())
+  groupId     Int
+  group       WhgGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  key         String   @unique
+  name        String   @default("")
+  description String   @default("")
+  uploadedAt  DateTime @default(now())
+
+  @@index([groupId])
+  @@map("whg_images")
 }
