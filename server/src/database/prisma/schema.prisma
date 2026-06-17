@@ -178,12 +178,15 @@ model RawPhoto {
 }
 
 model WhgGroup {
-  id        Int        @id @default(autoincrement())
-  name      String
-  keyPrefix String
-  order     Int        @default(0)
-  createdAt DateTime   @default(now())
-  images    WhgImage[]
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String     @default("")
+  theme       String     @default("")
+  themeColor  String     @default("")
+  keyPrefix   String
+  order       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  images      WhgImage[]
 
   @@map("whg_groups")
 }
@@ -199,4 +202,112 @@ model WhgImage {
 
   @@index([groupId])
   @@map("whg_images")
+}
+
+model LacGroup {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String     @default("")
+  theme       String     @default("")
+  themeColor  String     @default("")
+  keyPrefix   String
+  order       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  images      LacImage[]
+
+  @@map("lac_groups")
+}
+
+model LacImage {
+  id          String   @id @default(cuid())
+  groupId     Int
+  group       LacGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  key         String   @unique
+  name        String   @default("")
+  description String   @default("")
+  uploadedAt  DateTime @default(now())
+
+  @@index([groupId])
+  @@map("lac_images")
+}
+
+model HrdsGroup {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String      @default("")
+  theme       String      @default("")
+  themeColor  String      @default("")
+  keyPrefix   String
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  images      HrdsImage[]
+
+  @@map("hrds_groups")
+}
+
+model HrdsImage {
+  id          String    @id @default(cuid())
+  groupId     Int
+  group       HrdsGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  key         String    @unique
+  name        String    @default("")
+  description String    @default("")
+  uploadedAt  DateTime  @default(now())
+
+  @@index([groupId])
+  @@map("hrds_images")
+}
+
+model CwgGroup {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String     @default("")
+  theme       String     @default("")
+  themeColor  String     @default("")
+  keyPrefix   String
+  order       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  images      CwgImage[]
+
+  @@map("cwg_groups")
+}
+
+model CwgImage {
+  id          String   @id @default(cuid())
+  groupId     Int
+  group       CwgGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  key         String   @unique
+  name        String   @default("")
+  description String   @default("")
+  uploadedAt  DateTime @default(now())
+
+  @@index([groupId])
+  @@map("cwg_images")
+}
+
+model FsedsGroup {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String       @default("")
+  theme       String       @default("")
+  themeColor  String       @default("")
+  keyPrefix   String
+  order       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  images      FsedsImage[]
+
+  @@map("fseds_groups")
+}
+
+model FsedsImage {
+  id          String     @id @default(cuid())
+  groupId     Int
+  group       FsedsGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  key         String     @unique
+  name        String     @default("")
+  description String     @default("")
+  uploadedAt  DateTime   @default(now())
+
+  @@index([groupId])
+  @@map("fseds_images")
 }

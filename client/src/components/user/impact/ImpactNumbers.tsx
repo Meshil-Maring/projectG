@@ -16,60 +16,31 @@ const fadeUp = {
   }),
 };
 
-const stats = [
-  {
-    icon: Users,
-    value: "25,000+",
-    label: "Lives Impacted",
-    sub: "Across all programs",
-    color: "#1a3270",
-    bg: "#eef1fb",
-  },
-  {
-    icon: GraduationCap,
-    value: "10,000+",
-    label: "Children Educated",
-    sub: "Scholarships & school kits",
-    color: "#2563eb",
-    bg: "#eff6ff",
-  },
-  {
-    icon: Globe,
-    value: "150+",
-    label: "Communities Served",
-    sub: "Urban, rural & tribal areas",
-    color: "#16a34a",
-    bg: "#f0fdf4",
-  },
-  {
-    icon: HandHeart,
-    value: "500+",
-    label: "Active Volunteers",
-    sub: "Giving time every month",
-    color: "#7c3aed",
-    bg: "#f5f3ff",
-  },
-  {
-    icon: Utensils,
-    value: "50,000+",
-    label: "Meals Distributed",
-    sub: "Through community kitchens",
-    color: "#f97316",
-    bg: "#fff7ed",
-  },
-  {
-    icon: Clock,
-    value: "12+",
-    label: "Years of Service",
-    sub: "Serving since 2013",
-    color: "#0d9488",
-    bg: "#f0fdf9",
-  },
+const STAT_ICONS = [Users, GraduationCap, Globe, HandHeart, Utensils, Clock];
+const STAT_COLORS = ["#1a3270", "#2563eb", "#16a34a", "#7c3aed", "#f97316", "#0d9488"];
+const STAT_BGS = ["#eef1fb", "#eff6ff", "#f0fdf4", "#f5f3ff", "#fff7ed", "#f0fdf9"];
+const STAT_DEFAULTS = [
+  { value: "25,000+", label: "Lives Impacted", sub: "Across all programs" },
+  { value: "10,000+", label: "Children Educated", sub: "Scholarships & school kits" },
+  { value: "150+", label: "Communities Served", sub: "Urban, rural & tribal areas" },
+  { value: "500+", label: "Active Volunteers", sub: "Giving time every month" },
+  { value: "50,000+", label: "Meals Distributed", sub: "Through community kitchens" },
+  { value: "12+", label: "Years of Service", sub: "Serving since 2013" },
 ];
 
 export default function ImpactNumbers() {
   const { getSectionData } = usePageSections();
-  const content = { ...DEFAULT_NUMBERS, ...getSectionData("impact-numbers") };
+  const data = getSectionData("impact-numbers") ?? {};
+  const content = { ...DEFAULT_NUMBERS, ...data };
+
+  const stats = STAT_DEFAULTS.map((defaults, i) => ({
+    icon: STAT_ICONS[i],
+    color: STAT_COLORS[i],
+    bg: STAT_BGS[i],
+    value: data[`stat${i}Value`] || defaults.value,
+    label: data[`stat${i}Label`] || defaults.label,
+    sub: data[`stat${i}Sub`] || defaults.sub,
+  }));
 
   return (
     <section className="py-20 px-6 bg-surface">
@@ -107,7 +78,7 @@ export default function ImpactNumbers() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {stats.map(({ icon: Icon, value, label, sub, color, bg }, i) => (
             <motion.div
-              key={label}
+              key={i}
               variants={fadeUp}
               initial="hidden"
               whileInView="visible"

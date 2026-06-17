@@ -4,18 +4,18 @@ import SectionNavigator from "../../shared/components/SectionNavigator";
 import LacHero from "../../components/user/lac/LacHero";
 import LacWhatWeDo from "../../components/user/lac/LacWhatWeDo";
 import LacLegalAwarenessCamps from "../../components/user/lac/LacLegalAwarenessCamps";
-import LacActivities from "../../components/user/lac/LacActivities";
 import LacImpact from "../../components/user/lac/LacImpact";
 import LacContact from "../../components/user/lac/LacContact";
 import LacCTA from "../../components/user/lac/LacCTA";
 import LacCommunities from "../../components/user/lac/LacCommunities";
+import LacGallery from "../../components/user/lac/LacGallery";
 import { PageProvider } from "../../context/PageContext";
 
 const sections = [
   { id: "lac-hero", label: "Overview" },
   { id: "lac-what-we-do", label: "What We Do" },
   { id: "lac-camps", label: "Legal Camps" },
-  { id: "lac-activities", label: "Activities" },
+  { id: "lac-gallery", label: "Gallery" },
   { id: "lac-impact", label: "Impact" },
   { id: "lac-contact", label: "Contact" },
   { id: "lac-cta", label: "Get Involved" },
@@ -31,7 +31,7 @@ export default function LacPage() {
         <div id="lac-hero"><LacHero /></div>
         <div id="lac-what-we-do"><LacWhatWeDo /></div>
         <div id="lac-camps"><LacLegalAwarenessCamps /></div>
-        <div id="lac-activities"><LacActivities /></div>
+        <div id="lac-gallery"><LacGallery /></div>
         <div id="lac-impact"><LacImpact /></div>
         <div id="lac-contact"><LacContact /></div>
         <div id="lac-cta"><LacCTA /></div>

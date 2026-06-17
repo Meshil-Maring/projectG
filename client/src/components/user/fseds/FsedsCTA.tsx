@@ -1,5 +1,12 @@
 import { motion } from "framer-motion";
-import { Users, Clock, TrendingUp, Star, Lightbulb, ArrowRight } from "lucide-react";
+import {
+  Users,
+  Clock,
+  TrendingUp,
+  Star,
+  Lightbulb,
+  ArrowRight,
+} from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./fseds.constants";
 import { usePageSections } from "../../../context/PageContext";
 import CauseActionTiles from "../cause/CauseActionTiles";
@@ -29,7 +36,12 @@ export default function FsedsCTA() {
   return (
     <section
       id="get-involved"
-      style={{ background: "#ffffff", padding: "5rem 1.5rem", position: "relative", overflow: "hidden" }}
+      style={{
+        background: "#ffffff",
+        padding: "5rem 1.5rem",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
       <div
         style={{
@@ -58,44 +70,6 @@ export default function FsedsCTA() {
             background: `rgba(109,40,217,0.06)`,
           }}
         />
-
-        {/* Left – bar chart icon */}
-        <motion.div
-          {...fade(0)}
-          style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "180px" }}
-        >
-          <div
-            style={{
-              borderRadius: "1.25rem",
-              background: `linear-gradient(145deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
-              padding: "2rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "140px",
-              height: "140px",
-              boxShadow: `0 12px 32px rgba(109,40,217,0.25)`,
-              position: "relative",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "flex-end", gap: "5px" }}>
-              {chartBars.map((h, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: "10px",
-                    height: `${h * 0.6}px`,
-                    borderRadius: "2px 2px 0 0",
-                    background:
-                      i === chartBars.length - 1
-                        ? "rgba(255,255,255,0.95)"
-                        : "rgba(255,255,255,0.35)",
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </motion.div>
 
         {/* Center text + buttons */}
         <motion.div {...fade(0.1)} style={{ position: "relative" }}>
@@ -127,10 +101,23 @@ export default function FsedsCTA() {
             <br />
             {cta.headingLine3}
           </h2>
-          <p style={{ fontSize: "0.9rem", color: "#64748b", lineHeight: 1.7, marginBottom: "1.75rem" }}>
+          <p
+            style={{
+              fontSize: "0.9rem",
+              color: "#64748b",
+              lineHeight: 1.7,
+              marginBottom: "1.75rem",
+            }}
+          >
             {cta.description}
           </p>
-          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" as const }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "0.75rem",
+              flexWrap: "wrap" as const,
+            }}
+          >
             <a
               href="/get-involved"
               style={{
@@ -173,7 +160,13 @@ export default function FsedsCTA() {
         </motion.div>
 
         {/* Right – 4 action tiles */}
-        <CauseActionTiles actions={ctaActions} primary={PRIMARY} lightBg={LIGHT_BG} borderColor="#e4d9ff" shadowRgb="109,40,217" />
+        <CauseActionTiles
+          actions={ctaActions}
+          primary={PRIMARY}
+          lightBg={LIGHT_BG}
+          borderColor="#e4d9ff"
+          shadowRgb="109,40,217"
+        />
       </div>
     </section>
   );

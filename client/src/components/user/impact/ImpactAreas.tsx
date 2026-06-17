@@ -18,69 +18,34 @@ const fadeUp = {
   }),
 };
 
-const areas = [
-  {
-    icon: Leaf,
-    title: "Environment",
-    color: "#16a34a",
-    bg: "#f0fdf4",
-    metric: "1,200+ beneficiaries",
-    description:
-      "Community-led conservation, tree planting, and river clean-ups restore ecosystems and educate youth on sustainable living.",
-  },
-  {
-    icon: BookOpen,
-    title: "Education",
-    color: "#2563eb",
-    bg: "#eff6ff",
-    metric: "850+ students supported",
-    description:
-      "Scholarships, school supplies, and mobile classrooms bring quality education to the most underserved children.",
-  },
-  {
-    icon: HeartPulse,
-    title: "Health & Wellness",
-    color: "#ec4899",
-    bg: "#fdf2f8",
-    metric: "2,300+ patients treated",
-    description:
-      "Free health camps, vaccination drives, and maternal care programs reduce preventable illness across communities.",
-  },
-  {
-    icon: Utensils,
-    title: "Hunger & Food",
-    color: "#f97316",
-    bg: "#fff7ed",
-    metric: "640+ families fed",
-    description:
-      "Community kitchens and food distribution networks deliver nutritious meals and build long-term food security.",
-  },
-  {
-    icon: UserRound,
-    title: "Women Empowerment",
-    color: "#7c3aed",
-    bg: "#f5f3ff",
-    metric: "520+ women trained",
-    description:
-      "Vocational training and micro-finance programs equip women with skills and capital to achieve financial independence.",
-  },
-  {
-    icon: Rocket,
-    title: "Youth Development",
-    color: "#0891b2",
-    bg: "#ecfeff",
-    metric: "980+ youth engaged",
-    description:
-      "Coding bootcamps, leadership workshops, and mentorship programs prepare young people for a competitive world.",
-  },
+const AREA_ICONS = [Leaf, BookOpen, HeartPulse, Utensils, UserRound, Rocket];
+const AREA_COLORS = ["#16a34a", "#2563eb", "#ec4899", "#f97316", "#7c3aed", "#0891b2"];
+const AREA_BGS = ["#f0fdf4", "#eff6ff", "#fdf2f8", "#fff7ed", "#f5f3ff", "#ecfeff"];
+const AREA_DEFAULTS = [
+  { title: "Environment", metric: "1,200+ beneficiaries", description: "Community-led conservation, tree planting, and river clean-ups restore ecosystems and educate youth on sustainable living." },
+  { title: "Education", metric: "850+ students supported", description: "Scholarships, school supplies, and mobile classrooms bring quality education to the most underserved children." },
+  { title: "Health & Wellness", metric: "2,300+ patients treated", description: "Free health camps, vaccination drives, and maternal care programs reduce preventable illness across communities." },
+  { title: "Hunger & Food", metric: "640+ families fed", description: "Community kitchens and food distribution networks deliver nutritious meals and build long-term food security." },
+  { title: "Women Empowerment", metric: "520+ women trained", description: "Vocational training and micro-finance programs equip women with skills and capital to achieve financial independence." },
+  { title: "Youth Development", metric: "980+ youth engaged", description: "Coding bootcamps, leadership workshops, and mentorship programs prepare young people for a competitive world." },
 ];
 
 export default function ImpactAreas() {
   const { getSectionData } = usePageSections();
-  const content = { ...DEFAULT_AREAS, ...getSectionData("impact-areas") };
+  const data = getSectionData("impact-areas") ?? {};
+  const content = { ...DEFAULT_AREAS, ...data };
+
+  const areas = AREA_DEFAULTS.map((defaults, i) => ({
+    icon: AREA_ICONS[i],
+    color: AREA_COLORS[i],
+    bg: AREA_BGS[i],
+    title: data[`area${i}Title`] || defaults.title,
+    metric: data[`area${i}Metric`] || defaults.metric,
+    description: data[`area${i}Description`] || defaults.description,
+  }));
 
   return (
-    <section className="py-20 px-6 bg-[#f8fafc]">
+    <section className="py-20 px-6 bg-surface">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <motion.p
@@ -98,7 +63,7 @@ export default function ImpactAreas() {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-2xl xl:text-4xl font-extrabold text-[#1e293b] mb-3"
+            className="text-2xl xl:text-4xl font-extrabold text-heading mb-3"
           >
             {content.heading}
           </motion.h2>
@@ -117,7 +82,7 @@ export default function ImpactAreas() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {areas.map(({ icon: Icon, title, color, bg, metric, description }, i) => (
             <motion.div
-              key={title}
+              key={i}
               variants={fadeUp}
               initial="hidden"
               whileInView="visible"
@@ -131,7 +96,7 @@ export default function ImpactAreas() {
               >
                 <Icon size={22} style={{ color }} strokeWidth={1.8} />
               </div>
-              <h3 className="text-base font-bold text-[#1e293b] mb-1">{title}</h3>
+              <h3 className="text-base font-bold text-heading mb-1">{title}</h3>
               <p className="text-xs font-semibold mb-3" style={{ color }}>
                 {metric}
               </p>

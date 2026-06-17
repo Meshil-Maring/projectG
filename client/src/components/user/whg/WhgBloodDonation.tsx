@@ -91,9 +91,16 @@ function Lightbox({
 
 // ── Group gallery section ─────────────────────────────────────────────────────
 
+const DESCRIPTION_LIMIT = 150;
+
 function GroupGallery({ group }: { group: WhgGroup }) {
   const [expanded, setExpanded] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const desc = group.description ?? "";
+  const descTruncated = desc.length > DESCRIPTION_LIMIT && !descExpanded;
+  const descText = descTruncated ? desc.slice(0, DESCRIPTION_LIMIT).trimEnd() + "…" : desc;
 
   const displayed = expanded ? group.images : group.images.slice(0, PREVIEW_COUNT);
   const remaining = group.images.length - PREVIEW_COUNT;
@@ -101,7 +108,7 @@ function GroupGallery({ group }: { group: WhgGroup }) {
   return (
     <motion.div {...fade(0.1)} style={{ marginBottom: "3.5rem" }}>
       {/* Group heading */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.25rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: desc ? "0.75rem" : "1.25rem" }}>
         <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: LIGHT_BG, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <Images size={16} color={PRIMARY} strokeWidth={1.7} />
         </div>
@@ -111,6 +118,21 @@ function GroupGallery({ group }: { group: WhgGroup }) {
         </div>
         <div style={{ flex: 1, height: "1px", background: "#fde8da" }} />
       </div>
+
+      {/* Group description */}
+      {desc && (
+        <div style={{ marginBottom: "1.25rem", paddingLeft: "44px" }}>
+          <span style={{ fontSize: "0.86rem", color: "#475569", lineHeight: 1.7 }}>{descText}</span>
+          {desc.length > DESCRIPTION_LIMIT && (
+            <button
+              onClick={() => setDescExpanded((v) => !v)}
+              style={{ marginLeft: "0.4rem", background: "none", border: "none", color: PRIMARY, fontSize: "0.82rem", fontWeight: 700, cursor: "pointer", padding: 0, textDecoration: "underline" }}
+            >
+              {descExpanded ? "Show less" : "Read more"}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Photo grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "1.25rem" }}>

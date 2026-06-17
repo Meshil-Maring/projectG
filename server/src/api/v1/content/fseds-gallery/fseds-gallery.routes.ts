@@ -8,7 +8,7 @@ import { authenticate } from '../../../../middlewares/auth.middleware.js';
 import { requireRole } from '../../../../middlewares/rbac.middleware.js';
 import { ROLES } from '../../../../common/constants/roles.js';
 import { prisma } from '../../../../config/database.js';
-import { deleteByPath, deletePrefix, uploadToFolder, publicUrl, copyObject } from '../../../../common/services/storage.service.js';
+import { deleteByPath, deletePrefix, uploadToFolder, publicUrl } from '../../../../common/services/storage.service.js';
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const EXT_BY_MIME: Record<string, string> = {
@@ -22,14 +22,14 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-export const whgGalleryRoutes = Router();
+export const fsedsGalleryRoutes = Router();
 
 // ── Public: list groups with their images ─────────────────────────────────────
 
-whgGalleryRoutes.get(
+fsedsGalleryRoutes.get(
   '/groups',
   asyncHandler(async (_req: Request, res: Response) => {
-    const groups = await prisma.whgGroup.findMany({
+    const groups = await prisma.fsedsGroup.findMany({
       orderBy: { order: 'asc' },
       include: { images: { orderBy: { uploadedAt: 'desc' } } },
     });
@@ -52,40 +52,40 @@ whgGalleryRoutes.get(
 
 // ── Auth required from here ───────────────────────────────────────────────────
 
-whgGalleryRoutes.use(authenticate, requireRole(ROLES.ADMIN, ROLES.EDITOR));
+fsedsGalleryRoutes.use(authenticate, requireRole(ROLES.ADMIN, ROLES.EDITOR));
 
 // ── Create group ──────────────────────────────────────────────────────────────
 
-whgGalleryRoutes.post(
+fsedsGalleryRoutes.post(
   '/groups',
   asyncHandler(async (req: Request, res: Response) => {
     const { name, description, theme, themeColor } = req.body as { name?: string; description?: string; theme?: string; themeColor?: string };
     if (!name?.trim()) throw new ValidationError('Group name is required.');
 
-    const maxOrder = await prisma.whgGroup.aggregate({ _max: { order: true } });
+    const maxOrder = await prisma.fsedsGroup.aggregate({ _max: { order: true } });
     const nextOrder = (maxOrder._max.order ?? -1) + 1;
-    const keyPrefix = `whg-gallery/${randomUUID()}/`;
+    const keyPrefix = `fseds-gallery/${randomUUID()}/`;
 
-    const group = await prisma.whgGroup.create({
+    const group = await prisma.fsedsGroup.create({
       data: { name: name.trim(), description: (description ?? '').trim(), theme: (theme ?? '').trim(), themeColor: (themeColor ?? '').trim(), keyPrefix, order: nextOrder },
     });
     ok(res, { ...group, images: [] }, 201);
   }),
 );
 
-// ── Rename group ──────────────────────────────────────────────────────────────
+// ── Update group ──────────────────────────────────────────────────────────────
 
-whgGalleryRoutes.patch(
+fsedsGalleryRoutes.patch(
   '/groups/:id',
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const { name, description, theme, themeColor } = req.body as { name?: string; description?: string; theme?: string; themeColor?: string };
     if (!name?.trim()) throw new ValidationError('Group name is required.');
 
-    const group = await prisma.whgGroup.findUnique({ where: { id } });
+    const group = await prisma.fsedsGroup.findUnique({ where: { id } });
     if (!group) throw new NotFoundError('Group not found.');
 
-    const updated = await prisma.whgGroup.update({
+    const updated = await prisma.fsedsGroup.update({
       where: { id },
       data: {
         name: name.trim(),
@@ -98,61 +98,29 @@ whgGalleryRoutes.patch(
   }),
 );
 
-// ── Delete group (removes all R2 objects + DB records) ───────────────────────
+// ── Delete group ──────────────────────────────────────────────────────────────
 
-whgGalleryRoutes.delete(
+fsedsGalleryRoutes.delete(
   '/groups/:id',
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const group = await prisma.whgGroup.findUnique({ where: { id } });
+    const group = await prisma.fsedsGroup.findUnique({ where: { id } });
     if (!group) throw new NotFoundError('Group not found.');
 
-    // Delete all R2 objects for this group then DB records (cascade handles WhgImage)
     await deletePrefix(group.keyPrefix);
-    await prisma.whgGroup.delete({ where: { id } });
+    await prisma.fsedsGroup.delete({ where: { id } });
     ok(res, { id });
-  }),
-);
-
-// ── Migrate existing group images into the images/ subfolder in R2 ────────────
-
-whgGalleryRoutes.post(
-  '/groups/:id/migrate-images',
-  asyncHandler(async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    const group = await prisma.whgGroup.findUnique({
-      where: { id },
-      include: { images: true },
-    });
-    if (!group) throw new NotFoundError('Group not found.');
-
-    const imagesPrefix = `${group.keyPrefix}images/`;
-    const migratedIds: string[] = [];
-
-    for (const image of group.images) {
-      if (image.key.startsWith(imagesPrefix)) continue;
-
-      const filename = image.key.slice(group.keyPrefix.length);
-      const newKey = `${imagesPrefix}${filename}`;
-
-      await copyObject(image.key, newKey);
-      await deleteByPath(image.key);
-      await prisma.whgImage.update({ where: { id: image.id }, data: { key: newKey } });
-      migratedIds.push(image.id);
-    }
-
-    ok(res, { migrated: migratedIds.length, ids: migratedIds });
   }),
 );
 
 // ── Upload image to a group ───────────────────────────────────────────────────
 
-whgGalleryRoutes.post(
+fsedsGalleryRoutes.post(
   '/groups/:id/upload',
   upload.single('file'),
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const group = await prisma.whgGroup.findUnique({ where: { id } });
+    const group = await prisma.fsedsGroup.findUnique({ where: { id } });
     if (!group) throw new NotFoundError('Group not found.');
 
     const file = req.file;
@@ -166,7 +134,7 @@ whgGalleryRoutes.post(
     const imagesPrefix = `${group.keyPrefix}images/`;
     const { key, url } = await uploadToFolder(imagesPrefix, file.buffer, file.mimetype, filename);
 
-    const image = await prisma.whgImage.create({
+    const image = await prisma.fsedsImage.create({
       data: {
         groupId: id,
         key,
@@ -179,18 +147,18 @@ whgGalleryRoutes.post(
   }),
 );
 
-// ── Update image metadata (name / description) ────────────────────────────────
+// ── Update image metadata ─────────────────────────────────────────────────────
 
-whgGalleryRoutes.patch(
+fsedsGalleryRoutes.patch(
   '/image/:imageId',
   asyncHandler(async (req: Request, res: Response) => {
     const { imageId } = req.params;
     const { name, description } = req.body as { name?: string; description?: string };
 
-    const image = await prisma.whgImage.findUnique({ where: { id: imageId } });
+    const image = await prisma.fsedsImage.findUnique({ where: { id: imageId } });
     if (!image) throw new NotFoundError('Image not found.');
 
-    const updated = await prisma.whgImage.update({
+    const updated = await prisma.fsedsImage.update({
       where: { id: imageId },
       data: {
         name: (name ?? image.name).trim(),
@@ -198,26 +166,21 @@ whgGalleryRoutes.patch(
       },
     });
 
-    ok(res, {
-      id: updated.id,
-      name: updated.name,
-      description: updated.description,
-      url: updated.key,
-    });
+    ok(res, { id: updated.id, name: updated.name, description: updated.description, url: publicUrl(updated.key) });
   }),
 );
 
 // ── Delete an image ───────────────────────────────────────────────────────────
 
-whgGalleryRoutes.delete(
+fsedsGalleryRoutes.delete(
   '/image/:imageId',
   asyncHandler(async (req: Request, res: Response) => {
     const { imageId } = req.params;
-    const image = await prisma.whgImage.findUnique({ where: { id: imageId } });
+    const image = await prisma.fsedsImage.findUnique({ where: { id: imageId } });
     if (!image) throw new NotFoundError('Image not found.');
 
     await deleteByPath(image.key);
-    await prisma.whgImage.delete({ where: { id: imageId } });
+    await prisma.fsedsImage.delete({ where: { id: imageId } });
     ok(res, { id: imageId });
   }),
 );

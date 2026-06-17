@@ -3,19 +3,13 @@ import {
   Upload, Trash2, Loader2, CheckCircle2, AlertCircle, Edit3, X, Check,
   Image as ImageIcon, Images, Plus, FolderOpen, ChevronDown, ChevronUp,
 } from "lucide-react";
-import {
-  fetchWhgGroups, createWhgGroup, updateWhgGroup, deleteWhgGroup,
-  uploadToWhgGroup, deleteWhgGalleryImage, updateWhgGalleryImage,
-  type WhgGroup, type WhgGalleryImage,
-} from "../../lib/api";
+import type { GalleryGroup, GalleryImage } from "../../lib/api";
 
 type UploadStatus = { type: "idle" | "loading" | "success" | "error"; message?: string };
 type EditImageState = { id: string; name: string; description: string } | null;
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
 const PRIMARY = "#1a3270";
-const DANGER  = "#dc2626";
+const DANGER = "#dc2626";
 
 function overlayBtnStyle(bg: string): React.CSSProperties {
   return { background: `${bg}cc`, border: "none", borderRadius: "0.3rem", padding: "0.3rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" };
@@ -25,13 +19,13 @@ function actionBtnStyle(bg: string): React.CSSProperties {
   return { display: "inline-flex", alignItems: "center", gap: "0.25rem", padding: "0.2rem 0.5rem", fontSize: "0.68rem", fontWeight: 600, color: "#fff", backgroundColor: bg, border: "none", borderRadius: "0.25rem", cursor: "pointer" };
 }
 
-// ── Image card inside a group ─────────────────────────────────────────────────
+// ── Image card ────────────────────────────────────────────────────────────────
 
 function GroupImageCard({
   img, deleting, editing, saving,
   onDelete, onStartEdit, onCancelEdit, onChangeName, onChangeDesc, onSave,
 }: {
-  img: WhgGalleryImage;
+  img: GalleryImage;
   deleting: boolean; editing: EditImageState; saving: boolean;
   onDelete: () => void; onStartEdit: () => void; onCancelEdit: () => void;
   onChangeName: (v: string) => void; onChangeDesc: (v: string) => void; onSave: () => void;
@@ -71,19 +65,18 @@ function GroupImageCard({
 // ── Group panel ───────────────────────────────────────────────────────────────
 
 function GroupPanel({
-  group,
-  onUpdate,
-  onDelete,
-  onImageDeleted,
-  onImageUpdated,
-  onImageUploaded,
+  group, onUpdate, onDelete, onImageDeleted, onImageUpdated, onImageUploaded,
+  uploadToGroup, deleteImage, updateImage,
 }: {
-  group: WhgGroup;
+  group: GalleryGroup;
   onUpdate: (id: number, name: string, description: string, theme: string, themeColor: string) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
   onImageDeleted: (groupId: number, fileId: string) => void;
   onImageUpdated: (groupId: number, fileId: string, name: string, description: string) => void;
-  onImageUploaded: (groupId: number, img: WhgGalleryImage) => void;
+  onImageUploaded: (groupId: number, img: GalleryImage) => void;
+  uploadToGroup: (groupId: number, file: File) => Promise<GalleryImage>;
+  deleteImage: (imageId: string) => Promise<unknown>;
+  updateImage: (imageId: string, name: string, description: string) => Promise<GalleryImage>;
 }) {
   const [expanded, setExpanded] = useState(true);
   const [renaming, setRenaming] = useState(false);
@@ -123,7 +116,7 @@ function GroupPanel({
     const errors: string[] = [];
     for (const file of files) {
       try {
-        const img = await uploadToWhgGroup(group.id, file);
+        const img = await uploadToGroup(group.id, file);
         onImageUploaded(group.id, img);
         count++;
       } catch (err) { errors.push(err instanceof Error ? err.message : "Upload failed"); }
@@ -137,7 +130,7 @@ function GroupPanel({
 
   async function handleImgDelete(fileId: string) {
     setDeletingImgId(fileId);
-    try { await deleteWhgGalleryImage(fileId); onImageDeleted(group.id, fileId); }
+    try { await deleteImage(fileId); onImageDeleted(group.id, fileId); }
     catch { /* keep */ }
     finally { setDeletingImgId(null); }
   }
@@ -146,7 +139,7 @@ function GroupPanel({
     if (!editingImg) return;
     setSavingImgId(editingImg.id);
     try {
-      await updateWhgGalleryImage(editingImg.id, editingImg.name, editingImg.description);
+      await updateImage(editingImg.id, editingImg.name, editingImg.description);
       onImageUpdated(group.id, editingImg.id, editingImg.name, editingImg.description);
       setEditingImg(null);
     } catch { /* stay */ }
@@ -163,8 +156,7 @@ function GroupPanel({
           <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: "0.35rem" }}>
             <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
               <input
-                autoFocus
-                value={renameName}
+                autoFocus value={renameName}
                 onChange={(e) => setRenameName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") saveRename(); if (e.key === "Escape") { setRenaming(false); setRenameName(group.name); setRenameDesc(group.description); setRenameTheme(group.theme ?? ""); setRenameThemeColor(group.themeColor ?? ""); } }}
                 style={{ ...inlineInputStyle, fontSize: "0.85rem", fontWeight: 600 }}
@@ -175,13 +167,7 @@ function GroupPanel({
               </button>
               <button type="button" onClick={() => { setRenaming(false); setRenameName(group.name); setRenameDesc(group.description); setRenameTheme(group.theme ?? ""); setRenameThemeColor(group.themeColor ?? ""); }} style={actionBtnStyle("#94a3b8")}><X size={11} /></button>
             </div>
-            <textarea
-              value={renameDesc}
-              onChange={(e) => setRenameDesc(e.target.value)}
-              placeholder="Group description (optional)"
-              rows={2}
-              style={{ ...inlineInputStyle, resize: "vertical" as const, lineHeight: 1.5 }}
-            />
+            <textarea value={renameDesc} onChange={(e) => setRenameDesc(e.target.value)} placeholder="Group description (optional)" rows={2} style={{ ...inlineInputStyle, resize: "vertical" as const, lineHeight: 1.5 }} />
             <input value={renameTheme} onChange={(e) => setRenameTheme(e.target.value)} placeholder='Theme label (optional) — e.g. "Annual Camp"' style={inlineInputStyle} />
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <label style={{ fontSize: "0.72rem", color: "#64748b", flexShrink: 0 }}>Accent color</label>
@@ -228,12 +214,7 @@ function GroupPanel({
         <div style={{ padding: "1rem" }}>
           {/* Upload strip */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem", flexWrap: "wrap" as const }}>
-            <button
-              type="button"
-              disabled={uploadStatus.type === "loading"}
-              onClick={() => fileRef.current?.click()}
-              style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", padding: "0.45rem 0.9rem", backgroundColor: uploadStatus.type === "loading" ? "#94a3b8" : PRIMARY, color: "#fff", fontSize: "0.78rem", fontWeight: 600, border: "none", borderRadius: "0.4rem", cursor: uploadStatus.type === "loading" ? "default" : "pointer" }}
-            >
+            <button type="button" disabled={uploadStatus.type === "loading"} onClick={() => fileRef.current?.click()} style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", padding: "0.45rem 0.9rem", backgroundColor: uploadStatus.type === "loading" ? "#94a3b8" : PRIMARY, color: "#fff", fontSize: "0.78rem", fontWeight: 600, border: "none", borderRadius: "0.4rem", cursor: uploadStatus.type === "loading" ? "default" : "pointer" }}>
               {uploadStatus.type === "loading" ? <Loader2 size={13} className="animate-spin" /> : <Upload size={13} />}
               {uploadStatus.type === "loading" ? "Uploading…" : "Add Images"}
             </button>
@@ -280,10 +261,29 @@ function GroupPanel({
   );
 }
 
+// ── Props ─────────────────────────────────────────────────────────────────────
+
+export interface GenericGalleryTabProps {
+  title: string;
+  description: string;
+  groupPlaceholder?: string;
+  fetchGroups: () => Promise<GalleryGroup[]>;
+  createGroup: (name: string, description?: string, theme?: string, themeColor?: string) => Promise<GalleryGroup>;
+  updateGroup: (id: number, name: string, description: string, theme?: string, themeColor?: string) => Promise<GalleryGroup>;
+  deleteGroup: (id: number) => Promise<unknown>;
+  uploadToGroup: (groupId: number, file: File) => Promise<GalleryImage>;
+  deleteImage: (imageId: string) => Promise<unknown>;
+  updateImage: (imageId: string, name: string, description: string) => Promise<GalleryImage>;
+}
+
 // ── Main tab ──────────────────────────────────────────────────────────────────
 
-export function WhgGalleryTab() {
-  const [groups, setGroups] = useState<WhgGroup[]>([]);
+export function GenericGalleryTab({
+  title, description, groupPlaceholder = 'e.g. "Event 2024"',
+  fetchGroups, createGroup, updateGroup, deleteGroup,
+  uploadToGroup, deleteImage, updateImage,
+}: GenericGalleryTabProps) {
+  const [groups, setGroups] = useState<GalleryGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
@@ -296,10 +296,10 @@ export function WhgGalleryTab() {
 
   const loadGroups = useCallback(async () => {
     setLoading(true);
-    try { setGroups(await fetchWhgGroups()); }
+    try { setGroups(await fetchGroups()); }
     catch { setGroups([]); }
     finally { setLoading(false); }
-  }, []);
+  }, [fetchGroups]);
 
   useEffect(() => { loadGroups(); }, [loadGroups]);
 
@@ -308,7 +308,7 @@ export function WhgGalleryTab() {
     setCreateSaving(true);
     setCreateError(null);
     try {
-      const g = await createWhgGroup(newGroupName.trim(), newGroupDesc.trim(), newGroupTheme.trim(), newGroupThemeColor.trim());
+      const g = await createGroup(newGroupName.trim(), newGroupDesc.trim(), newGroupTheme.trim(), newGroupThemeColor.trim());
       setGroups((prev) => [...prev, g]);
       setNewGroupName("");
       setNewGroupDesc("");
@@ -321,13 +321,13 @@ export function WhgGalleryTab() {
     finally { setCreateSaving(false); }
   }
 
-  async function handleUpdate(id: number, name: string, description: string, theme: string, themeColor: string) {
-    const updated = await updateWhgGroup(id, name, description, theme, themeColor);
+  async function handleUpdate(id: number, name: string, desc: string, theme: string, themeColor: string) {
+    const updated = await updateGroup(id, name, desc, theme, themeColor);
     setGroups((prev) => prev.map((g) => g.id === id ? { ...g, name: updated.name, description: updated.description, theme: updated.theme, themeColor: updated.themeColor } : g));
   }
 
   async function handleDelete(id: number) {
-    await deleteWhgGroup(id);
+    await deleteGroup(id);
     setGroups((prev) => prev.filter((g) => g.id !== id));
   }
 
@@ -335,11 +335,11 @@ export function WhgGalleryTab() {
     setGroups((prev) => prev.map((g) => g.id !== groupId ? g : { ...g, images: g.images.filter((img) => img.id !== fileId) }));
   }
 
-  function handleImageUpdated(groupId: number, fileId: string, name: string, description: string) {
-    setGroups((prev) => prev.map((g) => g.id !== groupId ? g : { ...g, images: g.images.map((img) => img.id === fileId ? { ...img, name, description } : img) }));
+  function handleImageUpdated(groupId: number, fileId: string, name: string, desc: string) {
+    setGroups((prev) => prev.map((g) => g.id !== groupId ? g : { ...g, images: g.images.map((img) => img.id === fileId ? { ...img, name, description: desc } : img) }));
   }
 
-  function handleImageUploaded(groupId: number, img: WhgGalleryImage) {
+  function handleImageUploaded(groupId: number, img: GalleryImage) {
     setGroups((prev) => prev.map((g) => g.id !== groupId ? g : { ...g, images: [img, ...g.images] }));
   }
 
@@ -347,8 +347,8 @@ export function WhgGalleryTab() {
     <div>
       {/* Header */}
       <div style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "0.25rem" }}>WHG Blood Donation Gallery</h2>
-        <p style={{ fontSize: "0.8rem", color: "#64748b" }}>Organise images into groups (e.g. "Blood Donation Camp 2024"). Each group becomes a titled section in the public gallery.</p>
+        <h2 style={{ fontSize: "1.25rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "0.25rem" }}>{title}</h2>
+        <p style={{ fontSize: "0.8rem", color: "#64748b" }}>{description}</p>
       </div>
 
       {/* Create group */}
@@ -361,7 +361,7 @@ export function WhgGalleryTab() {
                 autoFocus
                 value={newGroupName}
                 onChange={(e) => { setNewGroupName(e.target.value); setCreateError(null); }}
-                placeholder='e.g. "Blood Donation Camp 2024"'
+                placeholder={groupPlaceholder}
                 onKeyDown={(e) => { if (e.key === "Enter") handleCreateGroup(); if (e.key === "Escape") { setCreating(false); setNewGroupName(""); setNewGroupDesc(""); setCreateError(null); } }}
                 style={{ flex: 1, padding: "0.55rem 0.75rem", fontSize: "0.85rem", border: `1.5px solid ${createError ? DANGER : PRIMARY}`, borderRadius: "0.4rem", outline: "none" }}
               />
@@ -373,13 +373,7 @@ export function WhgGalleryTab() {
                 <X size={13} />
               </button>
             </div>
-            <textarea
-              value={newGroupDesc}
-              onChange={(e) => setNewGroupDesc(e.target.value)}
-              placeholder="Group description (optional) — shown on the public page with a 'Read more' toggle"
-              rows={2}
-              style={{ padding: "0.55rem 0.75rem", fontSize: "0.82rem", border: "1.5px solid #e2e8f0", borderRadius: "0.4rem", outline: "none", resize: "vertical" as const, lineHeight: 1.5 }}
-            />
+            <textarea value={newGroupDesc} onChange={(e) => setNewGroupDesc(e.target.value)} placeholder="Group description (optional) — shown on the public page with a 'Read more' toggle" rows={2} style={{ padding: "0.55rem 0.75rem", fontSize: "0.82rem", border: "1.5px solid #e2e8f0", borderRadius: "0.4rem", outline: "none", resize: "vertical" as const, lineHeight: 1.5 }} />
             <input value={newGroupTheme} onChange={(e) => setNewGroupTheme(e.target.value)} placeholder='Theme label (optional) — e.g. "Annual Camp"' style={{ padding: "0.55rem 0.75rem", fontSize: "0.82rem", border: "1.5px solid #e2e8f0", borderRadius: "0.4rem", outline: "none" }} />
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <label style={{ fontSize: "0.75rem", color: "#64748b", flexShrink: 0 }}>Accent color</label>
@@ -420,6 +414,9 @@ export function WhgGalleryTab() {
               onImageDeleted={handleImageDeleted}
               onImageUpdated={handleImageUpdated}
               onImageUploaded={handleImageUploaded}
+              uploadToGroup={uploadToGroup}
+              deleteImage={deleteImage}
+              updateImage={updateImage}
             />
           ))}
         </div>

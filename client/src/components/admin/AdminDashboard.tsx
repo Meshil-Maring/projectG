@@ -34,7 +34,6 @@ import {
   Home,
   Bell,
   Calendar,
-  Camera,
   Images,
 } from "lucide-react";
 import {
@@ -64,8 +63,18 @@ import {
 import { type Section } from "../../context/PageContext";
 import { api } from "../../lib/api";
 import { ImageUploadField } from "./shared/ImageUploadField";
-import { RawPhotosTab } from "./RawPhotosTab";
 import { WhgGalleryTab } from "./WhgGalleryTab";
+import { GenericGalleryTab } from "./GenericGalleryTab";
+import {
+  fetchLacGroups, createLacGroup, updateLacGroup, deleteLacGroup,
+  uploadToLacGroup, deleteLacGalleryImage, updateLacGalleryImage,
+  fetchHrdsGroups, createHrdsGroup, updateHrdsGroup, deleteHrdsGroup,
+  uploadToHrdsGroup, deleteHrdsGalleryImage, updateHrdsGalleryImage,
+  fetchCwgGroups, createCwgGroup, updateCwgGroup, deleteCwgGroup,
+  uploadToCwgGroup, deleteCwgGalleryImage, updateCwgGalleryImage,
+  fetchFsedsGroups, createFsedsGroup, updateFsedsGroup, deleteFsedsGroup,
+  uploadToFsedsGroup, deleteFsedsGalleryImage, updateFsedsGalleryImage,
+} from "../../lib/api";
 import Logo from "../../assets/image/logo.jpeg";
 
 // ── Icon map ──────────────────────────────────────────────────────────────────
@@ -2076,8 +2085,11 @@ type ActiveView =
   | { kind: "home"; id: TabId }
   | { kind: "page"; slug: string }
   | { kind: "notifications" }
-  | { kind: "rawPhotos" }
   | { kind: "whgGallery" }
+  | { kind: "lacGallery" }
+  | { kind: "hrdsGallery" }
+  | { kind: "cwgGallery" }
+  | { kind: "fsedsGallery" }
   | { kind: "settings" };
 
 // ── Tab: Account Settings ─────────────────────────────────────────────────────
@@ -2176,7 +2188,12 @@ const PAGE_SECTION_LABELS: Record<string, string> = {
 };
 
 function fieldLabel(key: string) {
-  return key.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
+  return key
+    .replace(/([A-Z])/g, " $1")
+    .replace(/([a-zA-Z])(\d)/g, "$1 $2")
+    .replace(/(\d)([a-zA-Z])/g, "$1 $2")
+    .replace(/^./, (c) => c.toUpperCase())
+    .trim();
 }
 
 function PagesTab({ activeSlug }: { activeSlug: string }) {
@@ -2256,7 +2273,7 @@ function PagesTab({ activeSlug }: { activeSlug: string }) {
           </h3>
 
           {Object.keys(section.data).map((key) =>
-            key.toLowerCase().includes("description") ? (
+            key.toLowerCase().includes("description") || key.toLowerCase().includes("quote") ? (
               <FieldGroup key={key} label={fieldLabel(key)}>
                 <Textarea
                   value={edits[section.id]?.[key] ?? ""}
@@ -2567,15 +2584,24 @@ function NavSubItem({
 
 export default function AdminDashboard() {
   const [activeView, setActiveView] = useState<ActiveView>({ kind: "home", id: "hero" });
-  const [expandedGroups, setExpandedGroups] = useState<{ home: boolean; pages: boolean }>({
+  const [expandedGroups, setExpandedGroups] = useState<{ home: boolean; pages: boolean; galleries: boolean }>({
     home: true,
     pages: false,
+    galleries: false,
   });
   const navigate = useNavigate();
 
-  function toggleGroup(group: "home" | "pages") {
+  function toggleGroup(group: "home" | "pages" | "galleries") {
     setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
   }
+
+  const GALLERY_LABELS: Partial<Record<ActiveView["kind"], string>> = {
+    whgGallery: "WHG Gallery",
+    lacGallery: "LAC Gallery",
+    hrdsGallery: "HRDS Gallery",
+    cwgGallery: "CWG Gallery",
+    fsedsGallery: "FSEDS Gallery",
+  };
 
   const currentLabel =
     activeView.kind === "home"
@@ -2584,11 +2610,11 @@ export default function AdminDashboard() {
       ? PAGES.find((p) => p.slug === activeView.slug)?.title
       : activeView.kind === "notifications"
       ? "Notifications"
-      : activeView.kind === "rawPhotos"
-      ? "Raw Photos"
-      : activeView.kind === "whgGallery"
-      ? "WHG Gallery"
+      : activeView.kind in GALLERY_LABELS
+      ? GALLERY_LABELS[activeView.kind]
       : "Account Settings";
+
+  const galleryKinds: ActiveView["kind"][] = ["whgGallery", "lacGallery", "hrdsGallery", "cwgGallery", "fsedsGallery"];
 
   const currentCategory =
     activeView.kind === "home"
@@ -2597,7 +2623,7 @@ export default function AdminDashboard() {
       ? "Pages"
       : activeView.kind === "notifications"
       ? "Notifications"
-      : activeView.kind === "rawPhotos" || activeView.kind === "whgGallery"
+      : galleryKinds.includes(activeView.kind)
       ? "Media"
       : "Settings";
 
@@ -2737,25 +2763,24 @@ export default function AdminDashboard() {
             label="Notifications"
           />
 
-          {/* Raw Photos */}
-          <NavGroupHeader
-            active={activeView.kind === "rawPhotos"}
-            expanded={false}
-            showChevron={false}
-            onClick={() => setActiveView({ kind: "rawPhotos" })}
-            Icon={Camera}
-            label="Raw Photos"
-          />
 
-          {/* WHG Gallery */}
+          {/* Galleries */}
           <NavGroupHeader
-            active={activeView.kind === "whgGallery"}
-            expanded={false}
-            showChevron={false}
-            onClick={() => setActiveView({ kind: "whgGallery" })}
+            active={galleryKinds.includes(activeView.kind)}
+            expanded={expandedGroups.galleries}
+            onClick={() => toggleGroup("galleries")}
             Icon={Images}
-            label="WHG Gallery"
+            label="Galleries"
           />
+          {expandedGroups.galleries && (
+            <div style={{ paddingLeft: "1.1rem", marginBottom: "0.25rem" }}>
+              <NavSubItem active={activeView.kind === "whgGallery"} onClick={() => setActiveView({ kind: "whgGallery" })} label="WHG Gallery" />
+              <NavSubItem active={activeView.kind === "lacGallery"} onClick={() => setActiveView({ kind: "lacGallery" })} label="LAC Gallery" />
+              <NavSubItem active={activeView.kind === "hrdsGallery"} onClick={() => setActiveView({ kind: "hrdsGallery" })} label="HRDS Gallery" />
+              <NavSubItem active={activeView.kind === "cwgGallery"} onClick={() => setActiveView({ kind: "cwgGallery" })} label="CWG Gallery" />
+              <NavSubItem active={activeView.kind === "fsedsGallery"} onClick={() => setActiveView({ kind: "fsedsGallery" })} label="FSEDS Gallery" />
+            </div>
+          )}
 
           {/* Account Settings */}
           <NavGroupHeader
@@ -2857,8 +2882,63 @@ export default function AdminDashboard() {
           {activeView.kind === "home" && activeView.id === "team" && <TeamTab />}
           {activeView.kind === "page" && <PagesTab activeSlug={activeView.slug} />}
           {activeView.kind === "notifications" && <NotificationsTab />}
-          {activeView.kind === "rawPhotos" && <RawPhotosTab />}
           {activeView.kind === "whgGallery" && <WhgGalleryTab />}
+          {activeView.kind === "lacGallery" && (
+            <GenericGalleryTab
+              title="LAC Gallery"
+              description='Organise images into groups (e.g. "Legal Awareness Camp 2024"). Each group becomes a titled section in the public LAC gallery.'
+              groupPlaceholder='e.g. "Legal Awareness Camp 2024"'
+              fetchGroups={fetchLacGroups}
+              createGroup={createLacGroup}
+              updateGroup={updateLacGroup}
+              deleteGroup={deleteLacGroup}
+              uploadToGroup={uploadToLacGroup}
+              deleteImage={deleteLacGalleryImage}
+              updateImage={updateLacGalleryImage}
+            />
+          )}
+          {activeView.kind === "hrdsGallery" && (
+            <GenericGalleryTab
+              title="HRDS Gallery"
+              description='Organise images into groups (e.g. "Training Program 2024"). Each group becomes a titled section in the public HRDS gallery.'
+              groupPlaceholder='e.g. "Training Program 2024"'
+              fetchGroups={fetchHrdsGroups}
+              createGroup={createHrdsGroup}
+              updateGroup={updateHrdsGroup}
+              deleteGroup={deleteHrdsGroup}
+              uploadToGroup={uploadToHrdsGroup}
+              deleteImage={deleteHrdsGalleryImage}
+              updateImage={updateHrdsGalleryImage}
+            />
+          )}
+          {activeView.kind === "cwgGallery" && (
+            <GenericGalleryTab
+              title="CWG Gallery"
+              description='Organise images into groups (e.g. "Competition Event 2024"). Each group becomes a titled section in the public CWG gallery.'
+              groupPlaceholder='e.g. "Competition Event 2024"'
+              fetchGroups={fetchCwgGroups}
+              createGroup={createCwgGroup}
+              updateGroup={updateCwgGroup}
+              deleteGroup={deleteCwgGroup}
+              uploadToGroup={uploadToCwgGroup}
+              deleteImage={deleteCwgGalleryImage}
+              updateImage={updateCwgGalleryImage}
+            />
+          )}
+          {activeView.kind === "fsedsGallery" && (
+            <GenericGalleryTab
+              title="FSEDS Gallery"
+              description='Organise images into groups (e.g. "Community Program 2024"). Each group becomes a titled section in the public FSEDS gallery.'
+              groupPlaceholder='e.g. "Community Program 2024"'
+              fetchGroups={fetchFsedsGroups}
+              createGroup={createFsedsGroup}
+              updateGroup={updateFsedsGroup}
+              deleteGroup={deleteFsedsGroup}
+              uploadToGroup={uploadToFsedsGroup}
+              deleteImage={deleteFsedsGalleryImage}
+              updateImage={updateFsedsGalleryImage}
+            />
+          )}
           {activeView.kind === "settings" && <SettingsTab />}
         </div>
       </main>

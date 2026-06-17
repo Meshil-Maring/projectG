@@ -5,6 +5,10 @@ import { createListResource } from './listResource.js';
 import { imageRoutes } from './images/image.routes.js';
 import { rawPhotoRoutes } from './raw-photos/raw-photo.routes.js';
 import { whgGalleryRoutes } from './whg-gallery/whg-gallery.routes.js';
+import { lacGalleryRoutes } from './lac-gallery/lac-gallery.routes.js';
+import { hrdsGalleryRoutes } from './hrds-gallery/hrds-gallery.routes.js';
+import { cwgGalleryRoutes } from './cwg-gallery/cwg-gallery.routes.js';
+import { fsedsGalleryRoutes } from './fseds-gallery/fseds-gallery.routes.js';
 import {
   createVideoSchema,
   updateVideoSchema,
@@ -30,6 +34,10 @@ contentRoutes.use('/settings', settingsRoutes);
 contentRoutes.use('/images', imageRoutes);
 contentRoutes.use('/raw-photos', rawPhotoRoutes);
 contentRoutes.use('/whg-gallery', whgGalleryRoutes);
+contentRoutes.use('/lac-gallery', lacGalleryRoutes);
+contentRoutes.use('/hrds-gallery', hrdsGalleryRoutes);
+contentRoutes.use('/cwg-gallery', cwgGalleryRoutes);
+contentRoutes.use('/fseds-gallery', fsedsGalleryRoutes);
 
 contentRoutes.use(
   '/videos',

@@ -155,60 +155,188 @@ export function updateRawPhotoCaption(id: number, caption: string): Promise<RawP
   return api.patch<RawPhoto>(`/content/raw-photos/${id}`, { caption });
 }
 
-// ── WHG Gallery ───────────────────────────────────────────────────────────────
+// ── Shared gallery types ──────────────────────────────────────────────────────
 
-export interface WhgGalleryImage {
+export interface GalleryImage {
   id: string;
   name: string;
   description: string;
   url: string;
 }
 
-export interface WhgGroup {
+export interface GalleryGroup {
   id: number;
   name: string;
+  description: string;
+  theme: string;
+  themeColor: string;
   order: number;
-  images: WhgGalleryImage[];
+  images: GalleryImage[];
 }
 
-export function fetchWhgGroups(): Promise<WhgGroup[]> {
-  return api.get<WhgGroup[]>('/content/whg-gallery/groups');
-}
-
-export function createWhgGroup(name: string): Promise<WhgGroup> {
-  return api.post<WhgGroup>('/content/whg-gallery/groups', { name });
-}
-
-export function renameWhgGroup(id: number, name: string): Promise<WhgGroup> {
-  return api.patch<WhgGroup>(`/content/whg-gallery/groups/${id}`, { name });
-}
-
-export function deleteWhgGroup(id: number): Promise<{ id: number }> {
-  return api.delete<{ id: number }>(`/content/whg-gallery/groups/${id}`);
-}
-
-export async function uploadToWhgGroup(groupId: number, file: File): Promise<WhgGalleryImage> {
+async function uploadToGalleryGroup(endpoint: string, groupId: number, file: File): Promise<GalleryImage> {
   const formData = new FormData();
   formData.append('file', file);
   const token = localStorage.getItem('pg_admin_token');
-  const res = await fetch(`${API_URL}/content/whg-gallery/groups/${groupId}/upload`, {
+  const res = await fetch(`${API_URL}${endpoint}/${groupId}/upload`, {
     method: 'POST',
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     body: formData,
   });
   const json = await res.json().catch(() => null);
   if (!res.ok) throw new Error(json?.error?.message ?? 'Upload failed');
-  return json.data as WhgGalleryImage;
+  return json.data as GalleryImage;
+}
+
+// ── WHG Gallery ───────────────────────────────────────────────────────────────
+
+export type WhgGalleryImage = GalleryImage;
+export type WhgGroup = GalleryGroup;
+
+export function fetchWhgGroups(): Promise<GalleryGroup[]> {
+  return api.get<GalleryGroup[]>('/content/whg-gallery/groups');
+}
+
+export function createWhgGroup(name: string, description?: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.post<GalleryGroup>('/content/whg-gallery/groups', { name, description: description ?? '', theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function updateWhgGroup(id: number, name: string, description: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.patch<GalleryGroup>(`/content/whg-gallery/groups/${id}`, { name, description, theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function deleteWhgGroup(id: number): Promise<{ id: number }> {
+  return api.delete<{ id: number }>(`/content/whg-gallery/groups/${id}`);
+}
+
+export function uploadToWhgGroup(groupId: number, file: File): Promise<GalleryImage> {
+  return uploadToGalleryGroup('/content/whg-gallery/groups', groupId, file);
 }
 
 export function deleteWhgGalleryImage(imageId: string): Promise<{ id: string }> {
   return api.delete<{ id: string }>(`/content/whg-gallery/image/${imageId}`);
 }
 
-export function updateWhgGalleryImage(
-  imageId: string,
-  name: string,
-  description: string,
-): Promise<WhgGalleryImage> {
-  return api.patch<WhgGalleryImage>(`/content/whg-gallery/image/${imageId}`, { name, description });
+export function updateWhgGalleryImage(imageId: string, name: string, description: string): Promise<GalleryImage> {
+  return api.patch<GalleryImage>(`/content/whg-gallery/image/${imageId}`, { name, description });
+}
+
+// ── LAC Gallery ───────────────────────────────────────────────────────────────
+
+export function fetchLacGroups(): Promise<GalleryGroup[]> {
+  return api.get<GalleryGroup[]>('/content/lac-gallery/groups');
+}
+
+export function createLacGroup(name: string, description?: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.post<GalleryGroup>('/content/lac-gallery/groups', { name, description: description ?? '', theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function updateLacGroup(id: number, name: string, description: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.patch<GalleryGroup>(`/content/lac-gallery/groups/${id}`, { name, description, theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function deleteLacGroup(id: number): Promise<{ id: number }> {
+  return api.delete<{ id: number }>(`/content/lac-gallery/groups/${id}`);
+}
+
+export function uploadToLacGroup(groupId: number, file: File): Promise<GalleryImage> {
+  return uploadToGalleryGroup('/content/lac-gallery/groups', groupId, file);
+}
+
+export function deleteLacGalleryImage(imageId: string): Promise<{ id: string }> {
+  return api.delete<{ id: string }>(`/content/lac-gallery/image/${imageId}`);
+}
+
+export function updateLacGalleryImage(imageId: string, name: string, description: string): Promise<GalleryImage> {
+  return api.patch<GalleryImage>(`/content/lac-gallery/image/${imageId}`, { name, description });
+}
+
+// ── HRDS Gallery ──────────────────────────────────────────────────────────────
+
+export function fetchHrdsGroups(): Promise<GalleryGroup[]> {
+  return api.get<GalleryGroup[]>('/content/hrds-gallery/groups');
+}
+
+export function createHrdsGroup(name: string, description?: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.post<GalleryGroup>('/content/hrds-gallery/groups', { name, description: description ?? '', theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function updateHrdsGroup(id: number, name: string, description: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.patch<GalleryGroup>(`/content/hrds-gallery/groups/${id}`, { name, description, theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function deleteHrdsGroup(id: number): Promise<{ id: number }> {
+  return api.delete<{ id: number }>(`/content/hrds-gallery/groups/${id}`);
+}
+
+export function uploadToHrdsGroup(groupId: number, file: File): Promise<GalleryImage> {
+  return uploadToGalleryGroup('/content/hrds-gallery/groups', groupId, file);
+}
+
+export function deleteHrdsGalleryImage(imageId: string): Promise<{ id: string }> {
+  return api.delete<{ id: string }>(`/content/hrds-gallery/image/${imageId}`);
+}
+
+export function updateHrdsGalleryImage(imageId: string, name: string, description: string): Promise<GalleryImage> {
+  return api.patch<GalleryImage>(`/content/hrds-gallery/image/${imageId}`, { name, description });
+}
+
+// ── CWG Gallery ───────────────────────────────────────────────────────────────
+
+export function fetchCwgGroups(): Promise<GalleryGroup[]> {
+  return api.get<GalleryGroup[]>('/content/cwg-gallery/groups');
+}
+
+export function createCwgGroup(name: string, description?: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.post<GalleryGroup>('/content/cwg-gallery/groups', { name, description: description ?? '', theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function updateCwgGroup(id: number, name: string, description: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.patch<GalleryGroup>(`/content/cwg-gallery/groups/${id}`, { name, description, theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function deleteCwgGroup(id: number): Promise<{ id: number }> {
+  return api.delete<{ id: number }>(`/content/cwg-gallery/groups/${id}`);
+}
+
+export function uploadToCwgGroup(groupId: number, file: File): Promise<GalleryImage> {
+  return uploadToGalleryGroup('/content/cwg-gallery/groups', groupId, file);
+}
+
+export function deleteCwgGalleryImage(imageId: string): Promise<{ id: string }> {
+  return api.delete<{ id: string }>(`/content/cwg-gallery/image/${imageId}`);
+}
+
+export function updateCwgGalleryImage(imageId: string, name: string, description: string): Promise<GalleryImage> {
+  return api.patch<GalleryImage>(`/content/cwg-gallery/image/${imageId}`, { name, description });
+}
+
+// ── FSEDS Gallery ─────────────────────────────────────────────────────────────
+
+export function fetchFsedsGroups(): Promise<GalleryGroup[]> {
+  return api.get<GalleryGroup[]>('/content/fseds-gallery/groups');
+}
+
+export function createFsedsGroup(name: string, description?: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.post<GalleryGroup>('/content/fseds-gallery/groups', { name, description: description ?? '', theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function updateFsedsGroup(id: number, name: string, description: string, theme?: string, themeColor?: string): Promise<GalleryGroup> {
+  return api.patch<GalleryGroup>(`/content/fseds-gallery/groups/${id}`, { name, description, theme: theme ?? '', themeColor: themeColor ?? '' });
+}
+
+export function deleteFsedsGroup(id: number): Promise<{ id: number }> {
+  return api.delete<{ id: number }>(`/content/fseds-gallery/groups/${id}`);
+}
+
+export function uploadToFsedsGroup(groupId: number, file: File): Promise<GalleryImage> {
+  return uploadToGalleryGroup('/content/fseds-gallery/groups', groupId, file);
+}
+
+export function deleteFsedsGalleryImage(imageId: string): Promise<{ id: string }> {
+  return api.delete<{ id: string }>(`/content/fseds-gallery/image/${imageId}`);
+}
+
+export function updateFsedsGalleryImage(imageId: string, name: string, description: string): Promise<GalleryImage> {
+  return api.patch<GalleryImage>(`/content/fseds-gallery/image/${imageId}`, { name, description });
 }

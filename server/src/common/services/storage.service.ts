@@ -4,6 +4,7 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   ListObjectsV2Command,
+  CopyObjectCommand,
 } from '@aws-sdk/client-s3';
 import type { Response } from 'express';
 import { env } from '../../config/env.js';
@@ -97,6 +98,15 @@ export async function uploadToFolder(
     ContentType: contentType,
   }));
   return { key, url: publicUrl(key) };
+}
+
+// Copy an object to a new key within the same bucket (server-side, no re-upload).
+export async function copyObject(sourceKey: string, destKey: string): Promise<void> {
+  await s3.send(new CopyObjectCommand({
+    Bucket: env.R2_BUCKET_NAME,
+    CopySource: `${env.R2_BUCKET_NAME}/${sourceKey}`,
+    Key: destKey,
+  }));
 }
 
 // Kept for compatibility — not used with R2 but required by Express Response typing.
