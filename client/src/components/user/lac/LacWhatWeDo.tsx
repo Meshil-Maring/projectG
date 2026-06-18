@@ -162,6 +162,7 @@ export default function LacWhatWeDo() {
               lineHeight: 1.8,
               maxWidth: "560px",
               margin: "0 auto",
+              whiteSpace: "pre-wrap",
             }}
           >
             {mission.description}

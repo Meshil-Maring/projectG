@@ -71,6 +71,7 @@ export default function LacCTA() {
             maxWidth: "480px",
             margin: "0 auto 2.5rem",
             lineHeight: 1.7,
+            whiteSpace: "pre-wrap",
           }}
         >
           {cta.description}

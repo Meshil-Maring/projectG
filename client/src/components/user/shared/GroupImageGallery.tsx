@@ -50,29 +50,41 @@ function Lightbox({
       key="lightbox-backdrop"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}
       onClick={onClose}
-      style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.92)", display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center" }}
+      style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.92)", display: "flex", flexDirection: "column" as const, overflow: "hidden" }}
     >
-      <button onClick={onClose} style={{ position: "absolute", top: "1.25rem", right: "1.25rem", background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "42px", height: "42px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }} aria-label="Close preview">
-        <X size={20} />
-      </button>
-      <div style={{ position: "absolute", top: "1.35rem", left: "50%", transform: "translateX(-50%)", fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", letterSpacing: "0.08em" }}>
-        {current + 1} / {images.length}
+      {/* Top bar: counter + close */}
+      <div onClick={(e) => e.stopPropagation()} style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "0.9rem 1.5rem", position: "relative" as const }}>
+        <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", letterSpacing: "0.08em" }}>{current + 1} / {images.length}</div>
+        <button onClick={onClose} style={{ position: "absolute" as const, right: "1.25rem", top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "42px", height: "42px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }} aria-label="Close preview">
+          <X size={20} />
+        </button>
       </div>
-      <button onClick={(e) => { e.stopPropagation(); prev(); }} disabled={current === 0} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "46px", height: "46px", cursor: current === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", opacity: current === 0 ? 0.3 : 1 }} aria-label="Previous image">
-        <ChevronLeft size={24} />
-      </button>
-      <button onClick={(e) => { e.stopPropagation(); next(); }} disabled={current === images.length - 1} style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "46px", height: "46px", cursor: current === images.length - 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", opacity: current === images.length - 1 ? 0.3 : 1 }} aria-label="Next image">
-        <ChevronRight size={24} />
-      </button>
-      <motion.div key={current} initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.2 }} onClick={(e) => e.stopPropagation()} style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", maxWidth: "min(90vw, 1000px)", width: "100%", padding: "0 4rem" }}>
-        <img src={photo.url} alt={formatImageTitle(photo.name)} style={{ maxWidth: "100%", maxHeight: "72vh", objectFit: "contain" as const, borderRadius: "0.75rem", boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }} />
-        <div style={{ textAlign: "center" as const, marginTop: "1.25rem", padding: "0 1rem" }}>
-          <div style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: photo.description ? "0.4rem" : 0 }}>{formatImageTitle(photo.name)}</div>
-          {photo.description && <div style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.65 }}>{photo.description}</div>}
+
+      {/* Scrollable image + description */}
+      <div onClick={(e) => e.stopPropagation()} style={{ flex: 1, overflowY: "auto" as const, display: "flex", flexDirection: "column" as const, alignItems: "center", padding: "0 0 1rem" }}>
+        {/* Image row with inline nav arrows */}
+        <div style={{ display: "flex", alignItems: "center", width: "100%", maxWidth: "min(92vw, 1100px)", padding: "0 0.75rem", gap: "0.5rem" }}>
+          <button onClick={prev} disabled={current === 0} style={{ flexShrink: 0, background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "46px", height: "46px", cursor: current === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", opacity: current === 0 ? 0.3 : 1 }} aria-label="Previous image">
+            <ChevronLeft size={24} />
+          </button>
+          <motion.div key={current} initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.2 }} style={{ flex: 1, display: "flex", justifyContent: "center" as const }}>
+            <img src={photo.url} alt={formatImageTitle(photo.name)} style={{ maxWidth: "100%", maxHeight: "65vh", objectFit: "contain" as const, borderRadius: "0.75rem", boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }} />
+          </motion.div>
+          <button onClick={next} disabled={current === images.length - 1} style={{ flexShrink: 0, background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "46px", height: "46px", cursor: current === images.length - 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", opacity: current === images.length - 1 ? 0.3 : 1 }} aria-label="Next image">
+            <ChevronRight size={24} />
+          </button>
         </div>
-      </motion.div>
+
+        {/* Title + description */}
+        <div style={{ textAlign: "center" as const, marginTop: "1.25rem", padding: "0 1.5rem", maxWidth: "min(90vw, 800px)", width: "100%" }}>
+          <div style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: photo.description ? "0.5rem" : 0 }}>{formatImageTitle(photo.name)}</div>
+          {photo.description && <div style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.7 }}>{photo.description}</div>}
+        </div>
+      </div>
+
+      {/* Thumbnails */}
       {images.length > 1 && (
-        <div onClick={(e) => e.stopPropagation()} style={{ position: "absolute", bottom: "1.5rem", display: "flex", gap: "0.5rem", overflowX: "auto" as const, maxWidth: "90vw", padding: "0 1rem" }}>
+        <div onClick={(e) => e.stopPropagation()} style={{ flexShrink: 0, display: "flex", gap: "0.5rem", overflowX: "auto" as const, maxWidth: "90vw", padding: "0.75rem 1rem", alignSelf: "center" as const }}>
           {images.map((img, idx) => (
             <button key={idx} onClick={() => setCurrent(idx)} style={{ flexShrink: 0, width: "56px", height: "40px", borderRadius: "6px", overflow: "hidden", border: idx === current ? `2px solid ${primary}` : "2px solid transparent", cursor: "pointer", padding: 0, background: "transparent", opacity: idx === current ? 1 : 0.5 }} aria-label={`Go to image ${idx + 1}`}>
               <img src={img.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" as const }} />

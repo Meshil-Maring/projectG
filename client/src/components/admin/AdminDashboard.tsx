@@ -65,6 +65,7 @@ import { api } from "../../lib/api";
 import { ImageUploadField } from "./shared/ImageUploadField";
 import { WhgGalleryTab } from "./WhgGalleryTab";
 import { GenericGalleryTab } from "./GenericGalleryTab";
+import { AboutStoryTab } from "./AboutStoryTab";
 import {
   fetchLacGroups, createLacGroup, updateLacGroup, deleteLacGroup,
   uploadToLacGroup, deleteLacGalleryImage, updateLacGalleryImage,
@@ -370,8 +371,10 @@ function VideoTab() {
   useEffect(() => setVideos(data.videos), [data.videos]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<VideoFormData>(BLANK_VIDEO);
+  const [formError, setFormError] = useState("");
   const [addingNew, setAddingNew] = useState(false);
   const [newForm, setNewForm] = useState<VideoFormData>(BLANK_VIDEO);
+  const [newFormError, setNewFormError] = useState("");
   const [videoType, setVideoType] = useState<"youtube" | "url">("youtube");
   const [newVideoType, setNewVideoType] = useState<"youtube" | "url">("youtube");
 
@@ -391,17 +394,34 @@ function VideoTab() {
 
   function cancelEdit() {
     setEditingId(null);
+    setFormError("");
+  }
+
+  function parseYoutubeId(input: string): string {
+    const m = input.match(/(?:youtube\.com\/(?:watch\?.*v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    return m ? m[1] : input.trim();
+  }
+
+  function validateVideoForm(f: VideoFormData, type: "youtube" | "url"): string {
+    if (!f.title.trim()) return "Title is required.";
+    if (!f.description.trim()) return "Description is required.";
+    if (!f.thumbnail.trim()) return "Thumbnail image is required.";
+    if (!f.duration.trim()) return "Duration is required.";
+    if (type === "youtube" && !f.youtubeId?.trim()) return "YouTube video ID is required.";
+    if (type === "url" && !f.videoUrl?.trim()) return "Video URL is required.";
+    return "";
   }
 
   function saveEdit() {
+    const err = validateVideoForm(form, videoType);
+    if (err) { setFormError(err); return; }
+    setFormError("");
     const updated = videos.map((v) => {
       if (v.id !== editingId) return v;
       const { youtubeId, videoUrl, ...rest } = form;
-      return {
-        ...rest,
-        id: v.id,
-        ...(videoType === "youtube" ? { youtubeId } : { videoUrl }),
-      };
+      return videoType === "youtube"
+        ? { ...rest, id: v.id, youtubeId, videoUrl: "" }
+        : { ...rest, id: v.id, videoUrl, youtubeId: "" };
     });
     setVideos(updated);
     updateVideos(updated);
@@ -432,12 +452,13 @@ function VideoTab() {
   }
 
   function addVideo() {
+    const err = validateVideoForm(newForm, newVideoType);
+    if (err) { setNewFormError(err); return; }
+    setNewFormError("");
     const { youtubeId, videoUrl, ...rest } = newForm;
-    const entry: VideoEntry = {
-      ...rest,
-      id: nextId(videos),
-      ...(newVideoType === "youtube" ? { youtubeId } : { videoUrl }),
-    };
+    const entry: VideoEntry = newVideoType === "youtube"
+      ? { ...rest, id: nextId(videos), youtubeId, videoUrl: "" }
+      : { ...rest, id: nextId(videos), videoUrl, youtubeId: "" };
     const updated = [...videos, entry];
     setVideos(updated);
     updateVideos(updated);
@@ -576,9 +597,7 @@ function VideoTab() {
                 <FieldGroup label="Description">
                   <Textarea value={form.description} onChange={(val) => setForm((f) => ({ ...f, description: val }))} placeholder="Short video description" rows={2} />
                 </FieldGroup>
-                <FieldGroup label="Thumbnail URL">
-                  <Input value={form.thumbnail} onChange={(val) => setForm((f) => ({ ...f, thumbnail: val }))} placeholder="https://..." />
-                </FieldGroup>
+                <ImageUploadField specKey="videoThumbnail" label="Thumbnail" value={form.thumbnail} onChange={(val) => setForm((f) => ({ ...f, thumbnail: val }))} previewHeight={120} />
                 <FieldGroup label="Video Source">
                   <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
                     {(["youtube", "url"] as const).map((t) => (
@@ -602,11 +621,20 @@ function VideoTab() {
                     ))}
                   </div>
                   {videoType === "youtube" ? (
-                    <Input value={form.youtubeId ?? ""} onChange={(val) => setForm((f) => ({ ...f, youtubeId: val }))} placeholder="YouTube video ID (e.g. dQw4w9WgXcQ)" />
+                    <Input value={form.youtubeId ?? ""} onChange={(val) => setForm((f) => ({ ...f, youtubeId: parseYoutubeId(val) }))} placeholder="YouTube video ID or full YouTube URL" />
                   ) : (
-                    <Input value={form.videoUrl ?? ""} onChange={(val) => setForm((f) => ({ ...f, videoUrl: val }))} placeholder="https://example.com/video.mp4" />
+                    <Input
+                      value={form.videoUrl ?? ""}
+                      onChange={(val) => {
+                        const ytId = parseYoutubeId(val);
+                        if (ytId !== val.trim()) { setVideoType("youtube"); setForm((f) => ({ ...f, youtubeId: ytId, videoUrl: "" })); }
+                        else setForm((f) => ({ ...f, videoUrl: val }));
+                      }}
+                      placeholder="Direct .mp4 / .webm URL (paste YouTube URL to auto-switch)"
+                    />
                   )}
                 </FieldGroup>
+                {formError && <p style={{ fontSize: "0.78rem", color: "#dc2626", marginBottom: "0.5rem" }}>{formError}</p>}
                 <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
                   <button onClick={saveEdit} style={primaryBtnStyle}>
                     <Check size={13} /> Save
@@ -644,9 +672,7 @@ function VideoTab() {
             <FieldGroup label="Description">
               <Textarea value={newForm.description} onChange={(val) => setNewForm((f) => ({ ...f, description: val }))} placeholder="Short video description" rows={2} />
             </FieldGroup>
-            <FieldGroup label="Thumbnail URL">
-              <Input value={newForm.thumbnail} onChange={(val) => setNewForm((f) => ({ ...f, thumbnail: val }))} placeholder="https://..." />
-            </FieldGroup>
+            <ImageUploadField specKey="videoThumbnail" label="Thumbnail" value={newForm.thumbnail} onChange={(val) => setNewForm((f) => ({ ...f, thumbnail: val }))} previewHeight={120} />
             <FieldGroup label="Video Source">
               <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
                 {(["youtube", "url"] as const).map((t) => (
@@ -670,16 +696,25 @@ function VideoTab() {
                 ))}
               </div>
               {newVideoType === "youtube" ? (
-                <Input value={newForm.youtubeId ?? ""} onChange={(val) => setNewForm((f) => ({ ...f, youtubeId: val }))} placeholder="YouTube video ID (e.g. dQw4w9WgXcQ)" />
+                <Input value={newForm.youtubeId ?? ""} onChange={(val) => setNewForm((f) => ({ ...f, youtubeId: parseYoutubeId(val) }))} placeholder="YouTube video ID or full YouTube URL" />
               ) : (
-                <Input value={newForm.videoUrl ?? ""} onChange={(val) => setNewForm((f) => ({ ...f, videoUrl: val }))} placeholder="https://example.com/video.mp4" />
+                <Input
+                  value={newForm.videoUrl ?? ""}
+                  onChange={(val) => {
+                    const ytId = parseYoutubeId(val);
+                    if (ytId !== val.trim()) { setNewVideoType("youtube"); setNewForm((f) => ({ ...f, youtubeId: ytId, videoUrl: "" })); }
+                    else setNewForm((f) => ({ ...f, videoUrl: val }));
+                  }}
+                  placeholder="Direct .mp4 / .webm URL (paste YouTube URL to auto-switch)"
+                />
               )}
             </FieldGroup>
+            {newFormError && <p style={{ fontSize: "0.78rem", color: "#dc2626", marginBottom: "0.5rem" }}>{newFormError}</p>}
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
               <button onClick={addVideo} style={primaryBtnStyle}>
                 <Plus size={13} /> Add Video
               </button>
-              <button onClick={() => { setAddingNew(false); setNewForm(BLANK_VIDEO); }} style={secondaryBtnStyle}>
+              <button onClick={() => { setAddingNew(false); setNewForm(BLANK_VIDEO); setNewFormError(""); }} style={secondaryBtnStyle}>
                 <X size={13} /> Cancel
               </button>
             </div>
@@ -1210,9 +1245,7 @@ function StoriesTab() {
                     <Input value={form.role} onChange={(val) => setForm((f) => ({ ...f, role: val }))} placeholder="e.g. Volunteer" />
                   </FieldGroup>
                 </div>
-                <FieldGroup label="Profile Photo URL">
-                  <Input value={form.image} onChange={(val) => setForm((f) => ({ ...f, image: val }))} placeholder="https://..." />
-                </FieldGroup>
+                <ImageUploadField specKey="story" label="Profile Photo" value={form.image} onChange={(val) => setForm((f) => ({ ...f, image: val }))} previewHeight={100} />
                 <FieldGroup label="Message / Quote">
                   <Textarea value={form.quote} onChange={(val) => setForm((f) => ({ ...f, quote: val }))} placeholder="Their testimonial message..." rows={3} />
                 </FieldGroup>
@@ -1236,9 +1269,7 @@ function StoriesTab() {
                 <Input value={newForm.role} onChange={(val) => setNewForm((f) => ({ ...f, role: val }))} placeholder="e.g. Volunteer" />
               </FieldGroup>
             </div>
-            <FieldGroup label="Profile Photo URL">
-              <Input value={newForm.image} onChange={(val) => setNewForm((f) => ({ ...f, image: val }))} placeholder="https://..." />
-            </FieldGroup>
+            <ImageUploadField specKey="story" label="Profile Photo" value={newForm.image} onChange={(val) => setNewForm((f) => ({ ...f, image: val }))} previewHeight={100} />
             <FieldGroup label="Message / Quote">
               <Textarea value={newForm.quote} onChange={(val) => setNewForm((f) => ({ ...f, quote: val }))} placeholder="Their testimonial message..." rows={3} />
             </FieldGroup>
@@ -1533,8 +1564,8 @@ const secondaryBtnStyle: React.CSSProperties = {
 
 type BoardForm  = Omit<BoardMember,  "id">;
 type MemberForm = Omit<TeamMember, "id">;
-const BLANK_BOARD:  BoardForm  = { name: "", role: "", badge: "", color: "#1a3270" };
-const BLANK_MEMBER: MemberForm = { name: "", role: "", color: "#4a90d9" };
+const BLANK_BOARD:  BoardForm  = { name: "", role: "", badge: "", color: "#1a3270", image: "", description: "" };
+const BLANK_MEMBER: MemberForm = { name: "", role: "", color: "#4a90d9", image: "", description: "" };
 
 const COLOR_PRESETS = [
   "#1a3270","#2563eb","#4a90d9","#0891b2","#059669",
@@ -1567,12 +1598,38 @@ function ColorPicker({ value, onChange }: { value: string; onChange: (c: string)
   );
 }
 
+const DEFAULT_TEAM_TITLES = {
+  heading: "Meet Our Team",
+  boardLabel: "Board Committee Cum Chairman",
+  teamLabel: "Our Team Members",
+};
+
 function TeamTab() {
   const { data, updateBoard, updateMembers } = useTeamData();
   const [board,   setBoard]   = useState<BoardMember[]>(data.board);
   const [members, setMembers] = useState<TeamMember[]>(data.members);
   useEffect(() => setBoard(data.board), [data.board]);
   useEffect(() => setMembers(data.members), [data.members]);
+
+  // ── Section titles state ───────────────────────────────────────────────────
+  const [teamSectionId, setTeamSectionId] = useState<number | null>(null);
+  const [titles, setTitles] = useState({ ...DEFAULT_TEAM_TITLES });
+  useEffect(() => {
+    api.get<{ sections: { id: number; type: string; data: Record<string, string> }[] }>("/pages/about-us")
+      .then((page) => {
+        const sec = page.sections.find((s) => s.type === "about-team");
+        if (sec) {
+          setTeamSectionId(sec.id);
+          setTitles({ ...DEFAULT_TEAM_TITLES, ...sec.data });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  function saveTitles() {
+    if (!teamSectionId) return;
+    void api.patch(`/sections/${teamSectionId}`, { data: titles });
+  }
 
   // board state
   const [boardEditId,  setBoardEditId]  = useState<number | null>(null);
@@ -1589,7 +1646,7 @@ function TeamTab() {
   // ── Board helpers ──────────────────────────────────────────────────────────
   function startEditBoard(b: BoardMember) {
     setBoardEditId(b.id);
-    setBoardForm({ name: b.name, role: b.role, badge: b.badge, color: b.color });
+    setBoardForm({ name: b.name, role: b.role, badge: b.badge, color: b.color, image: b.image ?? "", description: b.description ?? "" });
     setAddingBoard(false);
   }
   function saveEditBoard() {
@@ -1611,7 +1668,7 @@ function TeamTab() {
   // ── Member helpers ─────────────────────────────────────────────────────────
   function startEditMember(m: TeamMember) {
     setMemberEditId(m.id);
-    setMemberForm({ name: m.name, role: m.role, color: m.color });
+    setMemberForm({ name: m.name, role: m.role, color: m.color, image: m.image ?? "", description: m.description ?? "" });
     setAddingMember(false);
   }
   function saveEditMember() {
@@ -1645,12 +1702,6 @@ function TeamTab() {
     margin: "1.5rem 0 0.75rem", paddingBottom: "0.4rem",
     borderBottom: "1px solid #e2e8f0",
   };
-  const avatarDot = (color: string) => ({
-    width: "32px", height: "32px", borderRadius: "8px",
-    background: color, flexShrink: 0,
-    display: "flex", alignItems: "center", justifyContent: "center",
-    color: "#fff", fontSize: "0.7rem", fontWeight: 700,
-  });
 
   return (
     <div>
@@ -1658,6 +1709,44 @@ function TeamTab() {
         title="Meet Our Team"
         subtitle="Manage Board Committee Cum Chairman members and the general team shown on the About Us page."
       />
+
+      {/* ── Section Titles ── */}
+      <div
+        style={{
+          background: "#fff",
+          border: "1px solid #e2e8f0",
+          borderRadius: "0.75rem",
+          padding: "1.25rem",
+          maxWidth: "640px",
+          marginBottom: "1.75rem",
+        }}
+      >
+        <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>
+          Section Titles
+        </p>
+        <FieldGroup label="Main Heading">
+          <Input
+            value={titles.heading}
+            onChange={(v) => setTitles((t) => ({ ...t, heading: v }))}
+            placeholder="e.g. Meet Our Team"
+          />
+        </FieldGroup>
+        <FieldGroup label="Board Group Label">
+          <Input
+            value={titles.boardLabel}
+            onChange={(v) => setTitles((t) => ({ ...t, boardLabel: v }))}
+            placeholder="e.g. Board Committee Cum Chairman"
+          />
+        </FieldGroup>
+        <FieldGroup label="Members Group Label">
+          <Input
+            value={titles.teamLabel}
+            onChange={(v) => setTitles((t) => ({ ...t, teamLabel: v }))}
+            placeholder="e.g. Our Team Members"
+          />
+        </FieldGroup>
+        <SaveBtn onClick={saveTitles} label="Save Titles" />
+      </div>
 
       {/* ── Board Committee ── */}
       <p style={subHead}>Board Committee Cum Chairman</p>
@@ -1667,7 +1756,13 @@ function TeamTab() {
           return (
             <div key={b.id} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.7rem 1rem", borderBottom: boardEditId === b.id ? "1px solid #e2e8f0" : "none" }}>
-                <div style={avatarDot(b.color)}>{initials}</div>
+                <div style={{ width: "40px", height: "40px", borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: b.color, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {b.image ? (
+                    <img src={b.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                  ) : (
+                    <span style={{ color: "#fff", fontSize: "0.7rem", fontWeight: 700 }}>{initials}</span>
+                  )}
+                </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: "0.83rem", fontWeight: 700, color: "#0f1e4a" }}>{b.name || "(No name)"}</p>
                   <p style={{ fontSize: "0.72rem", color: "#64748b" }}>{b.role} · <span style={{ fontWeight: 600, color: "#1a3270" }}>{b.badge}</span></p>
@@ -1683,6 +1778,7 @@ function TeamTab() {
               </div>
               {boardEditId === b.id && (
                 <div style={{ padding: "1rem", background: "#f8fafc" }}>
+                  <ImageUploadField specKey="team" label="Photo" value={boardForm.image ?? ""} onChange={(v) => setBoardForm((f) => ({ ...f, image: v }))} previewHeight={120} />
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                     <FieldGroup label="Name">
                       <Input value={boardForm.name} onChange={(v) => setBoardForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
@@ -1694,7 +1790,10 @@ function TeamTab() {
                   <FieldGroup label="Badge Label">
                     <Input value={boardForm.badge} onChange={(v) => setBoardForm((f) => ({ ...f, badge: v }))} placeholder="e.g. Chairman" />
                   </FieldGroup>
-                  <FieldGroup label="Avatar Colour">
+                  <FieldGroup label="Description">
+                    <Textarea value={boardForm.description ?? ""} onChange={(v) => setBoardForm((f) => ({ ...f, description: v }))} placeholder="Short bio or description..." rows={2} />
+                  </FieldGroup>
+                  <FieldGroup label="Avatar Colour (fallback)">
                     <ColorPicker value={boardForm.color} onChange={(c) => setBoardForm((f) => ({ ...f, color: c }))} />
                   </FieldGroup>
                   <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
@@ -1710,6 +1809,7 @@ function TeamTab() {
         {addingBoard ? (
           <div style={{ background: "#fff", border: "2px dashed #1a3270", borderRadius: "0.75rem", padding: "1.25rem" }}>
             <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>New Board Member</p>
+            <ImageUploadField specKey="team" label="Photo" value={newBoardForm.image ?? ""} onChange={(v) => setNewBoardForm((f) => ({ ...f, image: v }))} previewHeight={120} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
               <FieldGroup label="Name">
                 <Input value={newBoardForm.name} onChange={(v) => setNewBoardForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
@@ -1721,7 +1821,10 @@ function TeamTab() {
             <FieldGroup label="Badge Label">
               <Input value={newBoardForm.badge} onChange={(v) => setNewBoardForm((f) => ({ ...f, badge: v }))} placeholder="e.g. Chairman" />
             </FieldGroup>
-            <FieldGroup label="Avatar Colour">
+            <FieldGroup label="Description">
+              <Textarea value={newBoardForm.description ?? ""} onChange={(v) => setNewBoardForm((f) => ({ ...f, description: v }))} placeholder="Short bio or description..." rows={2} />
+            </FieldGroup>
+            <FieldGroup label="Avatar Colour (fallback)">
               <ColorPicker value={newBoardForm.color} onChange={(c) => setNewBoardForm((f) => ({ ...f, color: c }))} />
             </FieldGroup>
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
@@ -1747,7 +1850,13 @@ function TeamTab() {
           return (
             <div key={m.id} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: "0.75rem", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.7rem 1rem", borderBottom: memberEditId === m.id ? "1px solid #e2e8f0" : "none" }}>
-                <div style={avatarDot(m.color)}>{initials}</div>
+                <div style={{ width: "40px", height: "40px", borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: m.color, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {m.image ? (
+                    <img src={m.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                  ) : (
+                    <span style={{ color: "#fff", fontSize: "0.7rem", fontWeight: 700 }}>{initials}</span>
+                  )}
+                </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: "0.83rem", fontWeight: 700, color: "#0f1e4a" }}>{m.name || "(No name)"}</p>
                   <p style={{ fontSize: "0.72rem", color: "#64748b" }}>{m.role}</p>
@@ -1763,6 +1872,7 @@ function TeamTab() {
               </div>
               {memberEditId === m.id && (
                 <div style={{ padding: "1rem", background: "#f8fafc" }}>
+                  <ImageUploadField specKey="team" label="Photo" value={memberForm.image ?? ""} onChange={(v) => setMemberForm((f) => ({ ...f, image: v }))} previewHeight={120} />
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                     <FieldGroup label="Name">
                       <Input value={memberForm.name} onChange={(v) => setMemberForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
@@ -1771,7 +1881,10 @@ function TeamTab() {
                       <Input value={memberForm.role} onChange={(v) => setMemberForm((f) => ({ ...f, role: v }))} placeholder="e.g. Programs Manager" />
                     </FieldGroup>
                   </div>
-                  <FieldGroup label="Avatar Colour">
+                  <FieldGroup label="Description">
+                    <Textarea value={memberForm.description ?? ""} onChange={(v) => setMemberForm((f) => ({ ...f, description: v }))} placeholder="Short bio or description..." rows={2} />
+                  </FieldGroup>
+                  <FieldGroup label="Avatar Colour (fallback)">
                     <ColorPicker value={memberForm.color} onChange={(c) => setMemberForm((f) => ({ ...f, color: c }))} />
                   </FieldGroup>
                   <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
@@ -1787,6 +1900,7 @@ function TeamTab() {
         {addingMember ? (
           <div style={{ background: "#fff", border: "2px dashed #1a3270", borderRadius: "0.75rem", padding: "1.25rem" }}>
             <p style={{ fontSize: "0.85rem", fontWeight: 700, color: "#0f1e4a", marginBottom: "1rem" }}>New Team Member</p>
+            <ImageUploadField specKey="team" label="Photo" value={newMemberForm.image ?? ""} onChange={(v) => setNewMemberForm((f) => ({ ...f, image: v }))} previewHeight={120} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
               <FieldGroup label="Name">
                 <Input value={newMemberForm.name} onChange={(v) => setNewMemberForm((f) => ({ ...f, name: v }))} placeholder="Full name" />
@@ -1795,7 +1909,10 @@ function TeamTab() {
                 <Input value={newMemberForm.role} onChange={(v) => setNewMemberForm((f) => ({ ...f, role: v }))} placeholder="e.g. Programs Manager" />
               </FieldGroup>
             </div>
-            <FieldGroup label="Avatar Colour">
+            <FieldGroup label="Description">
+              <Textarea value={newMemberForm.description ?? ""} onChange={(v) => setNewMemberForm((f) => ({ ...f, description: v }))} placeholder="Short bio or description..." rows={2} />
+            </FieldGroup>
+            <FieldGroup label="Avatar Colour (fallback)">
               <ColorPicker value={newMemberForm.color} onChange={(c) => setNewMemberForm((f) => ({ ...f, color: c }))} />
             </FieldGroup>
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
@@ -1834,6 +1951,7 @@ const BLANK_NOTICE: NoticeFormData = {
   date: "",
   summary: "",
   body: "",
+  imageUrl: "",
 };
 
 function NoticeCategorySelect({
@@ -1879,7 +1997,7 @@ function NotificationsTab() {
 
   function startEdit(n: NoticeEntry) {
     setEditingId(n.id);
-    setForm({ title: n.title, category: n.category, date: n.date, summary: n.summary, body: n.body });
+    setForm({ title: n.title, category: n.category, date: n.date, summary: n.summary, body: n.body, imageUrl: n.imageUrl ?? "" });
     setAddingNew(false);
   }
 
@@ -2019,6 +2137,7 @@ function NotificationsTab() {
                   <FieldGroup label="Full Details">
                     <Textarea value={form.body} onChange={(v) => setForm((f) => ({ ...f, body: v }))} placeholder="Full notice details shown when expanded..." rows={4} />
                   </FieldGroup>
+                  <ImageUploadField specKey="notification" label="Image (optional)" value={form.imageUrl ?? ""} onChange={(v) => setForm((f) => ({ ...f, imageUrl: v }))} previewHeight={120} />
                   <div style={{ display: "flex", gap: "0.5rem" }}>
                     <button onClick={saveEdit} style={primaryBtnStyle}><Check size={13} /> Save</button>
                     <button onClick={() => setEditingId(null)} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
@@ -2049,6 +2168,7 @@ function NotificationsTab() {
             <FieldGroup label="Full Details">
               <Textarea value={newForm.body} onChange={(v) => setNewForm((f) => ({ ...f, body: v }))} placeholder="Full notice details shown when expanded..." rows={4} />
             </FieldGroup>
+            <ImageUploadField specKey="notification" label="Image (optional)" value={newForm.imageUrl ?? ""} onChange={(v) => setNewForm((f) => ({ ...f, imageUrl: v }))} previewHeight={120} />
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
               <button onClick={addNotice} style={primaryBtnStyle}><Plus size={13} /> Add Notice</button>
               <button onClick={() => { setAddingNew(false); setNewForm(BLANK_NOTICE); }} style={secondaryBtnStyle}><X size={13} /> Cancel</button>
@@ -2069,7 +2189,7 @@ function NotificationsTab() {
 
 // ── Tab definitions ───────────────────────────────────────────────────────────
 
-type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities" | "team";
+type TabId = "hero" | "videos" | "gallery" | "impact" | "stories" | "activities";
 
 const HOME_PAGE_TABS: { id: TabId; label: string; Icon: React.ElementType }[] = [
   { id: "hero",       label: "Hero Image",        Icon: Image },
@@ -2078,18 +2198,19 @@ const HOME_PAGE_TABS: { id: TabId; label: string; Icon: React.ElementType }[] = 
   { id: "impact",     label: "Our Impact",         Icon: BarChart2 },
   { id: "stories",    label: "Stories of Change",  Icon: MessageSquare },
   { id: "activities", label: "Group Activities",   Icon: Users },
-  { id: "team",       label: "Meet Our Team",      Icon: Users },
 ];
 
 type ActiveView =
   | { kind: "home"; id: TabId }
   | { kind: "page"; slug: string }
   | { kind: "notifications" }
+  | { kind: "team" }
   | { kind: "whgGallery" }
   | { kind: "lacGallery" }
   | { kind: "hrdsGallery" }
   | { kind: "cwgGallery" }
   | { kind: "fsedsGallery" }
+  | { kind: "aboutStory" }
   | { kind: "settings" };
 
 // ── Tab: Account Settings ─────────────────────────────────────────────────────
@@ -2272,12 +2393,27 @@ function PagesTab({ activeSlug }: { activeSlug: string }) {
             {PAGE_SECTION_LABELS[section.type] ?? section.type}
           </h3>
 
-          {Object.keys(section.data).map((key) =>
-            key.toLowerCase().includes("description") || key.toLowerCase().includes("quote") ? (
+          {Object.keys(section.data).map((key) => {
+            const k = key.toLowerCase();
+            const isMultiline =
+              k.includes("description") ||
+              k.includes("quote") ||
+              k.includes("body") ||
+              k.includes("summary") ||
+              k.includes("content") ||
+              k.includes("detail") ||
+              k.includes("message") ||
+              k.includes("text") ||
+              k.includes("mission") ||
+              k.includes("vision") ||
+              k.includes("objective") ||
+              k.includes("paragraph");
+            return isMultiline ? (
               <FieldGroup key={key} label={fieldLabel(key)}>
                 <Textarea
                   value={edits[section.id]?.[key] ?? ""}
                   onChange={(v) => setField(section.id, key, v)}
+                  rows={4}
                 />
               </FieldGroup>
             ) : (
@@ -2287,8 +2423,8 @@ function PagesTab({ activeSlug }: { activeSlug: string }) {
                   onChange={(v) => setField(section.id, key, v)}
                 />
               </FieldGroup>
-            ),
-          )}
+            );
+          })}
 
           <SaveBtn onClick={() => save(section.id)} />
         </div>
@@ -2610,6 +2746,10 @@ export default function AdminDashboard() {
       ? PAGES.find((p) => p.slug === activeView.slug)?.title
       : activeView.kind === "notifications"
       ? "Notifications"
+      : activeView.kind === "team"
+      ? "Meet Our Team"
+      : activeView.kind === "aboutStory"
+      ? "Our Story Section"
       : activeView.kind in GALLERY_LABELS
       ? GALLERY_LABELS[activeView.kind]
       : "Account Settings";
@@ -2623,6 +2763,10 @@ export default function AdminDashboard() {
       ? "Pages"
       : activeView.kind === "notifications"
       ? "Notifications"
+      : activeView.kind === "team"
+      ? "Team"
+      : activeView.kind === "aboutStory"
+      ? "About Us"
       : galleryKinds.includes(activeView.kind)
       ? "Media"
       : "Settings";
@@ -2750,6 +2894,12 @@ export default function AdminDashboard() {
                   label={p.title}
                 />
               ))}
+              <NavSubItem
+                active={activeView.kind === "aboutStory"}
+                onClick={() => setActiveView({ kind: "aboutStory" })}
+                Icon={Video}
+                label="About Us — Our Story"
+              />
             </div>
           )}
 
@@ -2763,6 +2913,15 @@ export default function AdminDashboard() {
             label="Notifications"
           />
 
+          {/* Meet Our Team */}
+          <NavGroupHeader
+            active={activeView.kind === "team"}
+            expanded={false}
+            showChevron={false}
+            onClick={() => setActiveView({ kind: "team" })}
+            Icon={Users}
+            label="Meet Our Team"
+          />
 
           {/* Galleries */}
           <NavGroupHeader
@@ -2879,7 +3038,8 @@ export default function AdminDashboard() {
           {activeView.kind === "home" && activeView.id === "impact" && <ImpactTab />}
           {activeView.kind === "home" && activeView.id === "stories" && <StoriesTab />}
           {activeView.kind === "home" && activeView.id === "activities" && <GroupActivitiesTab />}
-          {activeView.kind === "home" && activeView.id === "team" && <TeamTab />}
+          {activeView.kind === "team" && <TeamTab />}
+          {activeView.kind === "aboutStory" && <AboutStoryTab />}
           {activeView.kind === "page" && <PagesTab activeSlug={activeView.slug} />}
           {activeView.kind === "notifications" && <NotificationsTab />}
           {activeView.kind === "whgGallery" && <WhgGalleryTab />}

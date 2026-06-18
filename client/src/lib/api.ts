@@ -42,7 +42,12 @@ export async function syncList<T extends { id: number }>(
 
   for (const item of prev) {
     if (!nextIds.has(item.id)) {
-      await api.delete(`${path}/${item.id}`);
+      try {
+        await api.delete(`${path}/${item.id}`);
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 404) continue;
+        throw e;
+      }
     }
   }
 
@@ -53,7 +58,15 @@ export async function syncList<T extends { id: number }>(
     if (!prevIds.has(item.id)) {
       result.push(await api.post<T>(path, body));
     } else if (JSON.stringify({ ...prevItem, id: undefined }) !== JSON.stringify({ ...item, id: undefined })) {
-      result.push(await api.patch<T>(`${path}/${item.id}`, body));
+      try {
+        result.push(await api.patch<T>(`${path}/${item.id}`, body));
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 404) {
+          result.push(await api.post<T>(path, body));
+        } else {
+          throw e;
+        }
+      }
     } else {
       result.push(item);
     }

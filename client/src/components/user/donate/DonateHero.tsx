@@ -111,6 +111,7 @@ export default function DonateHero() {
             marginBottom: "2.5rem",
             maxWidth: "520px",
             margin: "0 auto 2.5rem",
+            whiteSpace: "pre-wrap",
           }}
         >
           {hero.description}

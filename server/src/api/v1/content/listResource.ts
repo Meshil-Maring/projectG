@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Router, type Request, type Response } from 'express';
 import { z, type ZodType } from 'zod';
 import { asyncHandler } from '../../../common/utils/asyncHandler.js';
@@ -62,7 +63,12 @@ export function createListResource(opts: {
     asyncHandler(async (req: Request, res: Response) => {
       const { ids } = req.body as { ids: number[] };
       for (const [index, id] of ids.entries()) {
-        await delegate.update({ where: { id }, data: { order: index } });
+        try {
+          await delegate.update({ where: { id }, data: { order: index } });
+        } catch (e) {
+          if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') continue;
+          throw e;
+        }
       }
       ok(res, { success: true });
     }),

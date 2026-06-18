@@ -73,7 +73,7 @@ export default function ImpactHero() {
           initial="hidden"
           animate="visible"
           custom={2}
-          className="text-base text-white/75 leading-relaxed mb-10 max-w-xl mx-auto"
+          className="text-base text-white/75 leading-relaxed mb-10 max-w-xl mx-auto whitespace-pre-wrap"
         >
           {hero.description}
         </motion.p>

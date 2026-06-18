@@ -97,22 +97,26 @@ model Activity {
 }
 
 model BoardMember {
-  id    Int    @id @default(autoincrement())
-  name  String
-  role  String
-  badge String
-  color String
-  order Int    @default(0)
+  id          Int    @id @default(autoincrement())
+  name        String
+  role        String
+  badge       String
+  color       String
+  image       String @default("")
+  description String @default("")
+  order       Int    @default(0)
 
   @@map("board_members")
 }
 
 model TeamMember {
-  id    Int    @id @default(autoincrement())
-  name  String
-  role  String
-  color String
-  order Int    @default(0)
+  id          Int    @id @default(autoincrement())
+  name        String
+  role        String
+  color       String
+  image       String @default("")
+  description String @default("")
+  order       Int    @default(0)
 
   @@map("team_members")
 }
@@ -124,6 +128,7 @@ model Notice {
   date     String
   summary  String
   body     String
+  imageUrl String @default("")
   order    Int    @default(0)
 
   @@map("notices")

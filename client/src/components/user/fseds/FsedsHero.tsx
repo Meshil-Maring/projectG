@@ -151,6 +151,7 @@ export default function FsedsHero() {
                 lineHeight: 1.75,
                 marginBottom: "2rem",
                 maxWidth: "420px",
+                whiteSpace: "pre-wrap",
               }}
             >
               {hero.description}

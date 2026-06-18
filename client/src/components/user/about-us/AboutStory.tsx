@@ -21,6 +21,9 @@ const DEFAULT_STORY = {
     "Project Generation was founded with a simple belief — that small acts of kindness can create a big change.",
   paragraph2:
     "What started as a group of passionate students has grown into a movement that touches thousands of lives every year.",
+  founded: "2012",
+  headquarters: "Manipur, India",
+  legalStatus: "Registered NGO",
 };
 
 const fmt = (s: number) => {
@@ -39,17 +42,17 @@ const fadeUp = {
   }),
 };
 
-const infoBadges = [
-  { icon: Calendar, label: "Founded", value: "2012" },
-  { icon: MapPin, label: "Headquarters", value: "Manipur, India" },
-  { icon: FileCheck, label: "Legal Status", value: "Registered NGO" },
-];
-
 export default function AboutStory() {
   const { data } = useAboutUsData();
   const video = data.storyVideo;
   const { getSectionData } = usePageSections();
   const story = { ...DEFAULT_STORY, ...getSectionData("about-story") };
+
+  const infoBadges = [
+    { icon: Calendar, label: "Founded", value: story.founded },
+    { icon: MapPin, label: "Headquarters", value: story.headquarters },
+    { icon: FileCheck, label: "Legal Status", value: story.legalStatus },
+  ];
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);

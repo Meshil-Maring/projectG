@@ -7,6 +7,8 @@ export type BoardMember = {
   role: string;
   badge: string;
   color: string;
+  image?: string;
+  description?: string;
 };
 
 export type TeamMember = {
@@ -14,6 +16,8 @@ export type TeamMember = {
   name: string;
   role: string;
   color: string;
+  image?: string;
+  description?: string;
 };
 
 export type TeamData = {

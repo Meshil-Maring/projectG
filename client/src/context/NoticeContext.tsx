@@ -10,6 +10,7 @@ export type NoticeEntry = {
   date: string;
   summary: string;
   body: string;
+  imageUrl?: string;
 };
 
 /** Formats a stored notice date (YYYY-MM-DD) as "Month D, YYYY" for display. */

@@ -77,6 +77,8 @@ export const createBoardMemberSchema = z.object({
   role: z.string().min(1),
   badge: z.string().min(1),
   color: z.string().min(1),
+  image: z.string().optional(),
+  description: z.string().optional(),
   order: z.number().int().optional(),
 });
 export const updateBoardMemberSchema = createBoardMemberSchema.partial();
@@ -85,6 +87,8 @@ export const createTeamMemberSchema = z.object({
   name: z.string().min(1),
   role: z.string().min(1),
   color: z.string().min(1),
+  image: z.string().optional(),
+  description: z.string().optional(),
   order: z.number().int().optional(),
 });
 export const updateTeamMemberSchema = createTeamMemberSchema.partial();
@@ -95,6 +99,7 @@ export const createNoticeSchema = z.object({
   date: z.string().min(1),
   summary: z.string().min(1),
   body: z.string().min(1),
+  imageUrl: z.string().optional(),
   order: z.number().int().optional(),
 });
 export const updateNoticeSchema = createNoticeSchema.partial();

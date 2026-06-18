@@ -63,7 +63,7 @@ export default function AboutHero() {
             initial="hidden"
             animate="visible"
             custom={2}
-            className="text-sm text-[#64748b] leading-relaxed mb-8"
+            className="text-sm text-[#64748b] leading-relaxed mb-8 whitespace-pre-wrap"
           >
             {hero.description}
           </motion.p>
@@ -113,7 +113,7 @@ export default function AboutHero() {
           <img
             src={familyImg}
             alt="Community members"
-            className="w-full h-80 lg:h-[440px] object-cover rounded-3xl shadow-xl"
+            className="w-full h-80 lg:h-[440px] object-cover rounded-3xl"
           />
         </motion.div>
 

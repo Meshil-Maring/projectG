@@ -133,6 +133,7 @@ export default function WhgMission() {
               color: "#475569",
               lineHeight: 1.8,
               marginBottom: "2rem",
+              whiteSpace: "pre-wrap",
             }}
           >
             {mission.description}

@@ -15,6 +15,8 @@ export const IMAGE_SPECS = {
   story: { width: 400, height: 400, maxSizeMB: 2, folder: 'stories' },
   activity: { width: 800, height: 600, maxSizeMB: 3, folder: 'activities' },
   videoThumbnail: { width: 1280, height: 720, maxSizeMB: 3, folder: 'videos' },
+  team: { width: 400, height: 400, maxSizeMB: 2, folder: 'team' },
+  notification: { width: 800, height: 450, maxSizeMB: 3, folder: 'notifications' },
 } as const satisfies Record<string, ImageSpec>;
 
 export type ImageSpecKey = keyof typeof IMAGE_SPECS;

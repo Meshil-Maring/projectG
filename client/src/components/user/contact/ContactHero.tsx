@@ -72,7 +72,7 @@ export default function ContactHero() {
             initial="hidden"
             animate="visible"
             custom={2}
-            className="text-sm sm:text-base text-white/75 leading-relaxed max-w-xl mx-auto"
+            className="text-sm sm:text-base text-white/75 leading-relaxed max-w-xl mx-auto whitespace-pre-wrap"
           >
             {hero.description}
           </motion.p>

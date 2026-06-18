@@ -27,6 +27,78 @@ const slideVariants = {
 
 const CARDS_PER_PAGE = 6;
 
+type PreviewMember = {
+  name: string;
+  role: string;
+  badge?: string;
+  color: string;
+  image?: string;
+  description?: string;
+};
+
+function MemberModal({ member, onClose }: { member: PreviewMember; onClose: () => void }) {
+  const initials = member.name.split(" ").map((w) => w[0]).join("").slice(0, 2);
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ backgroundColor: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)" }}
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0, transition: { duration: 0.28, ease: "easeOut" } }}
+          exit={{ opacity: 0, scale: 0.92, y: 12, transition: { duration: 0.18 } }}
+          onClick={(e) => e.stopPropagation()}
+          className="relative w-full max-w-sm sm:max-w-md"
+        >
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute -top-3 -right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-lg hover:bg-gray-100 transition text-gray-600 text-sm font-bold"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+
+          {/* Full image */}
+          <div
+            className="w-full rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center text-white text-6xl font-extrabold"
+            style={{ backgroundColor: member.color, aspectRatio: "3/4" }}
+          >
+            {member.image ? (
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              initials
+            )}
+          </div>
+
+          {/* Info card below image */}
+          <div className="bg-white rounded-2xl shadow-xl mt-3 px-5 py-4 text-center">
+            {member.badge && (
+              <span className="inline-block mb-2 px-3 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase text-white bg-primary shadow">
+                {member.badge}
+              </span>
+            )}
+            <h3 className="text-base font-extrabold text-heading leading-snug mb-0.5">{member.name}</h3>
+            <p className="text-xs text-primary font-semibold">{member.role}</p>
+            {member.description && (
+              <p className="text-xs text-[#64748b] mt-2 leading-relaxed">{member.description}</p>
+            )}
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 export default function AboutTeam() {
   const { data } = useTeamData();
   const boardCommittee = data.board;
@@ -36,6 +108,7 @@ export default function AboutTeam() {
 
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [preview, setPreview] = useState<PreviewMember | null>(null);
 
   const totalPages = Math.ceil(team.length / CARDS_PER_PAGE);
   const currentMembers = team.slice(page * CARDS_PER_PAGE, page * CARDS_PER_PAGE + CARDS_PER_PAGE);
@@ -89,7 +162,7 @@ export default function AboutTeam() {
 
           {/* Board cards */}
           <div className="flex flex-wrap justify-center gap-6">
-            {boardCommittee.map(({ name, role, color, badge }, i) => {
+            {boardCommittee.map(({ name, role, color, badge, image, description }, i) => {
               const initials = name.split(" ").map((w) => w[0]).join("").slice(0, 2);
               return (
                 <motion.div
@@ -102,16 +175,25 @@ export default function AboutTeam() {
                     {badge}
                   </span>
 
-                  {/* Avatar */}
-                  <div
-                    className="w-24 h-24 rounded-2xl flex items-center justify-center text-white text-2xl font-extrabold mb-4 shadow-md ring-4 ring-white"
+                  {/* Avatar — clickable */}
+                  <button
+                    onClick={() => setPreview({ name, role, badge, color, image, description })}
+                    className="w-24 h-24 rounded-2xl mb-4 shadow-md ring-4 ring-white overflow-hidden flex items-center justify-center text-white text-2xl font-extrabold cursor-pointer hover:scale-105 transition-transform focus:outline-none"
                     style={{ backgroundColor: color }}
+                    aria-label={`View ${name} profile`}
                   >
-                    {initials}
-                  </div>
+                    {image ? (
+                      <img src={image} alt={name} className="w-full h-full object-cover" />
+                    ) : (
+                      initials
+                    )}
+                  </button>
 
                   <h3 className="text-sm font-extrabold text-heading leading-snug mb-1">{name}</h3>
                   <p className="text-[11px] text-primary font-semibold">{role}</p>
+                  {description && (
+                    <p className="text-[11px] text-[#64748b] mt-1 leading-relaxed">{description}</p>
+                  )}
                 </motion.div>
               );
             })}
@@ -141,21 +223,31 @@ export default function AboutTeam() {
                 exit="exit"
                 className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5"
               >
-                {currentMembers.map(({ name, role, color }) => {
+                {currentMembers.map(({ name, role, color, image, description }) => {
                   const initials = name.split(" ").map((w) => w[0]).join("");
                   return (
                     <div
                       key={name}
                       className="bg-white border border-[#e2e8f0] rounded-2xl p-5 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <div
-                        className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-xl font-bold mb-3 shadow-sm"
+                      {/* Avatar — clickable */}
+                      <button
+                        onClick={() => setPreview({ name, role, color, image, description })}
+                        className="w-20 h-20 rounded-2xl mb-3 shadow-sm overflow-hidden flex items-center justify-center text-white text-xl font-bold cursor-pointer hover:scale-105 transition-transform focus:outline-none"
                         style={{ backgroundColor: color }}
+                        aria-label={`View ${name} profile`}
                       >
-                        {initials}
-                      </div>
+                        {image ? (
+                          <img src={image} alt={name} className="w-full h-full object-cover" />
+                        ) : (
+                          initials
+                        )}
+                      </button>
                       <h3 className="text-sm font-bold text-heading leading-tight mb-0.5">{name}</h3>
                       <p className="text-[11px] text-[#64748b]">{role}</p>
+                      {description && (
+                        <p className="text-[11px] text-muted mt-1 leading-relaxed">{description}</p>
+                      )}
                     </div>
                   );
                 })}
@@ -200,6 +292,9 @@ export default function AboutTeam() {
         </div>
 
       </div>
+
+      {/* Member preview modal */}
+      {preview && <MemberModal member={preview} onClose={() => setPreview(null)} />}
     </section>
   );
 }

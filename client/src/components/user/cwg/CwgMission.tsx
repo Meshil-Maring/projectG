@@ -134,7 +134,7 @@ export default function CwgMission() {
             <br />
             {mission.headingLine3}
           </h2>
-          <p style={{ fontSize: "0.9rem", color: "#475569", lineHeight: 1.8, marginBottom: "2rem" }}>
+          <p style={{ fontSize: "0.9rem", color: "#475569", lineHeight: 1.8, marginBottom: "2rem", whiteSpace: "pre-wrap" }}>
             {mission.description}
           </p>
           <CauseMissionPillars pillars={missionPillars} primary={PRIMARY} lightBg={LIGHT_BG} borderColor="#ccf0ed" shadowRgb="15,118,110" />

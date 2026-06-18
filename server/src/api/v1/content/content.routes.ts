@@ -110,5 +110,6 @@ contentRoutes.use(
     delegate: prisma.notice,
     createSchema: createNoticeSchema,
     updateSchema: updateNoticeSchema,
+    imageField: 'imageUrl',
   }),
 );

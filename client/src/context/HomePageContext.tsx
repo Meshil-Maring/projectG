@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from "react";
 import { api, syncList } from "../lib/api";
 
 export type IconKey =
@@ -91,6 +91,13 @@ export function HomePageProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<HomeData>(EMPTY_DATA);
   const [loading, setLoading] = useState(true);
 
+  // Refs track the last server-confirmed state so concurrent syncList calls
+  // never use an intermediate fake-ID state as their `prev` baseline.
+  const serverVideos = useRef<VideoEntry[]>([]);
+  const serverPhotos = useRef<PhotoEntry[]>([]);
+  const serverStats = useRef<ImpactStat[]>([]);
+  const serverStories = useRef<StoryEntry[]>([]);
+
   useEffect(() => {
     let cancelled = false;
     Promise.all([
@@ -102,6 +109,10 @@ export function HomePageProvider({ children }: { children: ReactNode }) {
     ])
       .then(([settings, videos, photos, stats, stories]) => {
         if (cancelled) return;
+        serverVideos.current = videos;
+        serverPhotos.current = photos;
+        serverStats.current = stats;
+        serverStories.current = stories;
         setData({
           heroImageUrl: settings.heroImageUrl,
           heroTitle: settings.heroTitle,
@@ -132,35 +143,39 @@ export function HomePageProvider({ children }: { children: ReactNode }) {
   };
 
   const updateVideos = (videos: VideoEntry[]) => {
-    const prev = data.videos;
+    const prev = serverVideos.current;
     setData((d) => ({ ...d, videos }));
-    void syncList("/content/videos", prev, videos).then((result) =>
-      setData((d) => ({ ...d, videos: result })),
-    );
+    void syncList("/content/videos", prev, videos).then((result) => {
+      serverVideos.current = result;
+      setData((d) => ({ ...d, videos: result }));
+    });
   };
 
   const updatePhotos = (photos: PhotoEntry[]) => {
-    const prev = data.photos;
+    const prev = serverPhotos.current;
     setData((d) => ({ ...d, photos }));
-    void syncList("/content/photos", prev, photos).then((result) =>
-      setData((d) => ({ ...d, photos: result })),
-    );
+    void syncList("/content/photos", prev, photos).then((result) => {
+      serverPhotos.current = result;
+      setData((d) => ({ ...d, photos: result }));
+    });
   };
 
   const updateStats = (stats: ImpactStat[]) => {
-    const prev = data.stats;
+    const prev = serverStats.current;
     setData((d) => ({ ...d, stats }));
-    void syncList("/content/stats", prev, stats).then((result) =>
-      setData((d) => ({ ...d, stats: result })),
-    );
+    void syncList("/content/stats", prev, stats).then((result) => {
+      serverStats.current = result;
+      setData((d) => ({ ...d, stats: result }));
+    });
   };
 
   const updateStories = (stories: StoryEntry[]) => {
-    const prev = data.stories;
+    const prev = serverStories.current;
     setData((d) => ({ ...d, stories }));
-    void syncList("/content/stories", prev, stories).then((result) =>
-      setData((d) => ({ ...d, stories: result })),
-    );
+    void syncList("/content/stories", prev, stories).then((result) => {
+      serverStories.current = result;
+      setData((d) => ({ ...d, stories: result }));
+    });
   };
 
   return (

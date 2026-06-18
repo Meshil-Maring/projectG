@@ -3,8 +3,32 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight, LayoutGrid, X } from "lucide-react";
 import { useHomePageData } from "../../../context/HomePageContext";
 
+function ImageGallerySkeleton() {
+  return (
+    <section className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-8">
+          <div className="space-y-2">
+            <div className="skeleton h-3 w-32 rounded" />
+            <div className="skeleton h-7 w-56 rounded" />
+          </div>
+          <div className="skeleton h-5 w-28 rounded mt-1" />
+        </div>
+        {/* Grid: 1 large + 4 small */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 sm:grid-rows-2 gap-3 sm:gap-4 sm:h-100 lg:h-120">
+          <div className="skeleton col-span-2 sm:col-span-1 sm:row-span-2 aspect-video sm:aspect-auto rounded-2xl" />
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="skeleton aspect-square sm:aspect-auto rounded-2xl" />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ImageGallery() {
-  const { data } = useHomePageData();
+  const { data, loading } = useHomePageData();
   const photos = data.photos;
   const [showGrid, setShowGrid] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -40,6 +64,7 @@ export default function ImageGallery() {
     return () => { document.body.style.overflow = ""; };
   }, [isAnyOverlayOpen]);
 
+  if (loading) return <ImageGallerySkeleton />;
   if (photos.length === 0) return null;
 
   const [large, ...small] = photos;
@@ -191,11 +216,11 @@ export default function ImageGallery() {
       {/* ── Lightbox overlay ── */}
       {isLightboxOpen && activeIndex !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/92 backdrop-blur-sm"
+          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-sm overflow-y-auto"
           onClick={showGrid ? closeLightbox : closeAll}
         >
           <div
-            className="relative flex flex-col items-center w-full max-w-5xl px-4 sm:px-16"
+            className="flex flex-col items-center w-full max-w-5xl mx-auto px-4 sm:px-16 py-6 min-h-full justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top bar */}

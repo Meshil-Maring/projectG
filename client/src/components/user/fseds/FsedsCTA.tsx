@@ -107,6 +107,7 @@ export default function FsedsCTA() {
               color: "#64748b",
               lineHeight: 1.7,
               marginBottom: "1.75rem",
+              whiteSpace: "pre-wrap",
             }}
           >
             {cta.description}

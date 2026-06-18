@@ -166,16 +166,12 @@ whgGalleryRoutes.post(
     const imagesPrefix = `${group.keyPrefix}images/`;
     const { key, url } = await uploadToFolder(imagesPrefix, file.buffer, file.mimetype, filename);
 
-    const image = await prisma.whgImage.create({
-      data: {
-        groupId: id,
-        key,
-        name: file.originalname.replace(/\.[^.]+$/, ''),
-        description: '',
-      },
+    const created = await prisma.whgImage.create({
+      data: { groupId: id, key, name: '', description: '' },
     });
+    await prisma.whgImage.update({ where: { id: created.id }, data: { name: created.id } });
 
-    ok(res, { id: image.id, name: image.name, description: image.description, url }, 201);
+    ok(res, { id: created.id, name: created.id, description: '', url }, 201);
   }),
 );
 

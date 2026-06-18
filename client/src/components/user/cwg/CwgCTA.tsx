@@ -109,7 +109,7 @@ export default function CwgCTA() {
             <br />
             {cta.headingLine3}
           </h2>
-          <p style={{ fontSize: "0.9rem", color: "#64748b", lineHeight: 1.7, marginBottom: "1.75rem" }}>
+          <p style={{ fontSize: "0.9rem", color: "#64748b", lineHeight: 1.7, marginBottom: "1.75rem", whiteSpace: "pre-wrap" }}>
             {cta.description}
           </p>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" as const }}>

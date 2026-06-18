@@ -22,12 +22,52 @@ const fmt = (s: number) => {
 };
 
 
+function VideoStoriesSkeleton() {
+  return (
+    <section className="py-16 px-4 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col lg:flex-row gap-10 items-center">
+          {/* Player skeleton */}
+          <div className="flex-1 w-full">
+            <div className="flex items-center gap-3">
+              <div className="skeleton shrink-0 w-10 h-10 rounded-full" />
+              <div className="skeleton flex-1 rounded-2xl overflow-hidden aspect-video" />
+              <div className="skeleton shrink-0 w-10 h-10 rounded-full" />
+            </div>
+            <div className="flex flex-col items-center gap-3 mt-4">
+              <div className="flex items-center gap-2">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className={`skeleton h-2 rounded-full ${i === 0 ? "w-6" : "w-2"}`} />
+                ))}
+              </div>
+              <div className="skeleton h-9 w-36 rounded-full" />
+            </div>
+          </div>
+          {/* Text skeleton */}
+          <div className="flex-1 max-w-lg space-y-4">
+            <div className="skeleton h-3 w-28 rounded" />
+            <div className="skeleton h-8 w-3/4 rounded" />
+            <div className="skeleton h-8 w-1/2 rounded" />
+            <div className="space-y-2 mt-2">
+              <div className="skeleton h-4 rounded" />
+              <div className="skeleton h-4 rounded" />
+              <div className="skeleton h-4 w-4/5 rounded" />
+            </div>
+            <div className="skeleton h-11 w-40 rounded-full mt-4" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function VideoStories() {
-  const { data } = useHomePageData();
+  const { data, loading } = useHomePageData();
   const videos = data.videos;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAllVideos, setShowAllVideos] = useState(false);
+  const [readMoreOpen, setReadMoreOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const [muted, setMuted] = useState(false);
@@ -60,6 +100,7 @@ export default function VideoStories() {
     setIsPlaying(false);
     setProgress(0);
     setElapsed(0);
+    setReadMoreOpen(false);
   };
 
   const switchTo = (index: number) => {
@@ -78,6 +119,7 @@ export default function VideoStories() {
     setShowAllVideos(false);
   };
 
+  if (loading) return <VideoStoriesSkeleton />;
   if (!current) return null;
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -138,8 +180,12 @@ export default function VideoStories() {
               <div className="relative flex-1 rounded-2xl overflow-hidden shadow-2xl bg-black group">
                 <div className="aspect-video relative">
 
-                  {/* ── YouTube: show iframe when playing, thumbnail when paused ── */}
-                  {isYoutube ? (
+                  {/* ── No source fallback ── */}
+                  {!current.youtubeId && !current.videoUrl ? (
+                    <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-400 text-sm">
+                      Video source not configured
+                    </div>
+                  ) : isYoutube ? (
                     isPlaying ? (
                       <iframe
                         key={`yt-${currentIndex}`}
@@ -346,16 +392,35 @@ export default function VideoStories() {
                 {current.title}
               </motion.h2>
 
-              <motion.p
-                variants={{
-                  hidden: { opacity: 0, y: 18 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
-                  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
-                }}
-                className="text-body leading-relaxed mb-8"
-              >
-                {current.description}
-              </motion.p>
+              {(() => {
+                const CHAR_LIMIT = 280;
+                const isLong = current.description.length > CHAR_LIMIT;
+                const displayed = isLong
+                  ? current.description.slice(0, CHAR_LIMIT).trimEnd() + "…"
+                  : current.description;
+                return (
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 18 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
+                      exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
+                    }}
+                    className="mb-6"
+                  >
+                    <p className="text-body leading-relaxed" style={{ whiteSpace: "pre-wrap" }}>
+                      {displayed}
+                    </p>
+                    {isLong && (
+                      <button
+                        onClick={() => setReadMoreOpen(true)}
+                        className="mt-2 text-sm font-semibold text-[#f97316] hover:underline focus:outline-none"
+                      >
+                        Read more
+                      </button>
+                    )}
+                  </motion.div>
+                );
+              })()}
 
 
               <motion.button
@@ -380,6 +445,50 @@ export default function VideoStories() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* ── Read More Overlay ── */}
+      <AnimatePresence>
+        {readMoreOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/65 z-50 flex items-center justify-center p-6"
+            onClick={() => setReadMoreOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.93, opacity: 0, y: 16 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.93, opacity: 0, y: 16 }}
+              transition={{ duration: 0.22 }}
+              className="bg-white rounded-2xl p-7 w-full max-w-xl max-h-[80vh] overflow-y-auto shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-1">
+                    Watch Our Story
+                  </p>
+                  <h3 className="text-lg font-bold text-heading leading-snug">
+                    {current.title}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setReadMoreOpen(false)}
+                  aria-label="Close"
+                  className="shrink-0 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition mt-1"
+                >
+                  <X size={15} className="text-slate-600" />
+                </button>
+              </div>
+              <p className="text-body leading-relaxed text-sm" style={{ whiteSpace: "pre-wrap" }}>
+                {current.description}
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── All Videos Overlay ── */}
       <AnimatePresence>
