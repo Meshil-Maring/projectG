@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -26,6 +27,10 @@ const sections = [
 export default function AboutUsPage() {
   return (
     <PageProvider slug="about-us">
+      <SEO
+        title="About Us"
+        description="Learn about Project G Manipur's mission, vision, and the dedicated team working to uplift communities across Manipur through education, health, and rights advocacy."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="about-hero"><AboutHero /></div>

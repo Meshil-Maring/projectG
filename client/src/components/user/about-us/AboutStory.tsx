@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
   Pause,
@@ -9,6 +9,7 @@ import {
   Volume2,
   VolumeX,
   Maximize2,
+  X,
 } from "lucide-react";
 import { useAboutUsData } from "../../../context/AboutUsContext";
 import { usePageSections } from "../../../context/PageContext";
@@ -58,7 +59,15 @@ export default function AboutStory() {
   const [progress, setProgress] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const [muted, setMuted] = useState(false);
+  const [readMoreOpen, setReadMoreOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const descParagraphs = (video.description ?? `${story.paragraph1}\n${story.paragraph2}`)
+    .split(/\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  const isLong = (video.description ?? "").length > 250;
 
   const isYoutube = !!video.youtubeId;
 
@@ -105,12 +114,13 @@ export default function AboutStory() {
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-14 relative">
 
         {/* Left — video player */}
+        <div className="shrink-0 w-full lg:w-120 flex flex-col gap-3">
         <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="shrink-0 w-full lg:w-120 relative rounded-2xl overflow-hidden shadow-xl bg-black group"
+          className="relative rounded-2xl overflow-hidden shadow-xl bg-black group"
         >
           <div className="aspect-video relative">
 
@@ -127,7 +137,10 @@ export default function AboutStory() {
               ) : (
                 <>
                   <img
-                    src={video.thumbnail}
+                    src={
+                      video.thumbnail ||
+                      `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
+                    }
                     alt={video.title}
                     className="w-full h-full object-cover"
                   />
@@ -145,6 +158,13 @@ export default function AboutStory() {
                     <YoutubeLogoIcon className="w-3.5 h-3.5 fill-red-500" />
                     YouTube
                   </div>
+                  {video.title && (
+                    <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-linear-to-t from-black/80 to-transparent pointer-events-none">
+                      <p className="text-white text-sm font-semibold leading-snug line-clamp-2">
+                        {video.title}
+                      </p>
+                    </div>
+                  )}
                 </>
               )
             ) : (
@@ -233,6 +253,7 @@ export default function AboutStory() {
             )}
           </div>
         </motion.div>
+        </div>
 
         {/* Right — story text */}
         <div className="flex-1 relative">
@@ -266,8 +287,19 @@ export default function AboutStory() {
             custom={2}
             className="space-y-3 text-sm text-[#64748b] leading-relaxed mb-8"
           >
-            <p>{story.paragraph1}</p>
-            <p>{story.paragraph2}</p>
+            {isLong ? (
+              <>
+                <p className="line-clamp-3">{descParagraphs[0]}</p>
+                <button
+                  onClick={() => setReadMoreOpen(true)}
+                  className="text-primary text-xs font-semibold hover:underline"
+                >
+                  Read more
+                </button>
+              </>
+            ) : (
+              descParagraphs.map((p, i) => <p key={i}>{p}</p>)
+            )}
           </motion.div>
 
           {/* Info badges */}
@@ -309,6 +341,44 @@ export default function AboutStory() {
           </svg>
         </div>
       </div>
+
+      {/* Read more overlay */}
+      <AnimatePresence>
+        {readMoreOpen && (
+          <motion.div
+            key="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm"
+            onClick={() => setReadMoreOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.97 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative"
+            >
+              <button
+                onClick={() => setReadMoreOpen(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition"
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#f97316] mb-1">
+                {story.eyebrow}
+              </p>
+              <h3 className="text-xl font-extrabold text-heading mb-4">{story.heading}</h3>
+              <div className="space-y-3 text-sm text-[#64748b] leading-relaxed">
+                {descParagraphs.map((p, i) => <p key={i}>{p}</p>)}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

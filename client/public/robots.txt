@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /projectG-admin
+Disallow: /projectG-admin/
+
+Sitemap: https://projectgmanipur.org/sitemap.xml

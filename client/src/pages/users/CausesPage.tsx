@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Users, MapPin, Target, X, Heart, IndianRupee } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -50,6 +51,10 @@ function CausesPageContent() {
 
   return (
     <>
+      <SEO
+        title="Our Causes"
+        description="Support active campaigns by Project G Manipur. Browse our causes and help create positive change in communities across Manipur, India."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
 

@@ -151,59 +151,83 @@ async function main() {
     await prisma.story.createMany({
       data: [
         {
-          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80',
+          image: '',
           quote: 'Thanks to the scholarship, I am now able to study and dream of a better future.',
           name: 'Aarav Kumar',
           role: 'Scholarship Recipient',
+          location: 'Imphal, Manipur',
+          year: '2023',
+          fullStory: "Aarav grew up in a small household where his parents worked as daily labourers. When the scholarship programme found him in Class 9, he was on the verge of dropping out. With the support he received, Aarav completed his Class 12 with distinction and is now pursuing a bachelor's degree in computer science. He dreams of returning to his village and teaching coding to children who, like him, might otherwise have lost hope.",
           order: 0,
         },
         {
-          image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=120&q=80',
+          image: '',
           quote: 'The support we received helped us rebuild our home and live with dignity again.',
           name: 'Sunita Devi',
           role: 'Community Beneficiary',
+          location: 'Thoubal, Manipur',
+          year: '2022',
+          fullStory: "When a flood destroyed Sunita's home in 2022, she had nothing left but hope. Project Generation's disaster relief team reached her village within days, providing temporary shelter, food, and rebuilding support. Today, Sunita's family lives in a stronger home and she has joined our community volunteer network to help others in times of crisis.",
           order: 1,
         },
         {
-          image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80',
+          image: '',
           quote: 'Volunteering here has been the most meaningful experience of my life.',
           name: 'Rohan Mehta',
           role: 'Volunteer',
+          location: 'Bishnupur, Manipur',
+          year: '2024',
+          fullStory: 'Rohan first joined Project Generation as a college student looking for meaningful ways to contribute. What started as weekend teaching sessions soon turned into a full commitment. He now leads a team of 20 volunteers coordinating health camps and education drives across three districts. "I came to give," he says, "but I received so much more in return."',
           order: 2,
         },
         {
-          image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80',
+          image: '',
           quote: "Every contribution transformed not just my child's future but our entire community.",
           name: 'Priya Sharma',
           role: 'Parent Beneficiary',
+          location: 'Churachandpur, Manipur',
+          year: '2023',
+          fullStory: "Priya's daughter, Deepa, was one of 60 children enrolled in our after-school learning programme. Before joining, Deepa could barely read. Within a year, she stood first in her class. Priya, moved by the transformation, began attending our parent awareness sessions and is now an advocate for girls' education in her neighbourhood.",
           order: 3,
         },
         {
-          image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&q=80',
+          image: '',
           quote: 'I never imagined clean water would change everything — it truly gave us a new life.',
           name: 'Meera Nair',
           role: 'Village Resident',
+          location: 'Senapati, Manipur',
+          year: '2021',
+          fullStory: "For years, Meera's village depended on a contaminated well that made children sick every monsoon. Project Generation's water sanitation project installed a filtration system and educated families on hygiene practices. Waterborne illnesses in the village dropped by 80% in the following year. Meera says clean water did not just save lives — it gave the village back its dignity.",
           order: 4,
         },
         {
-          image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=120&q=80',
+          image: '',
           quote: 'The skills training I received opened doors I never knew existed.',
           name: 'Samuel Osei',
           role: 'Vocational Graduate',
+          location: 'Kangpokpi, Manipur',
+          year: '2023',
+          fullStory: 'Samuel enrolled in our six-month electrician training programme with barely a Class 8 education and no income. By the end, he had passed the certification and secured his first contract. He now runs a small electrical services business employing two assistants from his community. "I used to wonder if someone like me could ever build something," he says. "Now I know I can."',
           order: 5,
         },
         {
-          image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=120&q=80',
+          image: '',
           quote: 'Seeing my students read their first sentence was worth more than words can express.',
           name: 'Fatima Al-Hassan',
           role: 'Community Teacher',
+          location: 'Ukhrul, Manipur',
+          year: '2024',
+          fullStory: "Fatima came to the literacy programme as a participant — a mother of three who had never been to school. After learning to read and write, she surprised everyone by asking to stay on as a teacher's aide. Today she runs evening classes for women in her own lane, teaching reading, numeracy, and basic health literacy. She believes every woman who learns becomes a teacher herself.",
           order: 6,
         },
         {
-          image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80',
+          image: '',
           quote: 'From receiving help to leading others — that journey is something I cherish forever.',
           name: 'Diego Reyes',
           role: 'Farmer & Community Trainer',
+          location: 'Pherzawl, Manipur',
+          year: '2022',
+          fullStory: "Diego was once a struggling farmer who had lost three consecutive harvests to poor soil management. After attending Project Generation's agriculture training workshops, he learned about crop rotation and organic composting. His yield doubled in the first season. He then trained 30 other farmers in his area, and their collective income rose by an average of 40%. Diego now leads our agricultural mentorship circle.",
           order: 7,
         },
       ],
@@ -694,18 +718,45 @@ async function main() {
         },
         {
           pageId: aboutUsPage.id,
-          type: 'about-objectives',
+          type: 'about-mission-vision',
           order: 2,
+          data: {
+            eyebrow: 'Our Direction',
+            heading: 'Mission & Vision',
+            missionTitle: 'Our Mission',
+            missionText:
+              'To uplift underprivileged communities by providing quality education, accessible healthcare, nutritious food, and a safe environment — empowering individuals to realise their full potential and build a better future for themselves and their families.',
+            visionTitle: 'Our Vision',
+            visionText:
+              'A world where every child grows up with equal opportunities — a society free from poverty and inequality, where communities thrive through collective compassion, shared knowledge, and sustainable growth that benefits generations to come.',
+          },
+        },
+        {
+          pageId: aboutUsPage.id,
+          type: 'about-objectives',
+          order: 3,
           data: {
             eyebrow: 'What We Stand For',
             heading: 'Our Objectives',
             description: 'The guiding goals behind every program we run',
+            items: JSON.stringify([
+              { icon: 'GraduationCap', text: 'Organize educational, awareness, and capacity-building programs for students and communities.' },
+              { icon: 'Heart',         text: 'Promote health, legal, environmental, and social awareness through campaigns and outreach.' },
+              { icon: 'Trophy',        text: 'Conduct competitions, workshops, seminars, and cultural activities that enhance creativity and critical thinking.' },
+              { icon: 'Briefcase',     text: 'Support skill development, career guidance, and life skills training for youth.' },
+              { icon: 'Lightbulb',     text: 'Encourage scientific temper, innovation, and Indian Knowledge Systems (IKS) among students.' },
+              { icon: 'Users',         text: 'Assist underprivileged and vulnerable sections through social service initiatives.' },
+              { icon: 'Handshake',     text: 'Collaborate with educational institutions, NGOs, professionals, and government bodies.' },
+              { icon: 'Shield',        text: 'Promote ethical leadership, constitutional values, and civic responsibility.' },
+              { icon: 'Star',          text: 'Provide platforms for talent identification, recognition, and youth empowerment.' },
+              { icon: 'Leaf',          text: 'Work towards sustainable development goals (SDGs) at the grassroots level.' },
+            ]),
           },
         },
         {
           pageId: aboutUsPage.id,
           type: 'about-societies',
-          order: 3,
+          order: 4,
           data: {
             eyebrow: 'How We Operate',
             heading: 'Our Societies & Clubs',
@@ -716,7 +767,7 @@ async function main() {
         {
           pageId: aboutUsPage.id,
           type: 'about-values',
-          order: 4,
+          order: 5,
           data: {
             valuesEyebrow: 'Our Values',
             valuesHeading: 'What Guides Us',
@@ -727,7 +778,7 @@ async function main() {
         {
           pageId: aboutUsPage.id,
           type: 'about-team',
-          order: 5,
+          order: 6,
           data: {
             heading: 'Meet Our Team',
             boardLabel: 'Board Committee Cum Chairman',
@@ -736,6 +787,59 @@ async function main() {
         },
       ],
     });
+  }
+
+  // Backfill: ensure about-mission-vision section exists for existing databases
+  if ((await prisma.section.count({ where: { pageId: aboutUsPage.id, type: 'about-mission-vision' } })) === 0) {
+    await prisma.section.create({
+      data: {
+        pageId: aboutUsPage.id,
+        type: 'about-mission-vision',
+        order: 2,
+        data: {
+          eyebrow: 'Our Direction',
+          heading: 'Mission & Vision',
+          missionTitle: 'Our Mission',
+          missionText:
+            'To uplift underprivileged communities by providing quality education, accessible healthcare, nutritious food, and a safe environment — empowering individuals to realise their full potential and build a better future for themselves and their families.',
+          visionTitle: 'Our Vision',
+          visionText:
+            'A world where every child grows up with equal opportunities — a society free from poverty and inequality, where communities thrive through collective compassion, shared knowledge, and sustainable growth that benefits generations to come.',
+        },
+      },
+    });
+    console.log('Seeded about-mission-vision section');
+  }
+
+  // Backfill: add items to about-objectives if missing
+  const objSection = await prisma.section.findFirst({
+    where: { pageId: aboutUsPage.id, type: 'about-objectives' },
+  });
+  if (objSection) {
+    const existingData = objSection.data as Record<string, string>;
+    if (!existingData.items) {
+      await prisma.section.update({
+        where: { id: objSection.id },
+        data: {
+          data: {
+            ...existingData,
+            items: JSON.stringify([
+              { icon: 'GraduationCap', text: 'Organize educational, awareness, and capacity-building programs for students and communities.' },
+              { icon: 'Heart',         text: 'Promote health, legal, environmental, and social awareness through campaigns and outreach.' },
+              { icon: 'Trophy',        text: 'Conduct competitions, workshops, seminars, and cultural activities that enhance creativity and critical thinking.' },
+              { icon: 'Briefcase',     text: 'Support skill development, career guidance, and life skills training for youth.' },
+              { icon: 'Lightbulb',     text: 'Encourage scientific temper, innovation, and Indian Knowledge Systems (IKS) among students.' },
+              { icon: 'Users',         text: 'Assist underprivileged and vulnerable sections through social service initiatives.' },
+              { icon: 'Handshake',     text: 'Collaborate with educational institutions, NGOs, professionals, and government bodies.' },
+              { icon: 'Shield',        text: 'Promote ethical leadership, constitutional values, and civic responsibility.' },
+              { icon: 'Star',          text: 'Provide platforms for talent identification, recognition, and youth empowerment.' },
+              { icon: 'Leaf',          text: 'Work towards sustainable development goals (SDGs) at the grassroots level.' },
+            ]),
+          },
+        },
+      });
+      console.log('Backfilled objectives items');
+    }
   }
 
   const impactPage = await prisma.page.upsert({

@@ -41,6 +41,9 @@ export type StoryEntry = {
   quote: string;
   name: string;
   role: string;
+  location?: string;
+  year?: string;
+  fullStory?: string;
 };
 
 export type HomeData = {

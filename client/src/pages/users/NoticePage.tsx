@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Bell, Calendar, Tag, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, Bell, Calendar, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
 import { useNoticeData, formatNoticeDate, type NoticeEntry, type NoticeCategory } from "../../context/NoticeContext";
+import { NoticeDetailModal } from "../../components/user/shared/NoticeDetailModal";
 
 const sections = [
   { id: "notice-hero", label: "Overview" },
@@ -24,7 +26,7 @@ const categoryColors: Record<NoticeCategory, { bg: string; text: string }> = {
 
 export default function NoticePage() {
   const { notices } = useNoticeData();
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [selectedNotice, setSelectedNotice] = useState<NoticeEntry | null>(null);
   const [activeCategory, setActiveCategory] = useState<NoticeCategory | "All">("All");
 
   const categories: Array<NoticeCategory | "All"> = [
@@ -42,6 +44,10 @@ export default function NoticePage() {
 
   return (
     <>
+      <SEO
+        title="Notices & Events"
+        description="Stay updated with the latest notices, announcements, and upcoming events from Project G Manipur."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
 
@@ -153,7 +159,7 @@ export default function NoticePage() {
       </section>
 
       {/* Notices list */}
-      <section id="notice-list" style={{ backgroundColor: "#f8fafc", padding: "2.5rem 0 4rem" }}>
+      <section id="notice-list" style={{ backgroundColor: "#f8fafc", padding: "2.5rem 0 4rem", minHeight: "calc(100vh - 280px)" }}>
         <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 1.5rem" }}>
           {filtered.length === 0 ? (
             <p style={{ textAlign: "center", color: "#94a3b8", fontFamily: "'Poppins', sans-serif" }}>
@@ -165,10 +171,7 @@ export default function NoticePage() {
                 <NoticeCard
                   key={notice.id}
                   notice={notice}
-                  isOpen={expandedId === notice.id}
-                  onToggle={() =>
-                    setExpandedId((prev) => (prev === notice.id ? null : notice.id))
-                  }
+                  onOpen={() => setSelectedNotice(notice)}
                 />
               ))}
             </div>
@@ -177,143 +180,111 @@ export default function NoticePage() {
       </section>
 
       <Footer />
+
+      {selectedNotice && (
+        <NoticeDetailModal notice={selectedNotice} onClose={() => setSelectedNotice(null)} />
+      )}
     </>
   );
 }
 
-function NoticeCard({
-  notice,
-  isOpen,
-  onToggle,
-}: {
-  notice: Notice;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
+function NoticeCard({ notice, onOpen }: { notice: Notice; onOpen: () => void }) {
   const cat = categoryColors[notice.category];
 
   return (
-    <motion.div
-      layout
+    <motion.button
+      onClick={onOpen}
+      whileHover={{ boxShadow: "0 6px 24px rgba(0,0,0,0.1)", y: -1 }}
       style={{
         backgroundColor: "#ffffff",
         borderRadius: "0.75rem",
         border: "1px solid #e2e8f0",
         overflow: "hidden",
-        boxShadow: isOpen ? "0 4px 20px rgba(0,0,0,0.08)" : "none",
-        transition: "box-shadow 0.2s",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+        width: "100%",
+        textAlign: "left",
+        cursor: "pointer",
+        padding: 0,
+        display: "block",
       }}
     >
-      {/* Header row */}
-      <button
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        aria-controls={`notice-panel-${notice.id}`}
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "1rem",
-          padding: "1.25rem 1.5rem",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          textAlign: "left",
-        }}
-      >
-        {/* Category badge */}
-        <span
-          style={{
-            display: "inline-block",
-            padding: "0.2rem 0.65rem",
-            borderRadius: "9999px",
-            fontSize: "0.68rem",
-            fontWeight: 700,
-            fontFamily: "'Poppins', sans-serif",
-            backgroundColor: cat.bg,
-            color: cat.text,
-            whiteSpace: "nowrap",
-            flexShrink: 0,
-            marginTop: "0.15rem",
-          }}
-        >
-          <Tag size={9} style={{ display: "inline", marginRight: "0.3rem", verticalAlign: "middle" }} />
-          {notice.category}
-        </span>
+      {/* Image preview */}
+      {notice.imageUrl && (
+        <img
+          src={notice.imageUrl}
+          alt={notice.title}
+          style={{ width: "100%", height: "200px", objectFit: "cover", display: "block" }}
+        />
+      )}
 
-        {/* Text */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p
+      <div style={{ padding: "1.25rem 1.5rem" }}>
+        {/* Category + date */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.65rem", flexWrap: "wrap" }}>
+          <span
             style={{
-              fontSize: "0.95rem",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.25rem",
+              padding: "0.2rem 0.65rem",
+              borderRadius: "9999px",
+              fontSize: "0.68rem",
               fontWeight: 700,
-              color: "#1e293b",
               fontFamily: "'Poppins', sans-serif",
-              marginBottom: "0.3rem",
-              lineHeight: 1.4,
+              backgroundColor: cat.bg,
+              color: cat.text,
             }}
           >
-            {notice.title}
-          </p>
-          <p style={{ fontSize: "0.78rem", color: "#94a3b8", fontFamily: "'Poppins', sans-serif" }}>
-            <Calendar size={11} style={{ display: "inline", marginRight: "0.3rem", verticalAlign: "middle" }} />
+            <Tag size={9} />
+            {notice.category}
+          </span>
+          <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontFamily: "'Poppins', sans-serif", display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
+            <Calendar size={11} />
             {formatNoticeDate(notice.date)}
-          </p>
-          {!isOpen && (
-            <p
-              style={{
-                fontSize: "0.82rem",
-                color: "#64748b",
-                marginTop: "0.4rem",
-                fontFamily: "'Poppins', sans-serif",
-                lineHeight: 1.6,
-              }}
-            >
-              {notice.summary}
-            </p>
-          )}
+          </span>
         </div>
 
-        {/* Chevron */}
-        <span style={{ color: "#94a3b8", flexShrink: 0, marginTop: "0.1rem" }}>
-          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-        </span>
-      </button>
+        {/* Title */}
+        <p
+          style={{
+            fontSize: "0.95rem",
+            fontWeight: 700,
+            color: "#1e293b",
+            fontFamily: "'Poppins', sans-serif",
+            marginBottom: "0.4rem",
+            lineHeight: 1.4,
+          }}
+        >
+          {notice.title}
+        </p>
 
-      {/* Expanded body */}
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            key="body"
-            id={`notice-panel-${notice.id}`}
-            role="region"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.22, ease: "easeInOut" as const }}
-            style={{ overflow: "hidden" }}
-          >
-            <div
-              style={{
-                padding: "0 1.5rem 1.5rem 1.5rem",
-                borderTop: "1px solid #f1f5f9",
-                paddingTop: "1rem",
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "0.88rem",
-                  color: "#475569",
-                  fontFamily: "'Poppins', sans-serif",
-                  lineHeight: 1.75,
-                }}
-              >
-                {notice.body}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+        {/* Summary */}
+        <p
+          style={{
+            fontSize: "0.82rem",
+            color: "#64748b",
+            fontFamily: "'Poppins', sans-serif",
+            lineHeight: 1.65,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {notice.summary}
+        </p>
+
+        <p
+          style={{
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            color: "#1a3270",
+            fontFamily: "'Poppins', sans-serif",
+            marginTop: "0.75rem",
+          }}
+        >
+          Read full notice →
+        </p>
+      </div>
+    </motion.button>
   );
 }

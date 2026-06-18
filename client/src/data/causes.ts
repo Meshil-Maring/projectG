@@ -17,7 +17,7 @@ export interface Cause {
 export const causes: Cause[] = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80",
+    image: "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/environment.png",
     imageAlt: "Environment Protection",
     category: "Environment",
     categoryColor: "#16a34a",
@@ -32,7 +32,7 @@ export const causes: Cause[] = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=80",
+    image: "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/education.png",
     imageAlt: "Education for All",
     category: "Education",
     categoryColor: "#2563eb",
@@ -47,7 +47,7 @@ export const causes: Cause[] = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
+    image: "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/health.png",
     imageAlt: "Health & Wellness",
     category: "Health",
     categoryColor: "#ec4899",
@@ -62,7 +62,7 @@ export const causes: Cause[] = [
   },
   {
     id: 4,
-    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80",
+    image: "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/hunger.png",
     imageAlt: "Hunger & Food",
     category: "Hunger",
     categoryColor: "#f97316",
@@ -77,7 +77,7 @@ export const causes: Cause[] = [
   },
   {
     id: 5,
-    image: "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&q=80",
+    image: "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/women.png",
     imageAlt: "Women Empowerment",
     category: "Empowerment",
     categoryColor: "#7c3aed",
@@ -92,7 +92,7 @@ export const causes: Cause[] = [
   },
   {
     id: 6,
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80",
+    image: "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/youth.png",
     imageAlt: "Youth Development",
     category: "Youth",
     categoryColor: "#0891b2",

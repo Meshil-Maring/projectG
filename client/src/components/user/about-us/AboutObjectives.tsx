@@ -20,52 +20,40 @@ const fadeUp = {
   }),
 };
 
-const objectives = [
-  {
-    icon: GraduationCap,
-    text: "Organize educational, awareness, and capacity-building programs for students and communities.",
-  },
-  {
-    icon: Heart,
-    text: "Promote health, legal, environmental, and social awareness through campaigns and outreach.",
-  },
-  {
-    icon: Trophy,
-    text: "Conduct competitions, workshops, seminars, and cultural activities that enhance creativity and critical thinking.",
-  },
-  {
-    icon: Briefcase,
-    text: "Support skill development, career guidance, and life skills training for youth.",
-  },
-  {
-    icon: Lightbulb,
-    text: "Encourage scientific temper, innovation, and Indian Knowledge Systems (IKS) among students.",
-  },
-  {
-    icon: Users,
-    text: "Assist underprivileged and vulnerable sections through social service initiatives.",
-  },
-  {
-    icon: Handshake,
-    text: "Collaborate with educational institutions, NGOs, professionals, and government bodies.",
-  },
-  {
-    icon: Shield,
-    text: "Promote ethical leadership, constitutional values, and civic responsibility.",
-  },
-  {
-    icon: Star,
-    text: "Provide platforms for talent identification, recognition, and youth empowerment.",
-  },
-  {
-    icon: Leaf,
-    text: "Work towards sustainable development goals (SDGs) at the grassroots level.",
-  },
+const ICON_MAP: Record<string, React.ElementType> = {
+  GraduationCap, Heart, Trophy, Briefcase, Lightbulb,
+  Users, Handshake, Shield, Star, Leaf,
+};
+
+const DEFAULT_ITEMS = [
+  { icon: GraduationCap, text: "Organize educational, awareness, and capacity-building programs for students and communities." },
+  { icon: Heart,         text: "Promote health, legal, environmental, and social awareness through campaigns and outreach." },
+  { icon: Trophy,        text: "Conduct competitions, workshops, seminars, and cultural activities that enhance creativity and critical thinking." },
+  { icon: Briefcase,     text: "Support skill development, career guidance, and life skills training for youth." },
+  { icon: Lightbulb,    text: "Encourage scientific temper, innovation, and Indian Knowledge Systems (IKS) among students." },
+  { icon: Users,         text: "Assist underprivileged and vulnerable sections through social service initiatives." },
+  { icon: Handshake,     text: "Collaborate with educational institutions, NGOs, professionals, and government bodies." },
+  { icon: Shield,        text: "Promote ethical leadership, constitutional values, and civic responsibility." },
+  { icon: Star,          text: "Provide platforms for talent identification, recognition, and youth empowerment." },
+  { icon: Leaf,          text: "Work towards sustainable development goals (SDGs) at the grassroots level." },
 ];
 
 export default function AboutObjectives() {
   const { getSectionData } = usePageSections();
-  const content = { ...DEFAULT_OBJECTIVES, ...getSectionData("about-objectives") };
+  const sectionData = getSectionData("about-objectives") ?? {};
+  const content = { ...DEFAULT_OBJECTIVES, ...sectionData };
+
+  // Parse dynamic items if the admin has saved them; otherwise use the hardcoded defaults.
+  let objectives = DEFAULT_ITEMS;
+  if (sectionData.items) {
+    try {
+      const parsed = JSON.parse(sectionData.items) as Array<{ text: string; icon: string }>;
+      objectives = parsed.map((item) => ({
+        icon: ICON_MAP[item.icon] ?? GraduationCap,
+        text: item.text,
+      }));
+    } catch { /* keep defaults */ }
+  }
 
   return (
     <section className="py-20 px-6 bg-white overflow-hidden">

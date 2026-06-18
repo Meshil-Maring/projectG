@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -26,6 +27,10 @@ export default function LacPage() {
   return (
     <PageProvider slug="lac">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
+        <SEO
+          title="Legal Aid Club (LAC)"
+          description="The Legal Aid Club provides free legal awareness and assistance to underserved communities across Manipur. Learn about our camps, programs, and impact."
+        />
         <Navbar />
         <SectionNavigator sections={sections} />
         <div id="lac-hero"><LacHero /></div>

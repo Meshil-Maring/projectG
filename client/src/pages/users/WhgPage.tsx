@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -22,6 +23,10 @@ export default function WhgPage() {
   return (
     <PageProvider slug="whg">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
+        <SEO
+          title="Work for Humanity Group (WHG)"
+          description="The Work for Humanity Group focuses on women's health, blood donation drives, and community welfare initiatives across Manipur. Discover our programs."
+        />
         <Navbar />
         <SectionNavigator sections={sections} />
         <div id="whg-hero"><WhgHero /></div>

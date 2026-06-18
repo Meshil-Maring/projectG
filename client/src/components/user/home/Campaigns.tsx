@@ -23,7 +23,7 @@ const campaigns: CampaignCardData[] = [
   {
     id: 1,
     image:
-      "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=400&q=80",
+      "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/environment.png",
     imageAlt: "Environment Protection",
     categoryIcon: <Leaf size={18} className="text-white" />,
     categoryColor: "#16a34a",
@@ -35,7 +35,7 @@ const campaigns: CampaignCardData[] = [
   {
     id: 2,
     image:
-      "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&q=80",
+      "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/education.png",
     imageAlt: "Education for All",
     categoryIcon: <BookOpen size={18} className="text-white" />,
     categoryColor: "#2563eb",
@@ -47,7 +47,7 @@ const campaigns: CampaignCardData[] = [
   {
     id: 3,
     image:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80",
+      "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/health.png",
     imageAlt: "Health & Wellness",
     categoryIcon: <HeartPulse size={18} className="text-white" />,
     categoryColor: "#ec4899",
@@ -59,7 +59,7 @@ const campaigns: CampaignCardData[] = [
   {
     id: 4,
     image:
-      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&q=80",
+      "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/hunger.png",
     imageAlt: "Hunger & Food",
     categoryIcon: <Utensils size={18} className="text-white" />,
     categoryColor: "#f97316",
@@ -83,7 +83,7 @@ const campaigns: CampaignCardData[] = [
   {
     id: 6,
     image:
-      "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=400&q=80",
+      "https://pub-6801b1695d3847ba91db17a08032bf71.r2.dev/causes/youth.png",
     imageAlt: "Youth Explore",
     categoryIcon: <Compass size={18} className="text-white" />,
     categoryColor: "#0ea5e9",

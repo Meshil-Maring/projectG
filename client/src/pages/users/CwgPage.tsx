@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -22,6 +23,10 @@ export default function CwgPage() {
   return (
     <PageProvider slug="cwg">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
+        <SEO
+          title="Competitive World Group (CWG)"
+          description="The Competitive World Group empowers youth in Manipur with skills, knowledge, and opportunities to thrive in today's competitive environment."
+        />
         <Navbar />
         <SectionNavigator sections={sections} />
         <div id="cwg-hero"><CwgHero /></div>

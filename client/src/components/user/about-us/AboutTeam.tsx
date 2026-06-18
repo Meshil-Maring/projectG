@@ -168,7 +168,7 @@ export default function AboutTeam() {
                 <motion.div
                   key={name}
                   variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.4}
-                  className="relative bg-linear-to-b from-[#f0f4ff] to-white border-2 border-primary/15 rounded-2xl p-6 flex flex-col items-center text-center shadow-md hover:shadow-xl transition-shadow w-56"
+                  className="relative bg-linear-to-b from-[#f0f4ff] to-white border-2 border-primary/15 rounded-2xl p-8 flex flex-col items-center text-center shadow-md hover:shadow-xl transition-shadow w-72"
                 >
                   {/* Badge */}
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase text-white bg-primary shadow">
@@ -178,7 +178,7 @@ export default function AboutTeam() {
                   {/* Avatar — clickable */}
                   <button
                     onClick={() => setPreview({ name, role, badge, color, image, description })}
-                    className="w-24 h-24 rounded-2xl mb-4 shadow-md ring-4 ring-white overflow-hidden flex items-center justify-center text-white text-2xl font-extrabold cursor-pointer hover:scale-105 transition-transform focus:outline-none"
+                    className="w-36 h-36 rounded-2xl mb-5 shadow-md ring-4 ring-white overflow-hidden flex items-center justify-center text-white text-3xl font-extrabold cursor-pointer hover:scale-105 transition-transform focus:outline-none"
                     style={{ backgroundColor: color }}
                     aria-label={`View ${name} profile`}
                   >
@@ -189,10 +189,10 @@ export default function AboutTeam() {
                     )}
                   </button>
 
-                  <h3 className="text-sm font-extrabold text-heading leading-snug mb-1">{name}</h3>
-                  <p className="text-[11px] text-primary font-semibold">{role}</p>
+                  <h3 className="text-base font-extrabold text-heading leading-snug mb-1">{name}</h3>
+                  <p className="text-sm text-primary font-semibold">{role}</p>
                   {description && (
-                    <p className="text-[11px] text-[#64748b] mt-1 leading-relaxed">{description}</p>
+                    <p className="text-xs text-[#64748b] mt-1 leading-relaxed">{description}</p>
                   )}
                 </motion.div>
               );
@@ -212,7 +212,7 @@ export default function AboutTeam() {
           </div>
 
           {/* Animated cards */}
-          <div className="relative overflow-hidden min-h-65">
+          <div className="relative overflow-hidden min-h-130">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={page}
@@ -221,19 +221,19 @@ export default function AboutTeam() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5"
+                className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-8"
               >
                 {currentMembers.map(({ name, role, color, image, description }) => {
                   const initials = name.split(" ").map((w) => w[0]).join("");
                   return (
                     <div
                       key={name}
-                      className="bg-white border border-[#e2e8f0] rounded-2xl p-5 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow"
+                      className="bg-white border border-[#e2e8f0] rounded-2xl p-6 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow"
                     >
                       {/* Avatar — clickable */}
                       <button
                         onClick={() => setPreview({ name, role, color, image, description })}
-                        className="w-20 h-20 rounded-2xl mb-3 shadow-sm overflow-hidden flex items-center justify-center text-white text-xl font-bold cursor-pointer hover:scale-105 transition-transform focus:outline-none"
+                        className="w-36 h-36 rounded-2xl mb-4 shadow-sm overflow-hidden flex items-center justify-center text-white text-2xl font-bold cursor-pointer hover:scale-105 transition-transform focus:outline-none"
                         style={{ backgroundColor: color }}
                         aria-label={`View ${name} profile`}
                       >
@@ -243,10 +243,10 @@ export default function AboutTeam() {
                           initials
                         )}
                       </button>
-                      <h3 className="text-sm font-bold text-heading leading-tight mb-0.5">{name}</h3>
-                      <p className="text-[11px] text-[#64748b]">{role}</p>
+                      <h3 className="text-base font-bold text-heading leading-tight mb-1">{name}</h3>
+                      <p className="text-sm text-[#64748b]">{role}</p>
                       {description && (
-                        <p className="text-[11px] text-muted mt-1 leading-relaxed">{description}</p>
+                        <p className="text-xs text-muted mt-1 leading-relaxed">{description}</p>
                       )}
                     </div>
                   );

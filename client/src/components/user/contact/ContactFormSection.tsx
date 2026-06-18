@@ -42,17 +42,21 @@ export default function ContactFormSection() {
   const { getSectionData } = usePageSections();
   const content = { ...DEFAULT_FORM, ...getSectionData("contact-form") };
   const [form, setForm] = useState<FormState>({ name: "", email: "", subject: "", message: "" });
+  const [customSubject, setCustomSubject] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Partial<FormState>>({});
+  const [errors, setErrors] = useState<Partial<FormState & { customSubject: string }>>({});
   const [submitError, setSubmitError] = useState("");
 
+  const isOther = form.subject === "Other";
+
   function validate(): boolean {
-    const next: Partial<FormState> = {};
+    const next: Partial<FormState & { customSubject: string }> = {};
     if (!form.name.trim()) next.name = "Name is required.";
     if (!form.email.trim()) next.email = "Email is required.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = "Enter a valid email.";
     if (!form.subject.trim()) next.subject = "Subject is required.";
+    if (isOther && !customSubject.trim()) next.customSubject = "Please describe your subject.";
     if (!form.message.trim()) next.message = "Message is required.";
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -61,6 +65,7 @@ export default function ContactFormSection() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "subject" && value !== "Other") setCustomSubject("");
     if (errors[name as keyof FormState]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -71,8 +76,9 @@ export default function ContactFormSection() {
     if (!validate()) return;
     setLoading(true);
     setSubmitError("");
+    const payload = { ...form, subject: isOther ? customSubject.trim() : form.subject };
     try {
-      await api.post("/contact/message", form);
+      await api.post("/contact/message", payload);
       setSubmitted(true);
     } catch {
       setSubmitError("Something went wrong. Please try again.");
@@ -172,7 +178,7 @@ export default function ContactFormSection() {
                   Thank you for reaching out. We'll get back to you within 24 hours.
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
+                  onClick={() => { setSubmitted(false); setForm({ name: "", email: "", subject: "", message: "" }); setCustomSubject(""); }}
                   className="mt-2 text-sm font-semibold text-primary underline underline-offset-2"
                 >
                   Send another message
@@ -250,6 +256,33 @@ export default function ContactFormSection() {
                     <option value="Other">Other</option>
                   </select>
                   {errors.subject && <p className="text-xs text-red-500 mt-1">{errors.subject}</p>}
+
+                  {isOther && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="mt-3"
+                    >
+                      <label htmlFor="contact-custom-subject" className="block text-xs font-semibold text-body mb-1.5">
+                        Please specify <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="contact-custom-subject"
+                        type="text"
+                        placeholder="Describe your subject…"
+                        value={customSubject}
+                        onChange={(e) => {
+                          setCustomSubject(e.target.value);
+                          if (errors.customSubject) setErrors((prev) => ({ ...prev, customSubject: undefined }));
+                        }}
+                        aria-invalid={!!errors.customSubject}
+                        style={inputBase}
+                        className={fieldClass(!!errors.customSubject)}
+                      />
+                      {errors.customSubject && <p className="text-xs text-red-500 mt-1">{errors.customSubject}</p>}
+                    </motion.div>
+                  )}
                 </div>
 
                 {/* Message */}

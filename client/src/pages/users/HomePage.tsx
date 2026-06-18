@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import SectionNavigator from "../../shared/components/SectionNavigator";
 import Hero from "../../components/user/home/Hero";
@@ -8,6 +9,7 @@ import Groups from "../../components/user/home/Groups";
 import Volunteer from "../../components/user/home/Volunteer";
 import Impact from "../../components/user/home/Impact";
 import Campaigns from "../../components/user/home/Campaigns";
+import RecentNotices from "../../components/user/home/RecentNotices";
 import StoriesOfChange from "../../components/user/home/StoriesOfChange";
 import Donate from "../../components/user/home/Donate";
 import NewsletterSubscribe from "../../components/user/home/NewsletterSubscribe";
@@ -28,11 +30,16 @@ export default function HomePage() {
 
   return (
     <>
+      <SEO
+        title="Empowering Communities in Manipur"
+        description="Project G Manipur is a grassroots organization empowering communities through legal awareness, women's health, human rights, and socio-economic development in Manipur, India."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
       <section id="home">
         <Hero />
       </section>
+      <RecentNotices />
       <section id="about">
         <Mission />
         <VideoStories />

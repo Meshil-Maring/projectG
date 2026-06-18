@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -22,6 +23,10 @@ export default function FsedsPage() {
   return (
     <PageProvider slug="fseds">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
+        <SEO
+          title="Foundation for Socio-Economic Development (FSEDS)"
+          description="FSEDS works to lift communities in Manipur out of poverty through education, skill development, and economic empowerment programs."
+        />
         <Navbar />
         <SectionNavigator sections={sections} />
         <div id="fseds-hero"><FsedsHero /></div>

@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -21,6 +22,10 @@ const sections = [
 export default function ImpactPage() {
   return (
     <PageProvider slug="impact">
+      <SEO
+        title="Our Impact"
+        description="Discover the measurable impact Project G Manipur has created across communities in Manipur through education, health, and rights programs."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="impact-hero"><ImpactHero /></div>

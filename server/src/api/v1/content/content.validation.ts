@@ -55,10 +55,13 @@ export const createStatSchema = z.object({
 export const updateStatSchema = createStatSchema.partial();
 
 export const createStorySchema = z.object({
-  image: z.string().min(1),
+  image: z.string().optional().default(''),
   quote: z.string().min(1),
   name: z.string().min(1),
   role: z.string().min(1),
+  location: z.string().optional(),
+  year: z.string().optional(),
+  fullStory: z.string().optional(),
   order: z.number().int().optional(),
 });
 export const updateStorySchema = createStorySchema.partial();

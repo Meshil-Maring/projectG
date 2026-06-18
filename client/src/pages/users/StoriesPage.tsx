@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, MapPin, Calendar, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
-import { stories } from "../../data/stories";
+import { api } from "../../lib/api";
 import { PageProvider, usePageSections } from "../../context/PageContext";
+
+type StoryItem = {
+  id: number;
+  image: string;
+  quote: string;
+  name: string;
+  role: string;
+  location?: string;
+  year?: string;
+  fullStory?: string;
+};
 
 const sections = [
   { id: "stories-hero", label: "Overview" },
@@ -28,12 +40,21 @@ export default function StoriesPage() {
 }
 
 function StoriesPageContent() {
-  const [selected, setSelected] = useState<(typeof stories)[number] | null>(null);
+  const [stories, setStories] = useState<StoryItem[]>([]);
+  const [selected, setSelected] = useState<StoryItem | null>(null);
   const { getSectionData } = usePageSections();
   const hero = { ...DEFAULT_HERO, ...getSectionData("stories-hero") };
 
+  useEffect(() => {
+    api.get<StoryItem[]>("/content/stories").then(setStories).catch(() => {});
+  }, []);
+
   return (
     <>
+      <SEO
+        title="Stories of Change"
+        description="Read inspiring stories of change from communities across Manipur. See how Project G Manipur is making a real difference in people's lives."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
 
@@ -83,23 +104,43 @@ function StoriesPageContent() {
   );
 }
 
+function getInitials(name: string) {
+  return name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
+}
+
+function Avatar({ image, name, size = "sm" }: { image: string; name: string; size?: "sm" | "lg" }) {
+  const dim = size === "lg" ? "w-16 h-16 text-base" : "w-12 h-12 text-sm";
+  if (image) {
+    return (
+      <img
+        src={image}
+        alt={name}
+        loading="lazy"
+        className={`${dim} rounded-full object-cover ring-2 ring-[color:var(--color-border)] shrink-0`}
+      />
+    );
+  }
+  return (
+    <div
+      className={`${dim} rounded-full flex items-center justify-center bg-[color:var(--color-primary)] text-white font-bold shrink-0 ring-2 ring-[color:var(--color-border)]`}
+    >
+      {getInitials(name)}
+    </div>
+  );
+}
+
 function StoryCard({
   story,
   onOpen,
 }: {
-  story: (typeof stories)[number];
+  story: StoryItem;
   onOpen: () => void;
 }) {
   return (
     <div className="flex flex-col gap-3 p-5 rounded-2xl border border-[color:var(--color-border)] bg-white hover:shadow-[var(--shadow-card)] transition-shadow duration-200">
       {/* Avatar + meta */}
       <div className="flex items-center gap-3">
-        <img
-          src={story.image}
-          alt={story.name}
-          loading="lazy"
-          className="w-12 h-12 rounded-full object-cover ring-2 ring-[color:var(--color-border)] shrink-0"
-        />
+        <Avatar image={story.image} name={story.name} />
         <div>
           <p className="text-sm font-bold text-[color:var(--color-heading)] leading-tight">
             {story.name}
@@ -121,15 +162,21 @@ function StoryCard({
         </p>
       </div>
 
-      {/* Location / year */}
-      <div className="flex items-center gap-3 mt-auto pt-1">
-        <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
-          <MapPin size={11} /> {story.location}
-        </span>
-        <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
-          <Calendar size={11} /> {story.year}
-        </span>
-      </div>
+      {/* Location / year — only rendered when values are present */}
+      {(story.location || story.year) && (
+        <div className="flex items-center gap-3 mt-auto pt-1">
+          {story.location && (
+            <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
+              <MapPin size={11} /> {story.location}
+            </span>
+          )}
+          {story.year && (
+            <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
+              <Calendar size={11} /> {story.year}
+            </span>
+          )}
+        </div>
+      )}
 
       <button
         onClick={onOpen}
@@ -145,7 +192,7 @@ function StoryModal({
   story,
   onClose,
 }: {
-  story: (typeof stories)[number];
+  story: StoryItem;
   onClose: () => void;
 }) {
   useEffect(() => {
@@ -180,22 +227,24 @@ function StoryModal({
         </button>
 
         <div className="flex items-center gap-4 mb-5">
-          <img
-            src={story.image}
-            alt={story.name}
-            className="w-16 h-16 rounded-full object-cover ring-2 ring-[color:var(--color-border)]"
-          />
+          <Avatar image={story.image} name={story.name} size="lg" />
           <div>
             <p id="story-modal-name" className="font-bold text-heading">{story.name}</p>
             <p className="text-xs text-[color:var(--color-muted)]">{story.role}</p>
-            <div className="flex items-center gap-3 mt-1">
-              <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
-                <MapPin size={11} /> {story.location}
-              </span>
-              <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
-                <Calendar size={11} /> {story.year}
-              </span>
-            </div>
+            {(story.location || story.year) && (
+              <div className="flex items-center gap-3 mt-1">
+                {story.location && (
+                  <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
+                    <MapPin size={11} /> {story.location}
+                  </span>
+                )}
+                {story.year && (
+                  <span className="flex items-center gap-1 text-xs text-[color:var(--color-muted)]">
+                    <Calendar size={11} /> {story.year}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -208,9 +257,11 @@ function StoryModal({
         <p className="text-base italic font-medium text-[color:var(--color-heading)] mb-4 -mt-1">
           {story.quote}
         </p>
-        <p className="text-sm text-[color:var(--color-body)] leading-relaxed">
-          {story.fullStory}
-        </p>
+        {story.fullStory && (
+          <p className="text-sm text-[color:var(--color-body)] leading-relaxed">
+            {story.fullStory}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -17,6 +18,10 @@ const sections = [
 export default function DonatePage() {
   return (
     <PageProvider slug="donate">
+      <SEO
+        title="Donate"
+        description="Support Project G Manipur with a donation. Your contribution directly funds legal awareness, healthcare, education, and community development in Manipur."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="donate-hero"><DonateHero /></div>

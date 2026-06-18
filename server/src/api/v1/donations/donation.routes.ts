@@ -5,6 +5,7 @@ import { ok } from '../../../common/utils/apiResponse.js';
 import { validate } from '../../../middlewares/validate.middleware.js';
 import { donationLimiter } from '../../../middlewares/rateLimiter.middleware.js';
 import { sendDonationReceiptEmail } from '../../../common/services/email.service.js';
+import { donationReceiptTemplate } from '../../../common/services/email.templates.js';
 import { donationSchema } from './donation.validation.js';
 
 export const donationRoutes = Router();
@@ -47,22 +48,17 @@ donationRoutes.post(
     });
     const formattedAmount = `Rs. ${donation.amount.toLocaleString('en-IN')}`;
 
-    const html = `
-      <h2>Thank you for your donation, ${escapeHtml(name)}!</h2>
-      <p>Here is your donation receipt:</p>
-      <table style="border-collapse: collapse;">
-        <tr><td style="padding:4px 12px 4px 0;"><strong>Receipt No.</strong></td><td style="padding:4px 0;">${donation.id}</td></tr>
-        <tr><td style="padding:4px 12px 4px 0;"><strong>Name</strong></td><td style="padding:4px 0;">${escapeHtml(name)}</td></tr>
-        <tr><td style="padding:4px 12px 4px 0;"><strong>Cause</strong></td><td style="padding:4px 0;">${escapeHtml(causeLabel)}</td></tr>
-        <tr><td style="padding:4px 12px 4px 0;"><strong>Amount</strong></td><td style="padding:4px 0;">${formattedAmount}</td></tr>
-        <tr><td style="padding:4px 12px 4px 0;"><strong>Date</strong></td><td style="padding:4px 0;">${formattedDate}</td></tr>
-      </table>
-      <p>We appreciate your generosity and support.</p>
-    `;
+    const html = donationReceiptTemplate({
+      name: escapeHtml(name),
+      receiptId: donation.id,
+      cause: escapeHtml(causeLabel),
+      amount: formattedAmount,
+      date: formattedDate,
+    });
 
     await sendDonationReceiptEmail({
       to: email,
-      subject: 'Your Donation Receipt - ProjectG Foundation',
+      subject: 'Your Donation Receipt - Project Generation',
       html,
     });
 

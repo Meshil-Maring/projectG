@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Heart, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import handImg from "../../../assets/image/hand.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -20,15 +19,6 @@ export default function AboutCTA() {
         background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)",
       }}
     >
-      {/* Hands background image */}
-      <div className="absolute inset-0 pointer-events-none">
-        <img
-          src={handImg}
-          alt=""
-          className="absolute left-0 bottom-0 h-full w-auto max-w-xs object-contain opacity-20"
-        />
-      </div>
-
       {/* Leaf decoration — right side */}
       <svg
         className="absolute right-0 top-0 h-full w-40 opacity-10 pointer-events-none"

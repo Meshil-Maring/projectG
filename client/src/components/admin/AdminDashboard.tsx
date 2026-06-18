@@ -66,6 +66,8 @@ import { ImageUploadField } from "./shared/ImageUploadField";
 import { WhgGalleryTab } from "./WhgGalleryTab";
 import { GenericGalleryTab } from "./GenericGalleryTab";
 import { AboutStoryTab } from "./AboutStoryTab";
+import { MissionVisionTab } from "./MissionVisionTab";
+import { ObjectivesTab } from "./ObjectivesTab";
 import {
   fetchLacGroups, createLacGroup, updateLacGroup, deleteLacGroup,
   uploadToLacGroup, deleteLacGalleryImage, updateLacGalleryImage,
@@ -1107,7 +1109,7 @@ function ImpactTab() {
 // ── Tab: Stories of Change ────────────────────────────────────────────────────
 
 type StoryFormData = Omit<StoryEntry, "id">;
-const BLANK_STORY: StoryFormData = { image: "", quote: "", name: "", role: "" };
+const BLANK_STORY: StoryFormData = { image: "", quote: "", name: "", role: "", location: "", year: "", fullStory: "" };
 
 function StoriesTab() {
   const { data, updateStories } = useHomePageData();
@@ -1120,7 +1122,7 @@ function StoriesTab() {
 
   function startEdit(s: StoryEntry) {
     setEditingId(s.id);
-    setForm({ image: s.image, quote: s.quote, name: s.name, role: s.role });
+    setForm({ image: s.image, quote: s.quote, name: s.name, role: s.role, location: s.location ?? "", year: s.year ?? "", fullStory: s.fullStory ?? "" });
     setAddingNew(false);
   }
 
@@ -1244,10 +1246,19 @@ function StoriesTab() {
                   <FieldGroup label="Profession / Role">
                     <Input value={form.role} onChange={(val) => setForm((f) => ({ ...f, role: val }))} placeholder="e.g. Volunteer" />
                   </FieldGroup>
+                  <FieldGroup label="Location">
+                    <Input value={form.location ?? ""} onChange={(val) => setForm((f) => ({ ...f, location: val }))} placeholder="e.g. Rajasthan, India" />
+                  </FieldGroup>
+                  <FieldGroup label="Year">
+                    <Input value={form.year ?? ""} onChange={(val) => setForm((f) => ({ ...f, year: val }))} placeholder="e.g. 2024" />
+                  </FieldGroup>
                 </div>
                 <ImageUploadField specKey="story" label="Profile Photo" value={form.image} onChange={(val) => setForm((f) => ({ ...f, image: val }))} previewHeight={100} />
                 <FieldGroup label="Message / Quote">
                   <Textarea value={form.quote} onChange={(val) => setForm((f) => ({ ...f, quote: val }))} placeholder="Their testimonial message..." rows={3} />
+                </FieldGroup>
+                <FieldGroup label="Full Story">
+                  <Textarea value={form.fullStory ?? ""} onChange={(val) => setForm((f) => ({ ...f, fullStory: val }))} placeholder="The full story shown when clicking 'Read full story'..." rows={4} />
                 </FieldGroup>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button onClick={saveEdit} style={primaryBtnStyle}><Check size={13} /> Save</button>
@@ -1268,10 +1279,19 @@ function StoriesTab() {
               <FieldGroup label="Profession / Role">
                 <Input value={newForm.role} onChange={(val) => setNewForm((f) => ({ ...f, role: val }))} placeholder="e.g. Volunteer" />
               </FieldGroup>
+              <FieldGroup label="Location">
+                <Input value={newForm.location ?? ""} onChange={(val) => setNewForm((f) => ({ ...f, location: val }))} placeholder="e.g. Rajasthan, India" />
+              </FieldGroup>
+              <FieldGroup label="Year">
+                <Input value={newForm.year ?? ""} onChange={(val) => setNewForm((f) => ({ ...f, year: val }))} placeholder="e.g. 2024" />
+              </FieldGroup>
             </div>
             <ImageUploadField specKey="story" label="Profile Photo" value={newForm.image} onChange={(val) => setNewForm((f) => ({ ...f, image: val }))} previewHeight={100} />
             <FieldGroup label="Message / Quote">
               <Textarea value={newForm.quote} onChange={(val) => setNewForm((f) => ({ ...f, quote: val }))} placeholder="Their testimonial message..." rows={3} />
+            </FieldGroup>
+            <FieldGroup label="Full Story">
+              <Textarea value={newForm.fullStory ?? ""} onChange={(val) => setNewForm((f) => ({ ...f, fullStory: val }))} placeholder="The full story shown when clicking 'Read full story'..." rows={4} />
             </FieldGroup>
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
               <button onClick={addStory} style={primaryBtnStyle}><Plus size={13} /> Add Story</button>
@@ -2211,6 +2231,8 @@ type ActiveView =
   | { kind: "cwgGallery" }
   | { kind: "fsedsGallery" }
   | { kind: "aboutStory" }
+  | { kind: "aboutMissionVision" }
+  | { kind: "aboutObjectives" }
   | { kind: "settings" };
 
 // ── Tab: Account Settings ─────────────────────────────────────────────────────
@@ -2750,6 +2772,10 @@ export default function AdminDashboard() {
       ? "Meet Our Team"
       : activeView.kind === "aboutStory"
       ? "Our Story Section"
+      : activeView.kind === "aboutMissionVision"
+      ? "Mission & Vision"
+      : activeView.kind === "aboutObjectives"
+      ? "Our Objectives"
       : activeView.kind in GALLERY_LABELS
       ? GALLERY_LABELS[activeView.kind]
       : "Account Settings";
@@ -2765,7 +2791,7 @@ export default function AdminDashboard() {
       ? "Notifications"
       : activeView.kind === "team"
       ? "Team"
-      : activeView.kind === "aboutStory"
+      : (activeView.kind === "aboutStory" || activeView.kind === "aboutMissionVision" || activeView.kind === "aboutObjectives")
       ? "About Us"
       : galleryKinds.includes(activeView.kind)
       ? "Media"
@@ -2886,7 +2912,54 @@ export default function AdminDashboard() {
           />
           {expandedGroups.pages && (
             <div style={{ paddingLeft: "1.1rem", marginBottom: "0.25rem" }}>
-              {PAGES.map((p) => (
+              {/* Groups */}
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "0.35rem 0.85rem 0.15rem", margin: 0 }}>
+                Groups
+              </p>
+              {(["whg", "hrds", "cwg", "fseds", "lac"] as const).map((slug) => {
+                const p = PAGES.find((pg) => pg.slug === slug)!;
+                return (
+                  <NavSubItem
+                    key={p.slug}
+                    active={activeView.kind === "page" && activeView.slug === p.slug}
+                    onClick={() => setActiveView({ kind: "page", slug: p.slug })}
+                    label={p.title}
+                  />
+                );
+              })}
+
+              {/* Pages */}
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "0.5rem 0.85rem 0.15rem", margin: 0 }}>
+                Pages
+              </p>
+
+              {/* About Us with nested sub-sections */}
+              <NavSubItem
+                active={activeView.kind === "page" && activeView.slug === "about-us"}
+                onClick={() => setActiveView({ kind: "page", slug: "about-us" })}
+                label="About Us"
+              />
+              <div style={{ paddingLeft: "0.75rem" }}>
+                <NavSubItem
+                  active={activeView.kind === "aboutStory"}
+                  onClick={() => setActiveView({ kind: "aboutStory" })}
+                  Icon={Video}
+                  label="Our Story"
+                />
+                <NavSubItem
+                  active={activeView.kind === "aboutMissionVision"}
+                  onClick={() => setActiveView({ kind: "aboutMissionVision" })}
+                  label="Mission & Vision"
+                />
+                <NavSubItem
+                  active={activeView.kind === "aboutObjectives"}
+                  onClick={() => setActiveView({ kind: "aboutObjectives" })}
+                  label="Objectives"
+                />
+              </div>
+
+              {/* Remaining pages */}
+              {PAGES.filter((p) => !["whg", "hrds", "cwg", "fseds", "lac", "about-us"].includes(p.slug)).map((p) => (
                 <NavSubItem
                   key={p.slug}
                   active={activeView.kind === "page" && activeView.slug === p.slug}
@@ -2894,12 +2967,6 @@ export default function AdminDashboard() {
                   label={p.title}
                 />
               ))}
-              <NavSubItem
-                active={activeView.kind === "aboutStory"}
-                onClick={() => setActiveView({ kind: "aboutStory" })}
-                Icon={Video}
-                label="About Us — Our Story"
-              />
             </div>
           )}
 
@@ -3040,6 +3107,8 @@ export default function AdminDashboard() {
           {activeView.kind === "home" && activeView.id === "activities" && <GroupActivitiesTab />}
           {activeView.kind === "team" && <TeamTab />}
           {activeView.kind === "aboutStory" && <AboutStoryTab />}
+          {activeView.kind === "aboutMissionVision" && <MissionVisionTab />}
+          {activeView.kind === "aboutObjectives" && <ObjectivesTab />}
           {activeView.kind === "page" && <PagesTab activeSlug={activeView.slug} />}
           {activeView.kind === "notifications" && <NotificationsTab />}
           {activeView.kind === "whgGallery" && <WhgGalleryTab />}

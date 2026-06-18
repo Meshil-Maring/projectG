@@ -17,11 +17,8 @@ const envSchema = z.object({
   R2_BUCKET_NAME: z.string().min(1),
   R2_PUBLIC_URL: z.string().url(),
 
-  // Email (SMTP)
-  SMTP_HOST: z.string().min(1),
-  SMTP_PORT: z.coerce.number().int().positive().default(587),
-  SMTP_USER: z.string().min(1),
-  SMTP_PASS: z.string().min(1),
+  // Email (Resend)
+  RESEND_API_KEY: z.string().min(1),
   EMAIL_FROM: z.string().min(1),
   CONTACT_EMAIL_TO: z.string().min(1),
 });

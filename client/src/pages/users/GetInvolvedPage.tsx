@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -19,6 +20,10 @@ const sections = [
 export default function GetInvolvedPage() {
   return (
     <PageProvider slug="get-involved">
+      <SEO
+        title="Get Involved"
+        description="Join Project G Manipur as a volunteer, fundraiser, or partner. Together we can create lasting change in communities across Manipur."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="gi-hero"><GetInvolvedHero /></div>

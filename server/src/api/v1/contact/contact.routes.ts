@@ -4,6 +4,7 @@ import { ok } from '../../../common/utils/apiResponse.js';
 import { validate } from '../../../middlewares/validate.middleware.js';
 import { contactLimiter } from '../../../middlewares/rateLimiter.middleware.js';
 import { sendContactEmail } from '../../../common/services/email.service.js';
+import { contactMessageTemplate, volunteerTemplate } from '../../../common/services/email.templates.js';
 import { volunteerSchema, contactMessageSchema } from './contact.validation.js';
 
 export const contactRoutes = Router();
@@ -25,14 +26,13 @@ contactRoutes.post(
   asyncHandler(async (req: Request, res: Response) => {
     const { name, email, phone, areas, message } = req.body as typeof volunteerSchema._type;
 
-    const html = `
-      <h2>New Volunteer Sign-Up</h2>
-      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-      ${phone ? `<p><strong>Phone:</strong> ${escapeHtml(phone)}</p>` : ''}
-      <p><strong>Areas of Interest:</strong> ${escapeHtml(areas.join(', '))}</p>
-      ${message ? `<p><strong>Message:</strong><br/>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>` : ''}
-    `;
+    const html = volunteerTemplate({
+      name: escapeHtml(name),
+      email: escapeHtml(email),
+      phone: phone ? escapeHtml(phone) : undefined,
+      areas: areas.map(escapeHtml),
+      message: message ? escapeHtml(message) : undefined,
+    });
 
     await sendContactEmail({
       subject: `New Volunteer Sign-Up from ${name}`,
@@ -50,13 +50,12 @@ contactRoutes.post(
   asyncHandler(async (req: Request, res: Response) => {
     const { name, email, subject, message } = req.body as typeof contactMessageSchema._type;
 
-    const html = `
-      <h2>New Contact Message</h2>
-      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-      <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
-      <p><strong>Message:</strong><br/>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>
-    `;
+    const html = contactMessageTemplate({
+      name: escapeHtml(name),
+      email: escapeHtml(email),
+      subject: escapeHtml(subject),
+      message: escapeHtml(message).replace(/\n/g, '<br/>'),
+    });
 
     await sendContactEmail({
       subject: `New Contact Message: ${subject}`,

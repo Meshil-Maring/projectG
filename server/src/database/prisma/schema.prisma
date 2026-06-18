@@ -75,12 +75,15 @@ model ImpactStat {
 }
 
 model Story {
-  id    Int    @id @default(autoincrement())
-  image String
-  quote String
-  name  String
-  role  String
-  order Int    @default(0)
+  id        Int    @id @default(autoincrement())
+  image     String @default("")
+  quote     String
+  name      String
+  role      String
+  location  String @default("")
+  year      String @default("")
+  fullStory String @default("")
+  order     Int    @default(0)
 
   @@map("stories")
 }

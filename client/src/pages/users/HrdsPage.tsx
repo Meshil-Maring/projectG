@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -22,6 +23,10 @@ export default function HrdsPage() {
   return (
     <PageProvider slug="hrds">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
+        <SEO
+          title="HR Development Society (HRDS)"
+          description="The HR Development Society advocates for the rights and dignity of marginalized communities in Manipur through education, awareness, and outreach programs."
+        />
         <Navbar />
         <SectionNavigator sections={sections} />
         <div id="hrds-hero"><HrdsHero /></div>

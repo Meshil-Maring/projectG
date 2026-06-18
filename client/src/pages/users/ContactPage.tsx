@@ -1,3 +1,4 @@
+import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 import SectionNavigator from "../../shared/components/SectionNavigator";
@@ -13,6 +14,10 @@ const sections = [
 export default function ContactPage() {
   return (
     <PageProvider slug="contact">
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Project G Manipur. Reach out to us for partnerships, volunteering, donations, or general inquiries."
+      />
       <Navbar />
       <SectionNavigator sections={sections} />
       <div id="contact-hero"><ContactHero /></div>
