@@ -41,7 +41,7 @@ type ObjectiveIconKey = (typeof ICON_OPTIONS)[number]["key"];
 
 const ICON_MAP = Object.fromEntries(
   ICON_OPTIONS.map(({ key, Icon }) => [key, Icon])
-) as Record<ObjectiveIconKey, React.ElementType>;
+) as unknown as Record<ObjectiveIconKey, React.ElementType>;
 
 type ObjectiveItem = { text: string; icon: ObjectiveIconKey };
 

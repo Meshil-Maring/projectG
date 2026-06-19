@@ -18,7 +18,6 @@ const ctaActions = [
   { icon: Star, label: "Be the Change" },
 ];
 
-const chartBars = [28, 44, 36, 56, 48, 64];
 
 const DEFAULT_CTA = {
   eyebrow: "TOGETHER WE RISE",

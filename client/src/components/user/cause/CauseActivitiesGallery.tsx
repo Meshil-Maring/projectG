@@ -3,7 +3,7 @@ import { Camera } from "lucide-react";
 import { fade } from "./cause.constants";
 
 export interface CauseActivity {
-  id: string;
+  id: string | number;
   title: string;
   desc: string;
   imageUrl?: string | null;

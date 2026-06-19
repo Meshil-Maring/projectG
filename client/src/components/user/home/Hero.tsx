@@ -1,4 +1,4 @@
-import { Heart, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "../../../assets/image/herosection_small.png";
 import { INK_PATHS } from "./heroInkPaths";

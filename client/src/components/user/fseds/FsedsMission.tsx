@@ -1,13 +1,12 @@
 import { motion } from "framer-motion";
 import {
-  Globe,
   BarChart3,
   GraduationCap,
   TrendingUp,
   Briefcase,
   Users,
 } from "lucide-react";
-import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./fseds.constants";
+import { PRIMARY, LIGHT_BG, fade } from "./fseds.constants";
 import { usePageSections } from "../../../context/PageContext";
 import CauseMissionPillars from "../cause/CauseMissionPillars";
 import CauseGrowthSteps from "../cause/CauseGrowthSteps";

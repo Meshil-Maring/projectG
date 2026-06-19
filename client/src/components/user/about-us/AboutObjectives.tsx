@@ -44,7 +44,7 @@ export default function AboutObjectives() {
   const content = { ...DEFAULT_OBJECTIVES, ...sectionData };
 
   // Parse dynamic items if the admin has saved them; otherwise use the hardcoded defaults.
-  let objectives = DEFAULT_ITEMS;
+  let objectives: Array<{ icon: React.ElementType; text: string }> = DEFAULT_ITEMS;
   if (sectionData.items) {
     try {
       const parsed = JSON.parse(sectionData.items) as Array<{ text: string; icon: string }>;
