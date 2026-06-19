@@ -18,8 +18,8 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
 # Prisma schema and migrations are needed at runtime for migrate deploy
-COPY src/database/prisma ./src/database/prisma
-COPY package.json ./
+COPY --from=builder /app/src/database/prisma ./src/database/prisma
+COPY --from=builder /app/package.json ./
 
 EXPOSE 4000
 
