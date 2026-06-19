@@ -29,7 +29,7 @@ app.use('/api/v1', apiLimiter, v1Routes);
 // Serve the React client build — /api/v1 takes priority above
 const clientDist = path.resolve(__dirname, '../client-dist');
 app.use(express.static(clientDist));
-app.get('*', (_req, res, next) => {
+app.get('/{*splat}', (_req, res, next) => {
   res.sendFile(path.join(clientDist, 'index.html'), (err) => {
     if (err) next(); // fall through to notFoundHandler in dev (no client build)
   });
