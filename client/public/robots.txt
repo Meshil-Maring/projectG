@@ -3,4 +3,4 @@ Allow: /
 Disallow: /projectG-admin
 Disallow: /projectG-admin/
 
-Sitemap: https://projectgmanipur.org/sitemap.xml
+Sitemap: https://projectgmanipur.com/sitemap.xml

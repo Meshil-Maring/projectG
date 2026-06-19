@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-const SITE_URL = "https://projectgmanipur.org";
+const SITE_URL = "https://projectgmanipur.com";
 const SITE_NAME = "Project G Manipur";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/small_logo.jpeg`;
 
