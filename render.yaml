@@ -3,7 +3,7 @@ services:
     name: projectg-server
     env: docker
     dockerfilePath: ./server/Dockerfile
-    dockerContext: ./server
+    dockerContext: .
     envVars:
       - key: NODE_ENV
         value: production
@@ -11,14 +11,5 @@ services:
         sync: false
       - key: PORT
         value: 4000
-
-  - type: web
-    name: projectg-client
-    env: docker
-    dockerfilePath: ./client/Dockerfile
-    dockerContext: ./client
-    envVars:
-      - key: PORT
-        value: "10000"
       - key: VITE_API_URL
-        sync: false
+        value: /api/v1
