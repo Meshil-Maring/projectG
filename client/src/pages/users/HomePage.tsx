@@ -31,7 +31,7 @@ export default function HomePage() {
   return (
     <>
       <SEO
-        title="Empowering Communities in Manipur"
+        title="Project G Manipur"
         description="Project G Manipur is a grassroots organization empowering communities through legal awareness, women's health, human rights, and socio-economic development in Manipur, India."
       />
       <Navbar />

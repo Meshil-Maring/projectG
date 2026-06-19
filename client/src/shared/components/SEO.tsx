@@ -21,7 +21,7 @@ export default function SEO({
 }: SEOProps) {
   const { pathname } = useLocation();
   const canonicalUrl = `${SITE_URL}${pathname}`;
-  const fullTitle = `${title} | ${SITE_NAME}`;
+  const fullTitle = title === SITE_NAME ? SITE_NAME : `${title} | ${SITE_NAME}`;
   const schemas = jsonLd
     ? Array.isArray(jsonLd)
       ? jsonLd
