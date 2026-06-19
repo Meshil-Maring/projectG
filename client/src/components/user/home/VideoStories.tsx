@@ -178,20 +178,20 @@ export default function VideoStories() {
 
               {/* Player */}
               <div className="relative flex-1 rounded-2xl overflow-hidden shadow-2xl bg-black group">
-                {/* Mobile overlay arrows */}
+                {/* Mobile overlay arrows — pinned to top corners so they don't overlap player controls */}
                 <button
                   onClick={handlePrev}
                   aria-label="Previous video"
-                  className="sm:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/80 border border-slate-200 shadow flex items-center justify-center"
+                  className="sm:hidden absolute left-2 top-2 z-20 w-9 h-9 rounded-full bg-black/50 border border-white/30 shadow flex items-center justify-center"
                 >
-                  <ChevronLeft size={16} className="text-slate-700" />
+                  <ChevronLeft size={18} className="text-white" />
                 </button>
                 <button
                   onClick={handleNext}
                   aria-label="Next video"
-                  className="sm:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/80 border border-slate-200 shadow flex items-center justify-center"
+                  className="sm:hidden absolute right-2 top-2 z-20 w-9 h-9 rounded-full bg-black/50 border border-white/30 shadow flex items-center justify-center"
                 >
-                  <ChevronRight size={16} className="text-slate-700" />
+                  <ChevronRight size={18} className="text-white" />
                 </button>
 
                 <div className="aspect-video relative">
@@ -257,11 +257,11 @@ export default function VideoStories() {
                       {/* Subtle overlay */}
                       <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
-                      {/* Center play/pause — fades while playing, reappears on hover */}
+                      {/* Center play/pause — always visible on mobile; fades on desktop while playing, reappears on hover */}
                       <button
                         onClick={() => setIsPlaying((p) => !p)}
                         className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                          isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
+                          isPlaying ? "sm:opacity-0 sm:group-hover:opacity-100" : "opacity-100"
                         }`}
                         aria-label={isPlaying ? "Pause" : "Play"}
                       >
@@ -304,28 +304,28 @@ export default function VideoStories() {
                         <div className="flex items-center justify-between">
                           <button
                             onClick={() => setIsPlaying((p) => !p)}
-                            className="text-white hover:text-white/80 transition"
+                            className="text-white hover:text-white/80 transition p-1"
                             aria-label={isPlaying ? "Pause" : "Play"}
                           >
-                            {isPlaying ? <Pause size={15} /> : <Play size={15} />}
+                            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
                           </button>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1">
                             <button
                               onClick={toggleMute}
-                              className="text-white hover:text-white/80 transition"
+                              className="text-white hover:text-white/80 transition p-1"
                               aria-label={muted ? "Unmute" : "Mute"}
                             >
-                              {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+                              {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                             </button>
-                            <span className="text-white text-xs tabular-nums">
+                            <span className="text-white text-xs tabular-nums px-1">
                               {fmt(elapsed)} / {current.duration}
                             </span>
                             <button
                               onClick={handleFullscreen}
-                              className="text-white hover:text-white/80 transition"
+                              className="text-white hover:text-white/80 transition p-1"
                               aria-label="Fullscreen"
                             >
-                              <Maximize2 size={15} />
+                              <Maximize2 size={16} />
                             </button>
                           </div>
                         </div>
