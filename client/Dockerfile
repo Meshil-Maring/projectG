@@ -14,12 +14,15 @@ ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm run build
 
-# Stage 2: Serve with Nginx
-FROM nginx:alpine AS runner
+# Stage 2: Serve with `serve` (SPA mode handles client-side routing on refresh)
+FROM node:20-alpine AS runner
 
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN npm install -g serve
 
-EXPOSE 80
+COPY --from=builder /app/dist /app/dist
 
-CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /app
+
+EXPOSE 10000
+
+CMD ["serve", "-s", "dist", "-l", "10000"]

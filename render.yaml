@@ -18,5 +18,7 @@ services:
     dockerfilePath: ./client/Dockerfile
     dockerContext: ./client
     envVars:
+      - key: PORT
+        value: "10000"
       - key: VITE_API_URL
         sync: false
