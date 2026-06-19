@@ -1,4 +1,4 @@
-# Stage 1: Build
+# Stage 1: Build React app
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -8,21 +8,21 @@ RUN npm ci
 
 COPY . .
 
-# VITE_API_URL is baked into the JS bundle at build time
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm run build
 
-# Stage 2: Serve with `serve` (SPA mode handles client-side routing on refresh)
+# Stage 2: Serve with a minimal Express server (guarantees SPA fallback)
 FROM node:20-alpine AS runner
-
-RUN npm install -g serve
-
-COPY --from=builder /app/dist /app/dist
 
 WORKDIR /app
 
+RUN npm init -y && npm install express
+
+COPY server.js .
+COPY --from=builder /app/dist ./dist
+
 EXPOSE 10000
 
-CMD ["serve", "-s", "dist", "-l", "10000"]
+CMD ["node", "server.js"]
