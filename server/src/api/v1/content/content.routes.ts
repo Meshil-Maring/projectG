@@ -82,7 +82,7 @@ contentRoutes.use(
     delegate: prisma.activity,
     createSchema: createActivitySchema,
     updateSchema: updateActivitySchema,
-    buildWhere: (req: Request) => (req.query.group ? { group: req.query.group as string } : undefined),
+    buildWhere: (req) => (req.query.group ? { group: req.query.group as string } : undefined),
   }),
 );
 

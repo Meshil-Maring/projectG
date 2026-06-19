@@ -180,7 +180,7 @@ whgGalleryRoutes.post(
 whgGalleryRoutes.patch(
   '/image/:imageId',
   asyncHandler(async (req: Request, res: Response) => {
-    const { imageId } = req.params;
+    const imageId = req.params.imageId as string;
     const { name, description } = req.body as { name?: string; description?: string };
 
     const image = await prisma.whgImage.findUnique({ where: { id: imageId } });
@@ -208,7 +208,7 @@ whgGalleryRoutes.patch(
 whgGalleryRoutes.delete(
   '/image/:imageId',
   asyncHandler(async (req: Request, res: Response) => {
-    const { imageId } = req.params;
+    const imageId = req.params.imageId as string;
     const image = await prisma.whgImage.findUnique({ where: { id: imageId } });
     if (!image) throw new NotFoundError('Image not found.');
 
