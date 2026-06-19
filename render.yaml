@@ -2,7 +2,7 @@ services:
   - type: web
     name: projectg-server
     env: docker
-    dockerfilePath: ./server/Dockerfile
+    dockerfilePath: ./Dockerfile
     dockerContext: .
     envVars:
       - key: NODE_ENV
