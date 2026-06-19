@@ -462,21 +462,22 @@ export default function Navbar() {
             style={{
               alignItems: "center",
               gap: "0.4rem",
-              padding: "0.5rem 1.1rem",
+              padding: "0.5rem 1.2rem",
               fontSize: "0.82rem",
               fontWeight: 600,
               color: "#ffffff",
               backgroundColor: "#1a3270",
-              borderRadius: "9999px",
+              borderRadius: "0.5rem",
               textDecoration: "none",
               whiteSpace: "nowrap",
               transition: "background-color 0.2s",
+              boxShadow: "0 4px 14px 0 rgba(26,50,112,0.35)",
             }}
             onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#13265a")}
             onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#1a3270")}
           >
             <Heart size={14} fill="#ffffff" />
-            Donate
+            Donate Now
           </Link>
           <button
             onClick={() => setMenuOpen((v) => !v)}
@@ -730,12 +731,13 @@ export default function Navbar() {
                   fontWeight: 600,
                   color: "#ffffff",
                   backgroundColor: "#1a3270",
-                  borderRadius: "9999px",
+                  borderRadius: "0.5rem",
                   textDecoration: "none",
+                  boxShadow: "0 4px 14px 0 rgba(26,50,112,0.35)",
                 }}
               >
                 <Heart size={15} fill="#ffffff" />
-                Donate
+                Donate Now
               </Link>
             </div>
           </motion.nav>

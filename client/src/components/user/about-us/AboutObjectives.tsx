@@ -86,7 +86,7 @@ export default function AboutObjectives() {
         </div>
 
         {/* Objectives grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
           {objectives.map(({ icon: Icon, text }, i) => (
             <motion.div
               key={i}
@@ -95,20 +95,21 @@ export default function AboutObjectives() {
               whileInView="visible"
               viewport={{ once: true }}
               custom={i}
-              className="flex items-start gap-4 bg-[#f8fafc] border border-[#e2e8f0] rounded-2xl px-5 py-4 hover:shadow-md hover:border-[#c7d7f8] transition-all duration-200"
+              className="flex items-center gap-3 sm:gap-4 bg-surface border border-[#e2e8f0] rounded-2xl px-4 py-3 sm:px-5 sm:py-4 hover:shadow-md hover:border-[#c7d7f8] transition-all duration-200"
             >
               {/* Number badge */}
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1a3270] flex items-center justify-center text-xs font-bold text-white">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary flex items-center justify-center text-[10px] sm:text-xs font-bold text-white">
                 {String(i + 1).padStart(2, "0")}
               </div>
 
               {/* Icon */}
-              <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#e8f0ff] flex items-center justify-center">
-                <Icon size={19} className="text-[#1a3270]" strokeWidth={1.7} />
+              <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#e8f0ff] flex items-center justify-center">
+                <Icon size={16} className="text-[#1a3270] sm:hidden" strokeWidth={1.7} />
+                <Icon size={19} className="text-[#1a3270] hidden sm:block" strokeWidth={1.7} />
               </div>
 
               {/* Text */}
-              <p className="text-sm text-[#475569] leading-relaxed pt-1">{text}</p>
+              <p className="text-xs sm:text-sm text-body leading-relaxed">{text}</p>
             </motion.div>
           ))}
         </div>

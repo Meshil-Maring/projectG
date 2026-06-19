@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./hrds.constants";
 import { usePageSections } from "../../../context/PageContext";
-import CauseBreadcrumb from "../cause/CauseBreadcrumb";
 import CauseFeatureStrip from "../cause/CauseFeatureStrip";
 
 const heroFeatures = [
@@ -64,20 +63,18 @@ export default function HrdsHero() {
       />
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1.5rem" }}>
-        {/* Breadcrumb */}
-        <CauseBreadcrumb currentLabel="Human Resources Developmental Society" primary={PRIMARY} />
-
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "3rem",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
+            textAlign: "center",
             paddingBottom: "3rem",
+            gap: "2.5rem",
           }}
         >
-          {/* Left */}
-          <div>
+          {/* Text content */}
+          <div style={{ maxWidth: "620px", width: "100%" }}>
             <motion.h1
               {...fade(0.1)}
               style={{
@@ -128,7 +125,7 @@ export default function HrdsHero() {
                 height: "3px",
                 background: PRIMARY,
                 borderRadius: "2px",
-                marginBottom: "1.25rem",
+                margin: "0 auto 1.25rem",
               }}
             />
 
@@ -139,7 +136,6 @@ export default function HrdsHero() {
                 color: "#475569",
                 lineHeight: 1.75,
                 marginBottom: "2rem",
-                maxWidth: "420px",
                 whiteSpace: "pre-wrap",
               }}
             >
@@ -148,7 +144,7 @@ export default function HrdsHero() {
 
             <motion.div
               {...fade(0.25)}
-              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const }}
+              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const, justifyContent: "center" }}
             >
               <a
                 href="#get-involved"
@@ -191,103 +187,79 @@ export default function HrdsHero() {
             </motion.div>
           </div>
 
-          {/* Right – skills visual card */}
+          {/* Skills visual card – centered */}
           <motion.div
             {...fade(0.15)}
-            style={{ position: "relative", display: "flex", justifyContent: "center" }}
+            style={{ position: "relative", display: "flex", justifyContent: "center", width: "100%" }}
           >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "radial-gradient(ellipse at 50% 50%, rgba(21,128,61,0.1) 0%, transparent 70%)",
-                borderRadius: "50%",
-                transform: "scale(1.2)",
-              }}
-            />
             <div
               style={{
                 position: "relative",
                 width: "100%",
-                maxWidth: "460px",
-                borderRadius: "1.5rem",
+                maxWidth: "400px",
+                borderRadius: "1.75rem",
                 overflow: "hidden",
-                boxShadow: `0 20px 60px rgba(21,128,61,0.15)`,
+                boxShadow: `0 24px 64px rgba(21,128,61,0.22), 0 4px 16px rgba(0,0,0,0.08)`,
                 background: `linear-gradient(145deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
-                padding: "3rem 2.5rem",
-                minHeight: "320px",
-                display: "flex",
-                flexDirection: "column" as const,
-                justifyContent: "center",
-                alignItems: "flex-start",
+                padding: "2.25rem 2rem 1.75rem",
               }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  top: "-60px",
-                  right: "-60px",
-                  width: "200px",
-                  height: "200px",
-                  borderRadius: "50%",
-                  background: "rgba(255,255,255,0.06)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "-40px",
-                  left: "-40px",
-                  width: "150px",
-                  height: "150px",
-                  borderRadius: "50%",
-                  background: "rgba(255,255,255,0.05)",
-                }}
-              />
-              <p
-                style={{
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase" as const,
-                  color: "rgba(255,255,255,0.65)",
-                  marginBottom: "1.5rem",
-                  position: "relative",
-                }}
-              >
-                Skills we build
-              </p>
-              {skillItems.map(({ label, Icon }, i) => (
-                <div
-                  key={label}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                    marginBottom: i < 4 ? "0.85rem" : 0,
-                    position: "relative",
-                  }}
-                >
+              {/* Decorative circles */}
+              <div style={{ position: "absolute", top: "-50px", right: "-50px", width: "180px", height: "180px", borderRadius: "50%", background: "rgba(255,255,255,0.07)" }} />
+              <div style={{ position: "absolute", bottom: "-30px", left: "-30px", width: "130px", height: "130px", borderRadius: "50%", background: "rgba(255,255,255,0.05)" }} />
+
+              {/* Dot pattern texture */}
+              <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)", backgroundSize: "18px 18px", pointerEvents: "none" }} />
+
+              {/* Header */}
+              <div style={{ position: "relative", textAlign: "center" as const, marginBottom: "1.5rem" }}>
+                <p style={{ fontSize: "0.62rem", fontWeight: 800, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)", marginBottom: "0.5rem" }}>
+                  Skills We Build
+                </p>
+                <div style={{ width: "28px", height: "2px", background: "rgba(255,255,255,0.35)", borderRadius: "2px", margin: "0 auto" }} />
+              </div>
+
+              {/* Skill grid */}
+              <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.65rem" }}>
+                {skillItems.map(({ label, Icon }, i) => (
                   <div
+                    key={label}
                     style={{
-                      width: "28px",
-                      height: "28px",
-                      borderRadius: "50%",
-                      background: "rgba(255,255,255,0.15)",
+                      gridColumn: i === skillItems.length - 1 && skillItems.length % 2 !== 0 ? "1 / -1" : undefined,
                       display: "flex",
+                      flexDirection: "column" as const,
                       alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
+                      gap: "0.5rem",
+                      background: "rgba(255,255,255,0.11)",
+                      borderRadius: "1rem",
+                      padding: "1rem 0.75rem 0.875rem",
+                      border: "1px solid rgba(255,255,255,0.14)",
                     }}
                   >
-                    <Icon size={13} color="#fff" />
+                    <div
+                      style={{
+                        width: "38px",
+                        height: "38px",
+                        borderRadius: "50%",
+                        background: "rgba(255,255,255,0.18)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Icon size={16} color="#fff" />
+                    </div>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#ffffff", textAlign: "center" as const, lineHeight: 1.2 }}>
+                      {label}
+                    </span>
                   </div>
-                  <span style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff" }}>
-                    {label}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Footer */}
+              <p style={{ position: "relative", textAlign: "center" as const, fontSize: "0.65rem", color: "rgba(255,255,255,0.38)", marginTop: "1.25rem", letterSpacing: "0.04em" }}>
+                Empowering communities · Est. 1997
+              </p>
             </div>
           </motion.div>
         </div>

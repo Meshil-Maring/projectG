@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./cwg.constants";
 import { usePageSections } from "../../../context/PageContext";
-import CauseBreadcrumb from "../cause/CauseBreadcrumb";
 import CauseFeatureStrip from "../cause/CauseFeatureStrip";
 
 const DEFAULT_HERO = {
@@ -63,20 +62,18 @@ export default function CwgHero() {
       />
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1.5rem" }}>
-        {/* Breadcrumb */}
-        <CauseBreadcrumb currentLabel="Competitive World Group" primary={PRIMARY} />
-
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "3rem",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
+            textAlign: "center",
             paddingBottom: "3rem",
+            gap: "2.5rem",
           }}
         >
-          {/* Left */}
-          <div>
+          {/* Text content */}
+          <div style={{ maxWidth: "620px", width: "100%" }}>
             <motion.h1
               {...fade(0.1)}
               style={{
@@ -127,7 +124,7 @@ export default function CwgHero() {
                 height: "3px",
                 background: PRIMARY,
                 borderRadius: "2px",
-                marginBottom: "1.25rem",
+                margin: "0 auto 1.25rem",
               }}
             />
 
@@ -138,7 +135,6 @@ export default function CwgHero() {
                 color: "#475569",
                 lineHeight: 1.75,
                 marginBottom: "2rem",
-                maxWidth: "420px",
                 whiteSpace: "pre-wrap",
               }}
             >
@@ -147,7 +143,7 @@ export default function CwgHero() {
 
             <motion.div
               {...fade(0.25)}
-              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const }}
+              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const, justifyContent: "center" }}
             >
               <a
                 href="#get-involved"
@@ -190,10 +186,10 @@ export default function CwgHero() {
             </motion.div>
           </div>
 
-          {/* Right – visual card */}
+          {/* Visual card – centered */}
           <motion.div
             {...fade(0.15)}
-            style={{ position: "relative", display: "flex", justifyContent: "center" }}
+            style={{ position: "relative", display: "flex", justifyContent: "center", width: "100%" }}
           >
             <div
               style={{
@@ -209,82 +205,150 @@ export default function CwgHero() {
               style={{
                 position: "relative",
                 width: "100%",
-                maxWidth: "460px",
-                borderRadius: "1.5rem",
+                maxWidth: "400px",
+                borderRadius: "1.75rem",
                 overflow: "hidden",
-                boxShadow: `0 20px 60px rgba(15,118,110,0.15)`,
+                boxShadow: `0 24px 70px rgba(15,118,110,0.22), 0 4px 16px rgba(15,118,110,0.12)`,
                 background: `linear-gradient(145deg, ${PRIMARY} 0%, ${SECONDARY} 100%)`,
-                padding: "3rem 2.5rem",
-                minHeight: "320px",
+                padding: "2.75rem 2.75rem 2.75rem 2.25rem",
                 display: "flex",
                 flexDirection: "column" as const,
                 justifyContent: "center",
                 alignItems: "flex-start",
               }}
             >
+              {/* Decorative circles */}
               <div
                 style={{
                   position: "absolute",
-                  top: "-60px",
-                  right: "-60px",
-                  width: "200px",
-                  height: "200px",
+                  top: "-70px",
+                  right: "-70px",
+                  width: "220px",
+                  height: "220px",
                   borderRadius: "50%",
-                  background: "rgba(255,255,255,0.06)",
+                  background: "rgba(255,255,255,0.07)",
+                  pointerEvents: "none",
                 }}
               />
               <div
                 style={{
                   position: "absolute",
-                  bottom: "-40px",
-                  left: "-40px",
-                  width: "150px",
-                  height: "150px",
+                  bottom: "-50px",
+                  left: "-50px",
+                  width: "170px",
+                  height: "170px",
                   borderRadius: "50%",
                   background: "rgba(255,255,255,0.05)",
+                  pointerEvents: "none",
                 }}
               />
-              <p
+              <div
                 style={{
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase" as const,
-                  color: "rgba(255,255,255,0.65)",
-                  marginBottom: "1.5rem",
-                  position: "relative",
+                  position: "absolute",
+                  top: "50%",
+                  right: "-30px",
+                  width: "90px",
+                  height: "90px",
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.04)",
+                  transform: "translateY(-50%)",
+                  pointerEvents: "none",
                 }}
-              >
-                Compete · Excel · Lead · Win · Grow
-              </p>
-              {cardItems.map(({ label, Icon }, i) => (
+              />
+
+              {/* Header */}
+              <div style={{ position: "relative", marginBottom: "1.75rem", width: "100%" }}>
                 <div
-                  key={label}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.75rem",
-                    marginBottom: i < 4 ? "0.85rem" : 0,
-                    position: "relative",
+                    gap: "0.5rem",
+                    marginBottom: "0.5rem",
                   }}
                 >
+                  <div style={{ height: "1px", width: "20px", background: "rgba(255,255,255,0.35)" }} />
+                  <Trophy size={12} color="rgba(255,255,255,0.75)" />
+                  <div style={{ height: "1px", flex: 1, background: "rgba(255,255,255,0.15)" }} />
+                </div>
+                <p
+                  style={{
+                    fontSize: "0.68rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase" as const,
+                    color: "rgba(255,255,255,0.75)",
+                    margin: 0,
+                  }}
+                >
+                  Compete · Excel · Lead · Win · Grow
+                </p>
+              </div>
+
+              {/* Items with connecting timeline line */}
+              <div style={{ position: "relative", width: "100%" }}>
+                {/* Vertical connector line */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "18px",
+                    top: "20px",
+                    bottom: "20px",
+                    width: "1px",
+                    background:
+                      "linear-gradient(to bottom, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.1) 100%)",
+                    zIndex: 0,
+                  }}
+                />
+
+                {cardItems.map(({ label, Icon }, i) => (
                   <div
+                    key={label}
                     style={{
-                      width: "28px",
-                      height: "28px",
-                      borderRadius: "50%",
-                      background: "rgba(255,255,255,0.15)",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
+                      gap: "1rem",
+                      marginBottom: i < cardItems.length - 1 ? "1rem" : 0,
+                      position: "relative",
+                      zIndex: 1,
                     }}
                   >
-                    <Icon size={13} color="#fff" />
+                    <div
+                      style={{
+                        width: "38px",
+                        height: "38px",
+                        borderRadius: "50%",
+                        background:
+                          i === 0
+                            ? "rgba(255,255,255,0.28)"
+                            : "rgba(255,255,255,0.13)",
+                        border: `1.5px solid ${i === 0 ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.22)"}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        boxShadow:
+                          i === 0
+                            ? "0 0 0 4px rgba(255,255,255,0.08)"
+                            : "none",
+                      }}
+                    >
+                      <Icon size={16} color="#fff" strokeWidth={i === 0 ? 2 : 1.7} />
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          fontSize: i === 0 ? "1.05rem" : "0.95rem",
+                          fontWeight: i === 0 ? 800 : 600,
+                          color: i === 0 ? "#ffffff" : "rgba(255,255,255,0.85)",
+                          letterSpacing: i === 0 ? "-0.01em" : "normal",
+                        }}
+                      >
+                        {label}
+                      </span>
+                    </div>
                   </div>
-                  <span style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff" }}>{label}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>

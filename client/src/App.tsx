@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect, type ReactNode } from "react";
 import "./App.css";
+import ScrollToTopButton from "./shared/components/ScrollToTopButton";
 
 // Home stays eagerly loaded for the fastest first paint; every other
 // page is split into its own chunk and fetched on navigation.
@@ -76,6 +77,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
+      <ScrollToTopButton />
       <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* User routes */}

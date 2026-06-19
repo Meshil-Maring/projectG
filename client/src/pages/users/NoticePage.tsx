@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Bell, Calendar, Tag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Bell, Calendar, Tag } from "lucide-react";
 import { motion } from "framer-motion";
 import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
@@ -54,26 +53,6 @@ export default function NoticePage() {
       {/* Hero */}
       <section id="notice-hero" style={{ backgroundColor: "#1a3270", padding: "4rem 0 3rem" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1.5rem" }}>
-          <Link
-            to="/"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.4rem",
-              fontSize: "0.82rem",
-              color: "rgba(255,255,255,0.65)",
-              textDecoration: "none",
-              marginBottom: "1.25rem",
-              transition: "color 0.2s",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#fff")}
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.65)")
-            }
-          >
-            <ArrowLeft size={14} /> Back to Home
-          </Link>
-
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <Bell size={18} color="#f59e0b" />
             <p

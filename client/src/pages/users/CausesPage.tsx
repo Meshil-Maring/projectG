@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Users, MapPin, Target, X, Heart, IndianRupee } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Users, MapPin, Target, X, Heart, IndianRupee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
@@ -70,13 +70,6 @@ function CausesPageContent() {
           <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-6 pt-16 pb-28 sm:pt-20 sm:pb-32">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white mb-8 transition-colors"
-            >
-              <ArrowLeft size={15} /> Back to Home
-            </Link>
-
             <motion.p
               variants={fadeUp}
               initial="hidden"

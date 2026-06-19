@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, User, Mail, MessageSquare, Clock, Users } from "lucide-react";
-import { SpinnerIcon, FacebookIcon, InstagramIcon, YoutubeIcon } from "../../../assets/icons";
+import { SpinnerIcon, FacebookIcon, InstagramIcon, YoutubeLogoIcon, WhatsappIcon } from "../../../assets/icons";
 import { usePageSections } from "../../../context/PageContext";
 import { api } from "../../../lib/api";
 
@@ -28,7 +28,8 @@ const sidePoints = [
 const socialLinks = [
   { name: "Facebook", icon: FacebookIcon, url: "https://www.facebook.com/share/17kjpAxLpJ/?mibextid=wwXIfr" },
   { name: "Instagram", icon: InstagramIcon, url: "https://www.instagram.com/project_g_manipur/" },
-  { name: "YouTube", icon: YoutubeIcon, url: "https://youtube.com/@projectgmanipur?si=_dMs0XzLLMtPd90n" },
+  { name: "YouTube", icon: YoutubeLogoIcon, url: "https://youtube.com/@projectgmanipur?si=_dMs0XzLLMtPd90n" },
+  { name: "WhatsApp", icon: WhatsappIcon, url: "https://wa.me/918798303158" },
 ];
 
 type FormState = {
@@ -156,7 +157,7 @@ export default function ContactFormSection() {
                           aria-label={`${name} (opens in a new tab)`}
                           className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors duration-200"
                         >
-                          <Icon />
+                          <Icon width={15} height={15} />
                         </a>
                       ))}
                     </div>

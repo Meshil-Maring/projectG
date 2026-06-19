@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface Section {
@@ -15,6 +15,8 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
   const [activeSection, setActiveSection] = useState<string>(sections[0]?.id ?? "");
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -22,6 +24,22 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  // Close mobile panel when tapping outside
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handler = (e: MouseEvent | TouchEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [mobileOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,8 +58,6 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [sections]);
-
-  if (isMobile) return null;
 
   const scrollTo = (id: string) => {
     const section = sections.find((s) => s.id === id);
@@ -62,14 +78,15 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
   const canPrev = activeIndex > 0;
   const canNext = activeIndex < sections.length - 1;
 
+  const btnSize = isMobile ? "20px" : "28px";
   const arrowBtn = (onClick: () => void, enabled: boolean) => ({
     onClick,
     style: {
       background: enabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.04)",
       border: "1px solid rgba(255,255,255,0.1)",
       borderRadius: "50%",
-      width: "28px",
-      height: "28px",
+      width: btnSize,
+      height: btnSize,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -80,12 +97,15 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
     } as React.CSSProperties,
   });
 
+  const showPanel = isMobile ? mobileOpen : isHovered;
+
   return (
     <div
-      onMouseLeave={() => setIsHovered(false)}
+      ref={rootRef}
+      onMouseLeave={() => !isMobile && setIsHovered(false)}
       style={{
         position: "fixed",
-        right: "20px",
+        right: isMobile ? "8px" : "20px",
         top: "50%",
         transform: "translateY(-50%)",
         zIndex: 9999,
@@ -94,7 +114,7 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
         gap: "10px",
       }}
     >
-      {/* Label panel — visible only on hover */}
+      {/* Label panel — hover on desktop, tap-toggle on mobile */}
       <div
         style={{
           backgroundColor: "rgba(15, 23, 55, 0.88)",
@@ -105,10 +125,10 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
           display: "flex",
           flexDirection: "column",
           gap: "2px",
-          opacity: isHovered ? 1 : 0,
-          transform: isHovered ? "translateX(0) scale(1)" : "translateX(12px) scale(0.96)",
+          opacity: showPanel ? 1 : 0,
+          transform: showPanel ? "translateX(0) scale(1)" : "translateX(12px) scale(0.96)",
           transition: "opacity 0.22s ease, transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1)",
-          pointerEvents: isHovered ? "auto" : "none",
+          pointerEvents: showPanel ? "auto" : "none",
           boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
           border: "1px solid rgba(255,255,255,0.08)",
         }}
@@ -118,7 +138,7 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
           return (
             <button
               key={id}
-              onClick={() => scrollTo(id)}
+              onClick={() => { scrollTo(id); if (isMobile) setMobileOpen(false); }}
               style={{
                 background: isActive ? "rgba(255,255,255,0.12)" : "transparent",
                 border: "none",
@@ -167,32 +187,34 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
         })}
       </div>
 
-      {/* Dash indicators + prev/next arrows — only this strip triggers the label panel */}
+      {/* Dash indicators + prev/next arrows */}
       <div
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={() => !isMobile && setIsHovered(true)}
+        onClick={() => isMobile && setMobileOpen((o) => !o)}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "8px",
-          backgroundColor: isHovered ? "rgba(15, 23, 55, 0.75)" : "transparent",
-          backdropFilter: isHovered ? "blur(10px)" : "none",
-          WebkitBackdropFilter: isHovered ? "blur(10px)" : "none",
+          gap: isMobile ? "5px" : "8px",
+          backgroundColor: (showPanel || isMobile) ? "rgba(15, 23, 55, 0.75)" : "transparent",
+          backdropFilter: (showPanel || isMobile) ? "blur(10px)" : "none",
+          WebkitBackdropFilter: (showPanel || isMobile) ? "blur(10px)" : "none",
           borderRadius: "20px",
-          padding: isHovered ? "10px 8px" : "4px 4px",
-          border: isHovered ? "1px solid rgba(255,255,255,0.08)" : "1px solid transparent",
+          padding: isMobile ? "6px 5px" : (showPanel ? "10px 8px" : "4px 4px"),
+          border: (showPanel || isMobile) ? "1px solid rgba(255,255,255,0.08)" : "1px solid transparent",
           transition: "all 0.25s ease",
-          boxShadow: isHovered ? "0 4px 20px rgba(0,0,0,0.25)" : "none",
+          boxShadow: (showPanel || isMobile) ? "0 4px 20px rgba(0,0,0,0.25)" : "none",
+          cursor: isMobile ? "pointer" : "default",
         }}
       >
         {/* Prev button */}
         <button
-          {...arrowBtn(goPrev, canPrev && isHovered)}
+          {...arrowBtn(goPrev, canPrev && (showPanel || isMobile))}
           aria-label="Previous section"
           style={{
-            ...arrowBtn(goPrev, canPrev && isHovered).style,
-            opacity: isHovered ? 1 : 0,
-            transform: isHovered ? "scale(1)" : "scale(0.7)",
+            ...arrowBtn(goPrev, canPrev && (showPanel || isMobile)).style,
+            opacity: (showPanel || isMobile) ? 1 : 0,
+            transform: (showPanel || isMobile) ? "scale(1)" : "scale(0.7)",
             transition: "opacity 0.2s ease, transform 0.2s ease, background 0.2s ease",
           }}
           onMouseEnter={(e) => {
@@ -202,7 +224,7 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
             if (canPrev) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.12)";
           }}
         >
-          <ChevronUp size={14} />
+          <ChevronUp size={isMobile ? 10 : 14} />
         </button>
 
         {/* Dash dots */}
@@ -218,7 +240,7 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                padding: "2px 0",
+                padding: isMobile ? "1px 0" : "2px 0",
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
@@ -227,8 +249,8 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
               <span
                 style={{
                   display: "block",
-                  width: isActive ? "28px" : "16px",
-                  height: isActive ? "4px" : "3px",
+                  width: isActive ? (isMobile ? "18px" : "28px") : (isMobile ? "10px" : "16px"),
+                  height: isActive ? (isMobile ? "3px" : "4px") : (isMobile ? "2px" : "3px"),
                   backgroundColor: isActive ? "#1a3270" : "rgba(148,163,184,0.55)",
                   borderRadius: "4px",
                   transition: "all 0.3s cubic-bezier(0.34, 1.3, 0.64, 1)",
@@ -243,12 +265,12 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
 
         {/* Next button */}
         <button
-          {...arrowBtn(goNext, canNext && isHovered)}
+          {...arrowBtn(goNext, canNext && (showPanel || isMobile))}
           aria-label="Next section"
           style={{
-            ...arrowBtn(goNext, canNext && isHovered).style,
-            opacity: isHovered ? 1 : 0,
-            transform: isHovered ? "scale(1)" : "scale(0.7)",
+            ...arrowBtn(goNext, canNext && (showPanel || isMobile)).style,
+            opacity: (showPanel || isMobile) ? 1 : 0,
+            transform: (showPanel || isMobile) ? "scale(1)" : "scale(0.7)",
             transition: "opacity 0.2s ease, transform 0.2s ease, background 0.2s ease",
           }}
           onMouseEnter={(e) => {
@@ -258,7 +280,7 @@ export default function SectionNavigator({ sections }: SectionNavigatorProps) {
             if (canNext) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.12)";
           }}
         >
-          <ChevronDown size={14} />
+          <ChevronDown size={isMobile ? 10 : 14} />
         </button>
       </div>
     </div>

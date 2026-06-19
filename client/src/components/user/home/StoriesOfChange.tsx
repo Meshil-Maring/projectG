@@ -141,6 +141,15 @@ export default function StoriesOfChange() {
   );
 }
 
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
 type StoryCardProps = {
   image: string;
   quote: string;
@@ -149,36 +158,42 @@ type StoryCardProps = {
 };
 
 function StoryCard({ image, quote, name, role }: StoryCardProps) {
+  const initials = getInitials(name);
+
   return (
     <motion.div
       whileHover={{ y: -4, boxShadow: "var(--shadow-card)" }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      className="flex gap-4 p-5 rounded-2xl border border-(--color-border) bg-white transition-shadow duration-200"
+      className="flex flex-col p-5 rounded-2xl border border-(--color-border) bg-white transition-shadow duration-200"
     >
-      {/* Avatar */}
-      <div className="shrink-0">
-        <img
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="w-14 h-14 rounded-full object-cover ring-2 ring-(--color-border)"
-        />
-      </div>
+      {/* Quote mark */}
+      <span
+        className="text-4xl leading-none font-script text-(--color-primary-light) select-none mb-2"
+        aria-hidden
+      >
+        &ldquo;
+      </span>
 
-      {/* Content */}
-      <div className="flex flex-col gap-2 min-w-0">
-        <span
-          className="text-4xl leading-none font-script text-(--color-primary-light) select-none -mt-1"
-          aria-hidden
-        >
-          &ldquo;
-        </span>
-        <p className="text-sm text-body leading-relaxed -mt-2">
-          {quote}
-        </p>
-        <div className="mt-1">
-          <p className="text-sm font-bold text-heading">{name}</p>
-          <p className="text-xs text-muted">{role}</p>
+      {/* Quote text */}
+      <p className="text-sm text-body leading-relaxed flex-1 mb-4">{quote}</p>
+
+      {/* Author row */}
+      <div className="flex items-center gap-3 pt-3 border-t border-(--color-border)">
+        {image ? (
+          <img
+            src={image}
+            alt={name}
+            loading="lazy"
+            className="w-10 h-10 rounded-full object-cover ring-2 ring-(--color-border) shrink-0"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-primary/10 text-primary font-bold text-sm shrink-0 ring-2 ring-primary/20">
+            {initials}
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="text-sm font-bold text-heading truncate">{name}</p>
+          <p className="text-xs text-muted truncate">{role}</p>
         </div>
       </div>
     </motion.div>

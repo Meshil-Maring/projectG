@@ -60,15 +60,15 @@ export default function AboutValues() {
             {content.valuesHeading}
           </motion.h2>
 
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
             {values.map(({ icon: Icon, label, desc, bg, color }, i) => (
               <motion.div
                 key={label}
                 variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.5}
-                className="flex flex-col items-center text-center"
+                className="flex flex-col items-center text-center bg-white sm:bg-transparent rounded-2xl sm:rounded-none p-4 sm:p-0 shadow-sm sm:shadow-none"
               >
-                <div className={`w-14 h-14 rounded-full ${bg} flex items-center justify-center mb-3 shadow-sm`}>
-                  <Icon size={22} className={color} strokeWidth={1.8} />
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full ${bg} flex items-center justify-center mb-3 shadow-sm`}>
+                  <Icon size={20} className={color} strokeWidth={1.8} />
                 </div>
                 <h3 className="text-sm font-bold text-heading mb-1">{label}</h3>
                 <p className="text-xs text-[#64748b] leading-relaxed">{desc}</p>

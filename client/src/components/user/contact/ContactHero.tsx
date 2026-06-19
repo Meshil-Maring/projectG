@@ -21,9 +21,9 @@ const fadeUp = {
 };
 
 const contactPoints = [
-  { icon: Mail, label: "Email Us", value: "projectgmanipur@gmail.com" },
-  { icon: Phone, label: "Call Us", value: "+91 87983 03158" },
-  { icon: MapPin, label: "Visit Us", value: "Sagolband Ingudam Leikai, Manipur, India - 795001" },
+  { icon: Mail, label: "Email Us", value: "projectgmanipur@gmail.com", href: "mailto:projectgmanipur@gmail.com" },
+  { icon: Phone, label: "Call Us", value: "+91 87983 03158", href: "tel:+918798303158" },
+  { icon: MapPin, label: "Visit Us", value: "Sagolband Ingudam Leikai, Manipur, India - 795001", href: "https://maps.google.com/?q=Sagolband+Ingudam+Leikai,Manipur,India" },
 ];
 
 export default function ContactHero() {
@@ -37,18 +37,13 @@ export default function ContactHero() {
         className="relative"
         style={{ background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)" }}
       >
-        {/* Decorative circles */}
-        <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute -bottom-28 -left-16 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
-
-        <div className="relative z-10 max-w-3xl mx-auto px-6 pt-20 pb-32 sm:pt-24 sm:pb-36 text-center">
+<div className="relative z-10 max-w-3xl mx-auto px-6 pr-14 sm:pr-6 pt-16 pb-28 sm:pt-24 sm:pb-36 text-center">
           <motion.p
             variants={fadeUp}
             initial="hidden"
             animate="visible"
             custom={0}
-            className="text-xs font-bold uppercase tracking-widest text-white/80 mb-4 flex items-center justify-center gap-2"
+            className="text-xs font-bold uppercase tracking-widest text-white/80 mb-3 flex items-center justify-center gap-2"
           >
             <span className="inline-block w-6 h-0.5 bg-white/60" />
             {hero.eyebrow}
@@ -60,11 +55,11 @@ export default function ContactHero() {
             initial="hidden"
             animate="visible"
             custom={1}
-            className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-white leading-tight mb-5"
+            className="text-3xl sm:text-5xl xl:text-6xl font-extrabold text-white leading-tight mb-4"
           >
-            {hero.headingLine1} {hero.headingLine2}
+            {hero.headingLine1}
             <br />
-            {hero.headingLine3}
+            {hero.headingLine2} {hero.headingLine3}
           </motion.h1>
 
           <motion.p
@@ -72,7 +67,7 @@ export default function ContactHero() {
             initial="hidden"
             animate="visible"
             custom={2}
-            className="text-sm sm:text-base text-white/75 leading-relaxed max-w-xl mx-auto whitespace-pre-wrap"
+            className="text-sm sm:text-base text-white/75 leading-relaxed max-w-xl mx-auto"
           >
             {hero.description}
           </motion.p>
@@ -80,25 +75,28 @@ export default function ContactHero() {
       </div>
 
       {/* Floating contact cards */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 -mt-14 sm:-mt-16 pb-16 sm:pb-20">
-        <div className="grid sm:grid-cols-3 gap-5">
-          {contactPoints.map(({ icon: Icon, label, value }, i) => (
-            <motion.div
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 -mt-10 sm:-mt-16 pb-12 sm:pb-20">
+        <div className="grid sm:grid-cols-3 gap-3 sm:gap-5">
+          {contactPoints.map(({ icon: Icon, label, value, href }, i) => (
+            <motion.a
               key={label}
+              href={href}
+              target={label === "Visit Us" ? "_blank" : undefined}
+              rel={label === "Visit Us" ? "noopener noreferrer" : undefined}
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               custom={i + 3}
-              className="bg-white rounded-2xl shadow-card border border-border p-6 flex items-center gap-4"
+              className="bg-white rounded-2xl shadow-card border border-border p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:border-primary/40 hover:shadow-lg transition-shadow duration-200"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <Icon size={20} className="text-primary" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <Icon size={18} className="text-primary" />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-1">{label}</p>
-                <p className="text-sm font-bold text-heading">{value}</p>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-0.5">{label}</p>
+                <p className="text-sm font-bold text-heading wrap-break-word leading-snug">{value}</p>
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
       </div>

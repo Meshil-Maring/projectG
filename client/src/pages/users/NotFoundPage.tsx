@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Home, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
 
@@ -107,27 +106,6 @@ export default function NotFoundPage() {
               Go Back
             </motion.button>
 
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                to="/"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.45rem",
-                  backgroundColor: "#1a3270",
-                  color: "#ffffff",
-                  fontWeight: 600,
-                  fontSize: "0.85rem",
-                  padding: "0.6rem 1.4rem",
-                  borderRadius: "0.4rem",
-                  textDecoration: "none",
-                  boxShadow: "0 4px 14px 0 rgba(26,50,112,0.28)",
-                }}
-              >
-                <Home size={15} />
-                Back to Home
-              </Link>
-            </motion.div>
           </div>
         </motion.div>
       </main>

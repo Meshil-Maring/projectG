@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, MapPin, Calendar, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { MapPin, Calendar, X } from "lucide-react";
 import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import Footer from "../../shared/components/Footer";
@@ -61,12 +60,6 @@ function StoriesPageContent() {
       {/* Hero */}
       <section id="stories-hero" className="bg-[color:var(--color-primary)] py-16">
         <div className="max-w-7xl mx-auto px-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white mb-6 transition-colors"
-          >
-            <ArrowLeft size={15} /> Back to Home
-          </Link>
           <p className="text-xs font-bold uppercase tracking-widest text-[color:var(--color-secondary)] mb-3">
             {hero.eyebrow}
           </p>

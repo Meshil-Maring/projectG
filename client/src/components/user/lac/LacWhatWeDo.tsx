@@ -218,20 +218,34 @@ export default function LacWhatWeDo() {
               }}
             />
 
+            {/* Top accent */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "3px",
+                background: `linear-gradient(90deg, ${GOLD} 0%, ${BRIGHT_BLUE} 100%)`,
+                borderRadius: "1.5rem 1.5rem 0 0",
+              }}
+            />
+
             {/* Icon */}
             <div
               style={{
-                width: "72px",
-                height: "72px",
+                width: "68px",
+                height: "68px",
                 borderRadius: "1.25rem",
                 background: "rgba(255,255,255,0.1)",
-                border: "1px solid rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.18)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                boxShadow: "0 0 0 7px rgba(255,255,255,0.05)",
               }}
             >
-              <Scale size={36} color="rgba(255,255,255,0.85)" strokeWidth={1.5} />
+              <Scale size={34} color="rgba(255,255,255,0.92)" strokeWidth={1.4} />
             </div>
 
             <div>
@@ -253,59 +267,72 @@ export default function LacWhatWeDo() {
             </div>
 
             {/* Stats */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "1rem",
-              }}
-            >
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
               {stats.map(({ icon: Icon, value, label }) => (
-                <div
+                <motion.div
                   key={label}
+                  whileHover={{ y: -3, background: "rgba(255,255,255,0.12)" }}
                   style={{
                     textAlign: "center",
-                    padding: "1rem 0.5rem",
+                    padding: "1.1rem 0.5rem",
                     borderRadius: "1rem",
                     background: "rgba(255,255,255,0.07)",
                     border: "1px solid rgba(255,255,255,0.1)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "0.45rem",
+                    cursor: "default",
                   }}
                 >
-                  <Icon
-                    size={18}
-                    color={GOLD}
-                    strokeWidth={1.8}
-                    style={{ marginBottom: "0.4rem" }}
-                  />
-                  <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#fff" }}>{value}</div>
-                  <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>
+                  <div
+                    style={{
+                      width: "38px",
+                      height: "38px",
+                      borderRadius: "10px",
+                      background: "rgba(184,134,11,0.18)",
+                      border: "1px solid rgba(184,134,11,0.3)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Icon size={17} color={GOLD} strokeWidth={1.8} />
+                  </div>
+                  <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#fff", lineHeight: 1 }}>
+                    {value}
+                  </div>
+                  <div style={{ fontSize: "0.63rem", color: "rgba(255,255,255,0.6)", fontWeight: 600, letterSpacing: "0.03em", lineHeight: 1.3 }}>
                     {label}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
             {/* CTA */}
-            <a
+            <motion.a
               href="#services"
+              whileHover={{ y: -2, boxShadow: "0 10px 30px rgba(37,99,235,0.55)" }}
+              whileTap={{ scale: 0.98 }}
               style={{
-                display: "inline-flex",
+                display: "flex",
+                justifyContent: "center",
                 alignItems: "center",
-                gap: "0.5rem",
-                background: `linear-gradient(135deg, ${BRIGHT_BLUE}, #6d28d9)`,
+                gap: "0.55rem",
+                background: `linear-gradient(135deg, ${BRIGHT_BLUE} 0%, #6d28d9 100%)`,
                 color: "#fff",
-                padding: "0.875rem 1.75rem",
-                borderRadius: "0.75rem",
+                padding: "0.9rem 1.75rem",
+                borderRadius: "0.875rem",
                 fontWeight: 700,
-                fontSize: "0.875rem",
+                fontSize: "0.9rem",
                 textDecoration: "none",
-                alignSelf: "flex-start",
                 boxShadow: "0 4px 20px rgba(37,99,235,0.35)",
+                letterSpacing: "0.01em",
               }}
             >
               Explore Our Work
-              <ArrowRight size={15} />
-            </a>
+              <ArrowRight size={16} />
+            </motion.a>
           </motion.div>
 
           {/* ── Right: cards ── */}

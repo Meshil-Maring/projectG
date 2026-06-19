@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./fseds.constants";
 import { usePageSections } from "../../../context/PageContext";
-import CauseBreadcrumb from "../cause/CauseBreadcrumb";
 import CauseFeatureStrip from "../cause/CauseFeatureStrip";
 
 const DEFAULT_HERO = {
@@ -60,20 +59,18 @@ export default function FsedsHero() {
       />
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1.5rem" }}>
-        {/* Breadcrumb */}
-        <CauseBreadcrumb currentLabel="Foundation for Socio-Economic Development Society" primary={PRIMARY} />
-
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "3rem",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
+            textAlign: "center",
             paddingBottom: "3rem",
+            gap: "2.5rem",
           }}
         >
-          {/* Left */}
-          <div>
+          {/* Text content */}
+          <div style={{ maxWidth: "620px", width: "100%" }}>
             <h1 style={{ marginBottom: "0.5rem" }}>
               <motion.span
                 {...fade(0.1)}
@@ -139,7 +136,7 @@ export default function FsedsHero() {
                 height: "3px",
                 background: PRIMARY,
                 borderRadius: "2px",
-                marginBottom: "1.25rem",
+                margin: "0 auto 1.25rem",
               }}
             />
 
@@ -150,7 +147,6 @@ export default function FsedsHero() {
                 color: "#475569",
                 lineHeight: 1.75,
                 marginBottom: "2rem",
-                maxWidth: "420px",
                 whiteSpace: "pre-wrap",
               }}
             >
@@ -159,7 +155,7 @@ export default function FsedsHero() {
 
             <motion.div
               {...fade(0.25)}
-              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const }}
+              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const, justifyContent: "center" }}
             >
               <a
                 href="#get-involved"
@@ -202,10 +198,10 @@ export default function FsedsHero() {
             </motion.div>
           </div>
 
-          {/* Right – Quote + chart card */}
+          {/* Quote + chart card – centered */}
           <motion.div
             {...fade(0.15)}
-            style={{ position: "relative", display: "flex", justifyContent: "center" }}
+            style={{ position: "relative", display: "flex", justifyContent: "center", width: "100%" }}
           >
             <div
               style={{
@@ -221,7 +217,7 @@ export default function FsedsHero() {
               style={{
                 position: "relative",
                 width: "100%",
-                maxWidth: "460px",
+                maxWidth: "400px",
                 borderRadius: "1.5rem",
                 overflow: "hidden",
                 boxShadow: `0 20px 60px rgba(109,40,217,0.15)`,
@@ -231,7 +227,8 @@ export default function FsedsHero() {
                 display: "flex",
                 flexDirection: "column" as const,
                 justifyContent: "center",
-                alignItems: "flex-start",
+                alignItems: "center",
+                textAlign: "center" as const,
               }}
             >
               <div

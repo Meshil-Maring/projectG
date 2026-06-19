@@ -150,8 +150,8 @@ export default function AboutStory() {
                     className="absolute inset-0 flex items-center justify-center"
                     aria-label="Play"
                   >
-                    <div className="w-16 h-16 rounded-full bg-red-600 shadow-xl flex items-center justify-center hover:bg-red-500 transition">
-                      <Play size={26} className="text-white ml-1.5" />
+                    <div className="w-12 h-12 rounded-full bg-red-600 shadow-xl flex items-center justify-center hover:bg-red-500 transition">
+                      <Play size={20} className="text-white ml-1" />
                     </div>
                   </button>
                   <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full font-medium">

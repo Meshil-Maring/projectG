@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Heart, Users, Leaf, Star, ArrowRight } from "lucide-react";
 import { PRIMARY, SECONDARY, LIGHT_BG, fade } from "./whg.constants";
 import { usePageSections } from "../../../context/PageContext";
-import CauseBreadcrumb from "../cause/CauseBreadcrumb";
 import CauseFeatureStrip from "../cause/CauseFeatureStrip";
 
 const heroFeatures = [
@@ -47,20 +46,18 @@ export default function WhgHero() {
       />
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1.5rem" }}>
-        {/* Breadcrumb */}
-        <CauseBreadcrumb currentLabel="Work for Humanity Group" primary={PRIMARY} />
-
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "3rem",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
+            textAlign: "center",
             paddingBottom: "3rem",
+            gap: "2.5rem",
           }}
         >
-          {/* Left */}
-          <div>
+          {/* Text content */}
+          <div style={{ maxWidth: "620px", width: "100%" }}>
             <motion.h1
               {...fade(0.1)}
               style={{
@@ -97,6 +94,7 @@ export default function WhgHero() {
                 background: PRIMARY,
                 borderRadius: "2px",
                 marginBottom: "1.25rem",
+                margin: "0 auto 1.25rem",
               }}
             />
 
@@ -107,7 +105,6 @@ export default function WhgHero() {
                 color: "#475569",
                 lineHeight: 1.75,
                 marginBottom: "2rem",
-                maxWidth: "420px",
                 whiteSpace: "pre-wrap",
               }}
             >
@@ -116,7 +113,7 @@ export default function WhgHero() {
 
             <motion.div
               {...fade(0.25)}
-              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const }}
+              style={{ display: "flex", gap: "1rem", flexWrap: "wrap" as const, justifyContent: "center" }}
             >
               <a
                 href="#get-involved"
@@ -159,10 +156,10 @@ export default function WhgHero() {
             </motion.div>
           </div>
 
-          {/* Right – visual card */}
+          {/* Quote card – centered */}
           <motion.div
             {...fade(0.15)}
-            style={{ position: "relative", display: "flex", justifyContent: "center" }}
+            style={{ position: "relative", display: "flex", justifyContent: "center", width: "100%" }}
           >
             <div
               style={{
@@ -178,7 +175,7 @@ export default function WhgHero() {
               style={{
                 position: "relative",
                 width: "100%",
-                maxWidth: "460px",
+                maxWidth: "400px",
                 borderRadius: "1.5rem",
                 overflow: "hidden",
                 boxShadow: `0 20px 60px rgba(194,65,12,0.15)`,

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight, LayoutGrid, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, LayoutGrid, X } from "lucide-react";
 import { useHomePageData } from "../../../context/HomePageContext";
+import { Lightbox } from "../shared/Lightbox";
 
 function ImageGallerySkeleton() {
   return (
@@ -40,24 +41,15 @@ export default function ImageGallery() {
   function closeAll() { setShowGrid(false); setActiveIndex(null); }
   function openLightbox(index: number) { setActiveIndex(index); }
   function closeLightbox() { setActiveIndex(null); }
-  function prev() { setActiveIndex((i) => (i === null ? 0 : (i - 1 + photos.length) % photos.length)); }
-  function next() { setActiveIndex((i) => (i === null ? 0 : (i + 1) % photos.length)); }
 
   useEffect(() => {
-    if (!isAnyOverlayOpen) return;
+    if (!showGrid || isLightboxOpen) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        if (isLightboxOpen) setActiveIndex(null);
-        else { setShowGrid(false); setActiveIndex(null); }
-      }
-      if (isLightboxOpen) {
-        if (e.key === "ArrowLeft") setActiveIndex((i) => (i === null ? 0 : (i - 1 + photos.length) % photos.length));
-        if (e.key === "ArrowRight") setActiveIndex((i) => (i === null ? 0 : (i + 1) % photos.length));
-      }
+      if (e.key === "Escape") { setShowGrid(false); }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isAnyOverlayOpen, isLightboxOpen, photos.length]);
+  }, [showGrid, isLightboxOpen]);
 
   useEffect(() => {
     document.body.style.overflow = isAnyOverlayOpen ? "hidden" : "";
@@ -74,7 +66,7 @@ export default function ImageGallery() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
-          <div className="flex items-start justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-8 gap-3">
             <div>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -102,7 +94,7 @@ export default function ImageGallery() {
               transition={{ duration: 0.5, ease: "easeOut" as const, delay: 0.12 }}
               whileHover={{ x: 3 }}
               onClick={openGrid}
-              className="flex items-center gap-1.5 text-primary font-semibold text-sm hover:underline mt-1 shrink-0"
+              className="flex items-center gap-1.5 text-primary font-semibold text-sm hover:underline sm:mt-1 shrink-0 self-start"
             >
               View All Photos
               <ArrowRight size={16} />
@@ -213,106 +205,16 @@ export default function ImageGallery() {
         </div>
       )}
 
-      {/* ── Lightbox overlay ── */}
-      {isLightboxOpen && activeIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-sm overflow-y-auto"
-          onClick={showGrid ? closeLightbox : closeAll}
-        >
-          <div
-            className="flex flex-col items-center w-full max-w-5xl mx-auto px-4 sm:px-16 py-6 min-h-full justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Top bar */}
-            <div className="w-full flex items-center justify-between mb-4">
-              {showGrid ? (
-                <button
-                  onClick={closeLightbox}
-                  className="flex items-center gap-1.5 text-white/60 hover:text-white text-sm transition-colors"
-                  aria-label="Back to grid"
-                >
-                  <LayoutGrid size={16} />
-                  Back to grid
-                </button>
-              ) : (
-                <span className="text-white/50 text-sm">
-                  {activeIndex + 1} / {photos.length}
-                </span>
-              )}
-
-              <div className="flex items-center gap-4">
-                {showGrid && (
-                  <span className="text-white/50 text-sm">
-                    {activeIndex + 1} / {photos.length}
-                  </span>
-                )}
-                <button
-                  onClick={closeAll}
-                  className="text-white/60 hover:text-white transition-colors"
-                  aria-label="Close"
-                >
-                  <X size={26} />
-                </button>
-              </div>
-            </div>
-
-            {/* Image + Prev/Next */}
-            <div className="relative flex items-center w-full">
-              {/* Prev */}
-              <button
-                onClick={prev}
-                className="absolute left-0 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
-                aria-label="Previous photo"
-              >
-                <ChevronLeft size={26} />
-              </button>
-
-              {/* Image */}
-              <div className="w-full overflow-hidden rounded-t-2xl shadow-2xl">
-                <img
-                  key={activeIndex}
-                  src={photos[activeIndex].src}
-                  alt={photos[activeIndex].alt}
-                  className="w-full max-h-[65vh] object-contain bg-black"
-                />
-              </div>
-
-              {/* Next */}
-              <button
-                onClick={next}
-                className="absolute right-0 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
-                aria-label="Next photo"
-              >
-                <ChevronRight size={26} />
-              </button>
-            </div>
-
-            {/* ── Description panel ── */}
-            <div className="w-full bg-white/5 border border-white/10 rounded-b-2xl px-6 py-4 backdrop-blur-sm">
-              <h4 className="text-white font-semibold text-base mb-1">
-                {photos[activeIndex].alt}
-              </h4>
-              <p className="text-white/60 text-sm leading-relaxed">
-                {photos[activeIndex].description}
-              </p>
-            </div>
-
-            {/* Dot indicators */}
-            <div className="flex gap-2 mt-5">
-              {photos.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIndex(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                    i === activeIndex ? "bg-white scale-125" : "bg-white/40 hover:bg-white/70"
-                  }`}
-                  aria-label={`Go to photo ${i + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ── Lightbox ── */}
+      <AnimatePresence>
+        {isLightboxOpen && activeIndex !== null && (
+          <Lightbox
+            images={photos.map((p) => ({ url: p.src, title: p.alt, description: p.description }))}
+            index={activeIndex}
+            onClose={showGrid ? closeLightbox : closeAll}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

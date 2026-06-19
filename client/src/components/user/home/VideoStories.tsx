@@ -24,15 +24,15 @@ const fmt = (s: number) => {
 
 function VideoStoriesSkeleton() {
   return (
-    <section className="py-16 px-4 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-10 sm:py-16 px-4 bg-white">
+      <div className="max-w-7xl mx-auto sm:px-6">
         <div className="flex flex-col lg:flex-row gap-10 items-center">
           {/* Player skeleton */}
           <div className="flex-1 w-full">
             <div className="flex items-center gap-3">
-              <div className="skeleton shrink-0 w-10 h-10 rounded-full" />
+              <div className="skeleton hidden sm:block shrink-0 w-10 h-10 rounded-full" />
               <div className="skeleton flex-1 rounded-2xl overflow-hidden aspect-video" />
-              <div className="skeleton shrink-0 w-10 h-10 rounded-full" />
+              <div className="skeleton hidden sm:block shrink-0 w-10 h-10 rounded-full" />
             </div>
             <div className="flex flex-col items-center gap-3 mt-4">
               <div className="flex items-center gap-2">
@@ -161,23 +161,39 @@ export default function VideoStories() {
   };
 
   return (
-    <section className="py-16 px-4 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-10 sm:py-16 px-4 bg-white">
+      <div className="max-w-7xl mx-auto sm:px-6">
         <div className="flex flex-col lg:flex-row gap-10 items-center">
           {/* ── Video Player Column ── */}
           <div className="flex-1 w-full">
             <div className="flex items-center gap-3">
-              {/* Prev */}
+              {/* Prev — hidden on mobile (overlaid inside player instead) */}
               <button
                 onClick={handlePrev}
                 aria-label="Previous video"
-                className="shrink-0 w-10 h-10 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center hover:bg-slate-50 transition"
+                className="hidden sm:flex shrink-0 w-10 h-10 rounded-full bg-white border border-slate-200 shadow-sm items-center justify-center hover:bg-slate-50 transition"
               >
                 <ChevronLeft size={20} className="text-slate-600" />
               </button>
 
               {/* Player */}
               <div className="relative flex-1 rounded-2xl overflow-hidden shadow-2xl bg-black group">
+                {/* Mobile overlay arrows */}
+                <button
+                  onClick={handlePrev}
+                  aria-label="Previous video"
+                  className="sm:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/80 border border-slate-200 shadow flex items-center justify-center"
+                >
+                  <ChevronLeft size={16} className="text-slate-700" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  aria-label="Next video"
+                  className="sm:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/80 border border-slate-200 shadow flex items-center justify-center"
+                >
+                  <ChevronRight size={16} className="text-slate-700" />
+                </button>
+
                 <div className="aspect-video relative">
 
                   {/* ── No source fallback ── */}
@@ -209,8 +225,8 @@ export default function VideoStories() {
                           className="absolute inset-0 flex items-center justify-center"
                           aria-label="Play"
                         >
-                          <div className="w-20 h-20 rounded-full bg-red-600 shadow-xl flex items-center justify-center hover:bg-red-500 transition">
-                            <Play size={32} className="text-white ml-1.5" />
+                          <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-red-600 shadow-xl flex items-center justify-center hover:bg-red-500 transition">
+                            <Play className="text-white ml-0.5 sm:ml-1.5 w-5 h-5 sm:w-8 sm:h-8" />
                           </div>
                         </button>
                         {/* YouTube badge */}
@@ -319,11 +335,11 @@ export default function VideoStories() {
                 </div>
               </div>
 
-              {/* Next */}
+              {/* Next — hidden on mobile (overlaid inside player instead) */}
               <button
                 onClick={handleNext}
                 aria-label="Next video"
-                className="shrink-0 w-10 h-10 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center hover:bg-slate-50 transition"
+                className="hidden sm:flex shrink-0 w-10 h-10 rounded-full bg-white border border-slate-200 shadow-sm items-center justify-center hover:bg-slate-50 transition"
               >
                 <ChevronRight size={20} className="text-slate-600" />
               </button>
@@ -368,7 +384,7 @@ export default function VideoStories() {
                 visible: { transition: { staggerChildren: 0.08 } },
                 exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
               }}
-              className="flex-1 max-w-lg"
+              className="flex-1 max-w-lg w-full"
             >
               <motion.p
                 variants={{
@@ -387,7 +403,7 @@ export default function VideoStories() {
                   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
                   exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
                 }}
-                className="text-3xl xl:text-4xl font-bold text-heading leading-snug mb-4"
+                className="text-2xl sm:text-3xl xl:text-4xl font-bold text-heading leading-snug mb-4"
               >
                 {current.title}
               </motion.h2>

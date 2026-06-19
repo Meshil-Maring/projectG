@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Calendar, MapPin, Users, Droplets, Award, Camera, X, ChevronLeft, ChevronRight, ZoomIn, Images } from "lucide-react";
+import { Heart, Calendar, MapPin, Users, Droplets, Award, Camera, ZoomIn, Images } from "lucide-react";
 import { PRIMARY, SECONDARY, ACCENT, LIGHT_BG, fade } from "./whg.constants";
-import { fetchWhgGroups, type WhgGroup, type WhgGalleryImage } from "../../../lib/api";
+import { fetchWhgGroups, type WhgGroup } from "../../../lib/api";
+import { Lightbox } from "../shared/Lightbox";
 
 const PREVIEW_COUNT = 6;
 
@@ -16,78 +17,6 @@ const highlights = [
   { icon: Users,    title: "Community Drive",    desc: "Volunteers from across the region came together." },
   { icon: Award,    title: "Honouring Heroes",   desc: "Dedicated to the heroes preserving Manipur's integrity." },
 ];
-
-// ── Lightbox ──────────────────────────────────────────────────────────────────
-
-function Lightbox({
-  images, index, onClose,
-}: {
-  images: WhgGalleryImage[];
-  index: number;
-  onClose: () => void;
-}) {
-  const [current, setCurrent] = useState(index);
-  const photo = images[current];
-  const prev = useCallback(() => setCurrent((i) => Math.max(0, i - 1)), []);
-  const next = useCallback(() => setCurrent((i) => Math.min(images.length - 1, i + 1)), [images.length]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
-    };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
-  }, [onClose, prev, next]);
-
-  if (!photo) return null;
-
-  return (
-    <motion.div
-      key="lightbox-backdrop"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}
-      onClick={onClose}
-      style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.92)", display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center" }}
-    >
-      {/* Close */}
-      <button onClick={onClose} style={{ position: "absolute", top: "1.25rem", right: "1.25rem", background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "42px", height: "42px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }} aria-label="Close preview">
-        <X size={20} />
-      </button>
-      {/* Counter */}
-      <div style={{ position: "absolute", top: "1.35rem", left: "50%", transform: "translateX(-50%)", fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", letterSpacing: "0.08em" }}>
-        {current + 1} / {images.length}
-      </div>
-      {/* Prev */}
-      <button onClick={(e) => { e.stopPropagation(); prev(); }} disabled={current === 0} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "46px", height: "46px", cursor: current === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", opacity: current === 0 ? 0.3 : 1 }} aria-label="Previous image">
-        <ChevronLeft size={24} />
-      </button>
-      {/* Next */}
-      <button onClick={(e) => { e.stopPropagation(); next(); }} disabled={current === images.length - 1} style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "50%", width: "46px", height: "46px", cursor: current === images.length - 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", opacity: current === images.length - 1 ? 0.3 : 1 }} aria-label="Next image">
-        <ChevronRight size={24} />
-      </button>
-      {/* Image */}
-      <motion.div key={current} initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.2 }} onClick={(e) => e.stopPropagation()} style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", maxWidth: "min(90vw, 1000px)", width: "100%", padding: "0 4rem" }}>
-        <img src={photo.url} alt={formatImageTitle(photo.name)} style={{ maxWidth: "100%", maxHeight: "72vh", objectFit: "contain" as const, borderRadius: "0.75rem", boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }} />
-        <div style={{ textAlign: "center" as const, marginTop: "1.25rem", padding: "0 1rem" }}>
-          <div style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: photo.description ? "0.4rem" : 0 }}>{formatImageTitle(photo.name)}</div>
-          {photo.description && <div style={{ fontSize: "0.84rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.65 }}>{photo.description}</div>}
-        </div>
-      </motion.div>
-      {/* Thumbnail strip */}
-      {images.length > 1 && (
-        <div onClick={(e) => e.stopPropagation()} style={{ position: "absolute", bottom: "1.5rem", display: "flex", gap: "0.5rem", overflowX: "auto" as const, maxWidth: "90vw", padding: "0 1rem" }}>
-          {images.map((img, idx) => (
-            <button key={idx} onClick={() => setCurrent(idx)} style={{ flexShrink: 0, width: "56px", height: "40px", borderRadius: "6px", overflow: "hidden", border: idx === current ? `2px solid ${PRIMARY}` : "2px solid transparent", cursor: "pointer", padding: 0, background: "transparent", opacity: idx === current ? 1 : 0.5 }} aria-label={`Go to image ${idx + 1}`}>
-              <img src={img.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" as const }} />
-            </button>
-          ))}
-        </div>
-      )}
-    </motion.div>
-  );
-}
 
 // ── Group gallery section ─────────────────────────────────────────────────────
 
@@ -193,9 +122,10 @@ function GroupGallery({ group }: { group: WhgGroup }) {
       <AnimatePresence>
         {lightboxIndex !== null && (
           <Lightbox
-            images={group.images}
+            images={group.images.map((img) => ({ url: img.url, title: formatImageTitle(img.name), description: img.description }))}
             index={lightboxIndex}
             onClose={() => setLightboxIndex(null)}
+            accentColor={PRIMARY}
           />
         )}
       </AnimatePresence>
