@@ -1,5 +1,10 @@
 import AdminDashboard from "../../components/admin/AdminDashboard";
+import { GroupActivitiesProvider } from "../../context/GroupActivitiesContext";
 
 export default function AdminDashboardPage() {
-  return <AdminDashboard />;
+  return (
+    <GroupActivitiesProvider>
+      <AdminDashboard />
+    </GroupActivitiesProvider>
+  );
 }

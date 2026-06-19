@@ -9,6 +9,7 @@ import FsedsStats from "../../components/user/fseds/FsedsStats";
 import FsedsCommunities from "../../components/user/fseds/FsedsCommunities";
 import FsedsGallery from "../../components/user/fseds/FsedsGallery";
 import { PageProvider } from "../../context/PageContext";
+import { GroupActivitiesProvider } from "../../context/GroupActivitiesContext";
 
 const sections = [
   { id: "fseds-hero", label: "Overview" },
@@ -21,6 +22,7 @@ const sections = [
 
 export default function FsedsPage() {
   return (
+    <GroupActivitiesProvider>
     <PageProvider slug="fseds">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
         <SEO
@@ -38,5 +40,6 @@ export default function FsedsPage() {
         <Footer />
       </div>
     </PageProvider>
+    </GroupActivitiesProvider>
   );
 }

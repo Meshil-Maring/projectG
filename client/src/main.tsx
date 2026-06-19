@@ -4,24 +4,15 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import { HomePageProvider } from './context/HomePageContext.tsx'
-import { GroupActivitiesProvider } from './context/GroupActivitiesContext.tsx'
-import { TeamProvider } from './context/TeamContext.tsx'
-import { AboutUsProvider } from './context/AboutUsContext.tsx'
 import { NoticeProvider } from './context/NoticeContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <HomePageProvider>
-        <AboutUsProvider>
-          <GroupActivitiesProvider>
-            <TeamProvider>
-              <NoticeProvider>
-                <App />
-              </NoticeProvider>
-            </TeamProvider>
-          </GroupActivitiesProvider>
-        </AboutUsProvider>
+        <NoticeProvider>
+          <App />
+        </NoticeProvider>
       </HomePageProvider>
     </BrowserRouter>
   </StrictMode>,

@@ -1,6 +1,7 @@
 import SEO from "../../shared/components/SEO";
 import Navbar from "../../shared/components/Navbar";
 import SectionNavigator from "../../shared/components/SectionNavigator";
+import LazySection from "../../shared/components/LazySection";
 import Hero from "../../components/user/home/Hero";
 import Mission from "../../components/user/home/Mission";
 import VideoStories from "../../components/user/home/VideoStories";
@@ -36,37 +37,67 @@ export default function HomePage() {
       />
       <Navbar />
       <SectionNavigator sections={sections} />
+
+      {/* Above fold — always render immediately */}
       <section id="home">
         <Hero />
       </section>
       <RecentNotices />
+
+      {/* About section — slightly below fold, small rootMargin */}
       <section id="about">
         <Mission />
-        <VideoStories />
-        <ImageGallery />
+        <LazySection rootMargin="200px">
+          <VideoStories />
+        </LazySection>
+        <LazySection rootMargin="200px">
+          <ImageGallery />
+        </LazySection>
       </section>
-      <section id="groups">
-        <Groups />
-      </section>
-      <section id="causes">
-        <Campaigns />
-      </section>
-      <section id="impact">
-        <Impact />
-      </section>
-      <section id="stories">
-        <StoriesOfChange />
-      </section>
-      <section id="get-involved">
-        <Volunteer />
-      </section>
-      <section id="donate">
-        <Donate />
-      </section>
-      <section id="contact">
-        <NewsletterSubscribe />
-      </section>
-      <Footer />
+
+      {/* Everything below here is well below fold */}
+      <LazySection rootMargin="400px">
+        <section id="groups">
+          <Groups />
+        </section>
+      </LazySection>
+
+      <LazySection rootMargin="400px">
+        <section id="causes">
+          <Campaigns />
+        </section>
+      </LazySection>
+
+      <LazySection rootMargin="400px">
+        <section id="impact">
+          <Impact />
+        </section>
+      </LazySection>
+
+      <LazySection rootMargin="400px">
+        <section id="stories">
+          <StoriesOfChange />
+        </section>
+      </LazySection>
+
+      <LazySection rootMargin="400px">
+        <section id="get-involved">
+          <Volunteer />
+        </section>
+      </LazySection>
+
+      <LazySection rootMargin="400px">
+        <section id="donate">
+          <Donate />
+        </section>
+      </LazySection>
+
+      <LazySection rootMargin="400px">
+        <section id="contact">
+          <NewsletterSubscribe />
+        </section>
+        <Footer />
+      </LazySection>
     </>
   );
 }

@@ -11,6 +11,7 @@ import LacCTA from "../../components/user/lac/LacCTA";
 import LacCommunities from "../../components/user/lac/LacCommunities";
 import LacGallery from "../../components/user/lac/LacGallery";
 import { PageProvider } from "../../context/PageContext";
+import { GroupActivitiesProvider } from "../../context/GroupActivitiesContext";
 
 const sections = [
   { id: "lac-hero", label: "Overview" },
@@ -25,6 +26,7 @@ const sections = [
 
 export default function LacPage() {
   return (
+    <GroupActivitiesProvider>
     <PageProvider slug="lac">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
         <SEO
@@ -44,5 +46,6 @@ export default function LacPage() {
         <Footer />
       </div>
     </PageProvider>
+    </GroupActivitiesProvider>
   );
 }

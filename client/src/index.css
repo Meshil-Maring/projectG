@@ -89,6 +89,21 @@ html {
   animation: shimmer 3s ease-in-out infinite;
 }
 
+/* Promote animated images and cards to their own GPU layer */
+img {
+  will-change: auto;
+}
+
+.group:hover img,
+[class*="transition-transform"] {
+  will-change: transform;
+}
+
+/* Contain paint for fixed overlays / modals */
+[class*="fixed"] {
+  contain: layout style;
+}
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -100,6 +115,9 @@ html {
     font-family: "Inter", "Segoe UI", system-ui, sans-serif;
     color: #475569;
     background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   /* Program pages set their wrapper to --font-sans for body copy;

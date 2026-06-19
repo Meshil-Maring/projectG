@@ -9,6 +9,7 @@ import WhgStats from "../../components/user/whg/WhgStats";
 import WhgCommunities from "../../components/user/whg/WhgCommunities";
 import WhgBloodDonation from "../../components/user/whg/WhgBloodDonation";
 import { PageProvider } from "../../context/PageContext";
+import { GroupActivitiesProvider } from "../../context/GroupActivitiesContext";
 
 const sections = [
   { id: "whg-hero", label: "Overview" },
@@ -21,6 +22,7 @@ const sections = [
 
 export default function WhgPage() {
   return (
+    <GroupActivitiesProvider>
     <PageProvider slug="whg">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
         <SEO
@@ -38,5 +40,6 @@ export default function WhgPage() {
         <Footer />
       </div>
     </PageProvider>
+    </GroupActivitiesProvider>
   );
 }

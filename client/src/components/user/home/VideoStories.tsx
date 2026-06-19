@@ -470,8 +470,8 @@ export default function VideoStories() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/65 z-50 flex items-center justify-center p-6"
-            onClick={() => setReadMoreOpen(false)}
+            className="fixed inset-0 bg-black/65 z-[200] flex items-center justify-center p-6"
+            onClick={(e) => { if (e.target === e.currentTarget) setReadMoreOpen(false); }}
           >
             <motion.div
               initial={{ scale: 0.93, opacity: 0, y: 16 }}
@@ -479,7 +479,6 @@ export default function VideoStories() {
               exit={{ scale: 0.93, opacity: 0, y: 16 }}
               transition={{ duration: 0.22 }}
               className="bg-white rounded-2xl p-7 w-full max-w-xl max-h-[80vh] overflow-y-auto shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
@@ -514,8 +513,8 @@ export default function VideoStories() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-6"
-            onClick={() => setShowAllVideos(false)}
+            className="fixed inset-0 bg-black/75 z-[200] flex items-center justify-center p-6"
+            onClick={(e) => { if (e.target === e.currentTarget) setShowAllVideos(false); }}
           >
             <motion.div
               initial={{ scale: 0.92, opacity: 0, y: 20 }}
@@ -523,7 +522,6 @@ export default function VideoStories() {
               exit={{ scale: 0.92, opacity: 0, y: 20 }}
               transition={{ duration: 0.25 }}
               className="bg-white rounded-2xl p-7 w-full max-w-3xl max-h-[85vh] overflow-y-auto shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
                 <div>

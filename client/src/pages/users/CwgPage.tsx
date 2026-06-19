@@ -9,6 +9,7 @@ import CwgStats from "../../components/user/cwg/CwgStats";
 import CwgCommunities from "../../components/user/cwg/CwgCommunities";
 import CwgGallery from "../../components/user/cwg/CwgGallery";
 import { PageProvider } from "../../context/PageContext";
+import { GroupActivitiesProvider } from "../../context/GroupActivitiesContext";
 
 const sections = [
   { id: "cwg-hero", label: "Overview" },
@@ -21,6 +22,7 @@ const sections = [
 
 export default function CwgPage() {
   return (
+    <GroupActivitiesProvider>
     <PageProvider slug="cwg">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
         <SEO
@@ -38,5 +40,6 @@ export default function CwgPage() {
         <Footer />
       </div>
     </PageProvider>
+    </GroupActivitiesProvider>
   );
 }

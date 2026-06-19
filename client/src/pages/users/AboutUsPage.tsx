@@ -12,6 +12,8 @@ import AboutTeam from "../../components/user/about-us/AboutTeam";
 import AboutStats from "../../components/user/about-us/AboutStats";
 import AboutCTA from "../../components/user/about-us/AboutCTA";
 import { PageProvider } from "../../context/PageContext";
+import { AboutUsProvider } from "../../context/AboutUsContext";
+import { TeamProvider } from "../../context/TeamContext";
 
 const sections = [
   { id: "about-hero", label: "Overview" },
@@ -26,6 +28,8 @@ const sections = [
 
 export default function AboutUsPage() {
   return (
+    <AboutUsProvider>
+    <TeamProvider>
     <PageProvider slug="about-us">
       <SEO
         title="About Us"
@@ -44,5 +48,7 @@ export default function AboutUsPage() {
       <AboutCTA />
       <Footer />
     </PageProvider>
+    </TeamProvider>
+    </AboutUsProvider>
   );
 }

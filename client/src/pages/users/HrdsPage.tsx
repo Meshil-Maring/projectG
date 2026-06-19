@@ -9,6 +9,7 @@ import HrdsStats from "../../components/user/hrds/HrdsStats";
 import HrdsCommunities from "../../components/user/hrds/HrdsCommunities";
 import HrdsGallery from "../../components/user/hrds/HrdsGallery";
 import { PageProvider } from "../../context/PageContext";
+import { GroupActivitiesProvider } from "../../context/GroupActivitiesContext";
 
 const sections = [
   { id: "hrds-hero", label: "Overview" },
@@ -21,6 +22,7 @@ const sections = [
 
 export default function HrdsPage() {
   return (
+    <GroupActivitiesProvider>
     <PageProvider slug="hrds">
       <div className="cause-page" style={{ fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
         <SEO
@@ -38,5 +40,6 @@ export default function HrdsPage() {
         <Footer />
       </div>
     </PageProvider>
+    </GroupActivitiesProvider>
   );
 }

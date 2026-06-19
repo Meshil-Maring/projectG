@@ -46,6 +46,8 @@ export default function Hero() {
           src={mobileBgSrc}
           alt=""
           aria-hidden="true"
+          fetchPriority="high"
+          decoding="async"
           variants={fadeIn}
           initial="hidden"
           animate="show"
@@ -237,6 +239,8 @@ export default function Hero() {
           src={bgSrc}
           alt=""
           aria-hidden="true"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
         />
 
