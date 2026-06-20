@@ -46,7 +46,7 @@ export default function Groups() {
               lineHeight: 1.2,
             }}
           >
-            Club of Society
+            Club/Society
           </h2>
           <p
             style={{
