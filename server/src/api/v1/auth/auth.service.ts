@@ -65,7 +65,8 @@ export const authService = {
       data: { passwordResetToken: token, passwordResetExpiry: expiry },
     });
 
-    const resetUrl = `${env.CORS_ORIGIN.split(',')[0].trim()}/projectG-admin/reset-password?token=${token}`;
+    const origin = env.CORS_ORIGIN.split(',')[0]?.trim() ?? env.CORS_ORIGIN;
+    const resetUrl = `${origin}/projectG-admin/reset-password?token=${token}`;
     const html = passwordResetTemplate({ name: user.name, resetUrl });
     await sendPasswordResetEmail(user.email, html);
 
