@@ -15,6 +15,10 @@ export const userRepository = {
     return prisma.user.findUnique({ where: { email } });
   },
 
+  findByResetToken(token: string) {
+    return prisma.user.findUnique({ where: { passwordResetToken: token } });
+  },
+
   findById(id: string) {
     return prisma.user.findUnique({ where: { id }, select: publicSelect });
   },

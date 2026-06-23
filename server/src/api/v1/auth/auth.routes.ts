@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authController } from './auth.controller.js';
-import { loginSchema, updateMeSchema } from './auth.validation.js';
+import { loginSchema, updateMeSchema, forgotPasswordSchema, resetPasswordSchema } from './auth.validation.js';
 import { validate } from '../../../middlewares/validate.middleware.js';
 import { authenticate } from '../../../middlewares/auth.middleware.js';
 import { authLimiter } from '../../../middlewares/rateLimiter.middleware.js';
@@ -15,4 +15,16 @@ authRoutes.patch(
   authLimiter,
   validate({ body: updateMeSchema }),
   authController.updateMe,
+);
+authRoutes.post(
+  '/forgot-password',
+  authLimiter,
+  validate({ body: forgotPasswordSchema }),
+  authController.forgotPassword,
+);
+authRoutes.post(
+  '/reset-password',
+  authLimiter,
+  validate({ body: resetPasswordSchema }),
+  authController.resetPassword,
 );

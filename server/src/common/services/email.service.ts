@@ -44,3 +44,17 @@ export async function sendDonationReceiptEmail({ to, subject, html }: SendDonati
     throw new Error('Failed to send receipt email. Please try again later.');
   }
 }
+
+export async function sendPasswordResetEmail(to: string, html: string): Promise<void> {
+  const { error } = await resend.emails.send({
+    from: env.EMAIL_FROM,
+    to,
+    subject: 'Reset Your Admin Password — Project Generation',
+    html,
+  });
+
+  if (error) {
+    logger.error({ error }, 'Failed to send password reset email');
+    throw new Error('Failed to send password reset email.');
+  }
+}
