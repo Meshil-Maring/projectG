@@ -295,18 +295,26 @@ export default function AdminLogin() {
 
               {/* Password */}
               <div>
-                <label
-                  htmlFor="admin-password"
-                  style={{
-                    display: "block",
-                    fontSize: "0.78rem",
-                    fontWeight: 600,
-                    color: "#374151",
-                    marginBottom: "0.45rem",
-                  }}
-                >
-                  Password
-                </label>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.45rem" }}>
+                  <label
+                    htmlFor="admin-password"
+                    style={{
+                      fontSize: "0.78rem",
+                      fontWeight: 600,
+                      color: "#374151",
+                    }}
+                  >
+                    Password
+                  </label>
+                  <a
+                    href="/projectG-admin/forgot-password"
+                    style={{ fontSize: "0.72rem", color: "#1a3270", textDecoration: "none", fontWeight: 600 }}
+                    onMouseEnter={(e) => ((e.target as HTMLAnchorElement).style.textDecoration = "underline")}
+                    onMouseLeave={(e) => ((e.target as HTMLAnchorElement).style.textDecoration = "none")}
+                  >
+                    Forgot password?
+                  </a>
+                </div>
                 <div style={{ position: "relative" }}>
                   <Lock
                     size={16}

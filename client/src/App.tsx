@@ -25,6 +25,8 @@ const NotFoundPage = lazy(() => import("./pages/users/NotFoundPage"));
 // Admin pages
 const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
 const AdminDashboardPage = lazy(() => import("./pages/admin/AdminDashboardPage"));
+const ForgotPasswordPage = lazy(() => import("./pages/admin/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("./pages/admin/ResetPasswordPage"));
 
 function ProtectedAdminRoute({ children }: { children: ReactNode }) {
   const isAuth = !!localStorage.getItem("pg_admin_token");
@@ -105,6 +107,8 @@ function App() {
 
         {/* Admin routes */}
         <Route path="/projectG-admin" element={<AdminLoginPage />} />
+        <Route path="/projectG-admin/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/projectG-admin/reset-password" element={<ResetPasswordPage />} />
         <Route
           path="/projectG-admin/dashboard"
           element={
